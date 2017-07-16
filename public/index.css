@@ -1,0 +1,220 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
+}
+.modal-dialog{
+		position: relative;
+		display: table; 
+		overflow-y: auto;    
+		overflow-x: auto;
+		width: auto;
+		min-width: 300px; 
+}
+	button{
+		 transition: all 0.3s ease 0s;
+		 margin: 3px;
+	}
+	#myPlayer{
+		margin-top:10px;
+		margin-bottom: 10px;
+		margin-right:5px;
+		margin-left:5px;
+		padding-left:3px;
+		padding-right:3px;
+		height:200px;
+		width:300px;
+	}
+	#modalButton{
+		padding: 0;
+		border: none;
+		background:none;
+	}
+	.modal-dialog{
+		 position: relative;
+		display: table;
+		overflow-y: auto;    
+		overflow-x: auto;
+		width: auto;
+		min-width: 300px; 
+	}
+	button{
+		 transition: all 0.3s ease 0s;
+	}
+	.card{
+		transition: 0.5s;
+		box-shadow: none;
+		margin-top: 10px;
+		max-height: 600px;
+		max-width: 1000px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		background-color: transparent;
+		margin-right: auto; margin-left: auto;
+		border: none;
+	}
+	.card:hover{
+		border-radius: 10px;
+	}
+	.card-header{
+		margin-top: 0px;
+		background-color:white;
+		color: red;
+	}
+
+	.ProfileContainer{
+		max-width: 1300px; margin-right: auto; margin-left: auto;
+		max-height: 750px;
+	}
+	.card-img-top{
+		max-height: 300px;z-index: 1; margin-top: -30px;
+	}
+	#aboutSec{
+		width: 100%;
+	}
+	#profilePic{
+		max-width: 100px !important;
+		max-height: 100px; 
+		position: relative;
+		z-index: 100;
+		margin-bottom: 5px;
+		margin-right: 5px;
+		top: -10px;
+	}
+	.picSocial{
+		z-index: 100;
+	}
+	#videoCard{
+		max-height: 750px; overflow-y: scroll;border-bottom: none;
+	}
+	.cardBlock{
+		padding: 0;
+	}
+	.cardTitle{
+		margin-top: -50px; z-index: 100; background-color: white;
+	}
+	.userRow{
+		z-index:100;
+	}
+	.list-group-item{
+		font-size: 14px;
+		float:left;
+		padding:6px;
+	}
+	#userNameID{
+		margin-left: 20px;
+		left: 5px;
+	}
+	.userButton{
+		float:right;
+		background-color: transparent;
+		border: none;
+	}
+	.profileCard{
+		background-color: white;
+	}
+
+	.progress{
+		width:100% !important;
+		margin: 10px 0 10px 0;
+		z-index: 100;
+	}
+	.progress-bar{
+		width:25%;
+		height: 5px !important;
+	}
+
+/*OnGoingChallenges page*/
+	.onGoingCard{
+		width: 32rem;
+		height: 400px;
+		padding: 0;
+	}
+	.onGoingRow{
+		margin-left: 15%;
+		margin-right: auto;
+	}
+	.onGoingInfo{
+		float: left;
+		margin-left: 10px;
+		color: white;
+		white-space: pre-line;
+	}
+
+/*Login Page*/
+	.loginSection{
+		width: 40rem;
+		margin-left: auto;
+		margin-right: auto;
+		color: white;
+	}
+	.loginCard{
+		border-color: white;
+	}
+
+
+/*Upload Video Card Page*/
+.uploadCard{
+	margin-right: auto;
+	margin-left: auto;
+	width: 55rem;
+	background-color: white !important;
+	text-align: left;
+	max-height: 100%;
+}
+#dropZzone{
+	height: 100px !important;
+	width: 100% !important;
+	border: 2px dashed red !important;
+	border-radius: 5%;
+}
+#challengeDescription{
+	max-height: 1000px;
+	max-width: 100%;
+}
+
+/******EDIT PROFILE CARD PAGE******/
+#profilePicture{
+	max-height: 100px;
+	max-width: 275px;
+}
+.editAboutCard{
+	width: 700px;
+	max-height: 100%;
+}
+#editProfileCard{
+	color:white;
+	text-align: left;
+}
+#userName{
+	font-size: 25px;
+	text-align: right;
+	color:white;
+}
+#facebookLinkInput{
+	background-color: #3b5998;
+	color:white;
+}
+#linkedInLinkInput{
+	background-color:#007bb6;
+	color:white;
+}
+#twitterLinkInput{
+	background-color: #0084b4;
+	color:white;
+}
+#picUploadZone{
+	max-width: 165px;
+	max-height: 30px;
+    padding: 1px 12px;
+}
+#backPicUploadZone{
+	max-width: 200px;
+	max-height: 50px;
+	padding: 1px 12px;
+}
+#backgroundPicture{
+	max-height: 100px;
+	max-width: 275px;
+}

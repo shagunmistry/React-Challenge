@@ -1,0 +1,36 @@
+{
+  "name": "challenge-accepted",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.16.2",
+    "blob-util": "^1.2.1",
+    "boron": "^0.2.3",
+    "filereader": "^0.10.3",
+    "firebase": "^4.1.2",
+    "firebaseui": "^2.1.1",
+    "react": "^15.5.4",
+    "react-bootstrap": "^0.31.0",
+    "react-dom": "^15.5.4",
+    "react-dropzone": "^3.13.3",
+    "react-file-reader": "^1.1.1",
+    "react-file-reader-input": "^1.1.0",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1",
+    "react-tap-event-plugin": "^2.0.1",
+    "redux": "^3.7.1",
+    "video-react": "^0.8.5"
+  },
+  "devDependencies": {
+    "react-scripts": "1.0.7",
+    "webpack": "^3.1.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "wbpack": "webpack src/App.js public/bundle.js",
+    "wbpack:build": "webpack src/App.js publics/bundle.js -p"
+  }
+}
