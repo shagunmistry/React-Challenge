@@ -1,3 +1,10 @@
+/**
+ * Card Container for the Challenge Feature. 
+ * A person who is challenged, their video will appear on the left. 
+ * The person who was the one to challenge the Original User, his video will show on the right. 
+ * There will be a status bar on the bottom which shows who is winning. 
+ * 
+ */
 import React, { Component } from 'react';
 import {
     Player, ControlBar,
@@ -103,7 +110,7 @@ class ChallengesCard extends Component {
 
                     <button type="button"
                         className="btn btn-danger btn-4"
-                        onClick={() => window.location.replace('http://localhost:3000/UploadVideo')} >
+                        onClick={() => window.location.replace('http:/www.beztbaba.com/UploadVideo')} >
                         <i className="fa fa-bomb"></i> | Challenge</button>
 
                     <button type="button"

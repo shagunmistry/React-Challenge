@@ -1,3 +1,7 @@
+/**
+ * Page where User can edit their user profile.
+ * Features: Upload new Profile Pic. Upload new Background Wallpaper. Edit social media links, etc.
+ */
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 import { firebaseApp } from './firebase';
@@ -66,7 +70,7 @@ class EditProfile extends Component {
                 linkedin: linkedinLink
             });
         }
-        window.location.replace('http://localhost:3000/profilepage');
+        window.location.replace('http://www.beztbaba.com/profilepage');
     }
 
     /**
@@ -219,7 +223,7 @@ class EditProfile extends Component {
                     //user not logged in
                     //same as replacing the current location in current window. 
                     window.alert("Please log in");
-                    window.location.replace("http://localhost:3000/Profilecheck");
+                    window.location.replace("http://www.beztbaba.com/Profilecheck");
                 }
             });
         }
@@ -277,7 +281,7 @@ class EditProfile extends Component {
                         <input type="url" className="form-control" id="twitterLinkInput" placeholder="https://www.twitter.com/username" />
                         <br />
                         <button type="submit" className="btn btn-danger btn-4" id="saveButton" onClick={() => this.submitChanges()}>Save Changes</button>
-                        <button className="btn btn-danger btn-4" id="cancelButton" onClick={() => window.location.replace('http://localhost:3000/ProfilePage') }>Cancel</button>
+                        <button className="btn btn-danger btn-4" id="cancelButton" onClick={() => window.location.replace('http://www.beztbaba.com/ProfilePage') }>Cancel</button>
                     </form>
                 </div>
             </div>

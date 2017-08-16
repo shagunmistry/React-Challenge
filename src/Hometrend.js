@@ -1,3 +1,7 @@
+/**
+ * Home Page screen
+ * 
+ */
 import React, { Component } from 'react';
 import CardContainer from './CardContainer';
 import ModalContainer from './ModalContainer';

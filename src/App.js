@@ -17,6 +17,8 @@ class App extends Component {
 
     return (
       <div className="App">
+    {//Set up all the paths of the url .. more to come later. 
+    }
         <Router>
           <div>
             <Navigationbar />

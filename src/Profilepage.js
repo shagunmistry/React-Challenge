@@ -1,3 +1,6 @@
+/**
+ * Profile Page showing the informaiton on the user. Will lead to a login screen if not logged in 
+ */
 import React, { Component } from 'react';
 import ModalContainer from './ModalContainer';
 import CardContainer from './CardContainer';
@@ -37,7 +40,7 @@ class Profilepage extends Component {
 
     logChange() {
         firebase.auth().signOut().then(function () {
-            window.location.replace("http://localhost:3000/");
+            window.location.replace("http://www.beztbaba.com/");
             console.log("user is signed out");
         }).catch(function (error) {
             console.log("Sign Out Error: ", error);
@@ -47,7 +50,7 @@ class Profilepage extends Component {
      * edit Profile page where you can change your picture and about status
      */
     editProfie() {
-        window.location.replace('http://localhost:3000/EditProfile');
+        window.location.replace('http://www.beztbaba.com/EditProfile');
     }
 
     render() {
@@ -103,7 +106,7 @@ class Profilepage extends Component {
                                 i++;
                                 document.getElementById('aboutSec').innerText = (userInfo.exists);
                             } while (!userInfo.exists)
-                            window.location.replace('http://localhost:3000/EditProfile');
+                            window.location.replace('http://www.beztbaba.com/EditProfile');
                         }
 
 
@@ -125,7 +128,7 @@ class Profilepage extends Component {
                 } else {
                     //user not logged in
                     //same as replacing the current location in current window. 
-                    window.location.replace("http://localhost:3000/Profilecheck");
+                    window.location.replace("http://www.beztbaba.com/Profilecheck");
                 }
                 /**
                 * Fill in the Video Section

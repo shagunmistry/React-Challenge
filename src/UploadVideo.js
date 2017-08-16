@@ -1,3 +1,6 @@
+/**
+ * Allows the user to upload their Skill video if they are logged in. If not, lead to Login screen .
+ */
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 //Default firebase App 
@@ -32,7 +35,7 @@ class UploadVideo extends Component {
     onDrop(acceptedFiles, rejectedFiles) {
         if (rejectedFiles == undefined && acceptedFiles[0] == undefined) {
             window.alert("Please choose a valid video file!");
-            window.location.replace('http://localhost:3000/UploadVideo');
+            window.location.replace('http://www.beztbaba.com/UploadVideo');
         } else {
             console.log("Accepted File: " + acceptedFiles[0].type)
             //assign the state.array to filesToBeSent var then push this file into it and then assign it back to state.
@@ -143,7 +146,7 @@ class UploadVideo extends Component {
                 userid: userUID
             });
 
-            window.location.replace('http://localhost:3000');
+            window.location.replace('http://www.beztbaba.com/');
         });
 
         //empty out array after everything is done. 
@@ -162,7 +165,7 @@ class UploadVideo extends Component {
                 } else {
                     //user not logged in.
                     window.alert("Please sign in first in order to upload a video");
-                    window.location.replace("http://localhost:3000/ProfileCheck");
+                    window.location.replace("http://www.beztbaba.com/ProfileCheck");
 
                 }
             });

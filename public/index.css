@@ -126,20 +126,52 @@ body {
 	}
 
 /*OnGoingChallenges page*/
+	.onGoingRow{
+		margin-left:15%;
+		margin-right: auto;
+	}
+	/*OnGoingChallenges page*/
 	.onGoingCard{
 		width: 32rem;
-		height: 400px;
+		height: 350px;
 		padding: 0;
+		border: 1px solid black;
+		left: 25%;
+		transition: 0.5s ease;
 	}
-	.onGoingRow{
-		margin-left: 15%;
-		margin-right: auto;
+	.onGoingCard:hover{
+		height: 500px;
+		width: 500px;
+		background-color: black;
+		border:none;
+		color: white;
+		z-index: 100;
+		left: -5px;
+	}
+	@media screen and (max-width: 1135px){
+		.onGoingCard{
+			left: 0;
+			margin: 5px;
+			float: left;
+		}
+		.onGoingCard:hover{
+			height: 450px;
+			width: 40rem;
+			left: -20px;
+		}
 	}
 	.onGoingInfo{
 		float: left;
 		margin-left: 10px;
 		color: white;
 		white-space: pre-line;
+	}
+	.challengePic{
+		max-width: 100px !important;
+		max-height: 100px; 
+		position: relative;
+		margin: 5px 5px 5px 5px;
+		float: left;
 	}
 
 /*Login Page*/
