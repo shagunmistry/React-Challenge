@@ -3,8 +3,8 @@
  * 
  */
 import React, { Component } from 'react';
-import CardContainer from './CardContainer';
-import ModalContainer from './ModalContainer';
+import CardContainer from '../cards/CardContainer';
+import ModalContainer from '../cards/ModalContainer';
 class Hometrend extends Component{
 
     render(){

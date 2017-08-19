@@ -2,9 +2,9 @@
  * Profile Page showing the informaiton on the user. Will lead to a login screen if not logged in 
  */
 import React, { Component } from 'react';
-import ModalContainer from './ModalContainer';
-import CardContainer from './CardContainer';
-import { firebaseApp } from './firebase';
+import ModalContainer from '../cards/ModalContainer';
+import CardContainer from '../cards//CardContainer';
+import { firebaseApp } from '../firebase/firebase';
 
 
 var firebase = require('firebase');

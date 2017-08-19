@@ -4,7 +4,7 @@
  */
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
-import { firebaseApp } from './firebase';
+import { firebaseApp } from '../firebase/firebase';
 
 var firebase = require('firebase');
 var userInfo = {

@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 //Default firebase App 
-import { firebaseApp } from './firebase';
+import { firebaseApp } from '../firebase/firebase';
 //import ReactFileReader from 'react-file-reader';
 import Dropzone from 'react-dropzone';
 

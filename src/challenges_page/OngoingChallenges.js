@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ChallengesCard from './ChallengesCard';
+import ChallengesCard from '../cards/ChallengesCard';
 
 class OngoingChallenges extends Component{
     constructor(props){

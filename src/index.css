@@ -133,6 +133,7 @@ button{
 #singleVideoContainer{
 	max-height: 700px;
 	padding: 3px;
+	height: 500px;
 }
 .videoInfoPic{
 	max-height: 75px;

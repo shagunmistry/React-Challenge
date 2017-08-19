@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import Navigationbar from './Navigationbar';
-import Hometrend from './Hometrend';
-import Profilepage from './Profilepage';
-import OngoingChallenges from './OngoingChallenges';
-import ProfileCheck from './ProfileCheck';
-import UploadVideo from './UploadVideo';
-import EditProfile from './EditProfile';
+import Navigationbar from '../navigation/Navigationbar';
+import Hometrend from '../homepage/Hometrend';
+import Profilepage from '../profile_page_comp/Profilepage';
+import OngoingChallenges from '../challenges_page/OngoingChallenges';
+import ProfileCheck from '../profile_page_comp/ProfileCheck';
+import UploadVideo from '../upload_video_comp/UploadVideo';
+import EditProfile from '../edit_profile_comp/EditProfile';
 
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
