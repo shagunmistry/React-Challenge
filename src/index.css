@@ -127,13 +127,12 @@ button{
 
 /***********************************Card Container****************************************/
 #generalCard{
-	width: 500px;
+	width: 525px;
 	max-height: 900px;
 }
 #singleVideoContainer{
 	max-height: 700px;
 	padding: 3px;
-	height: 500px;
 }
 .videoInfoPic{
 	max-height: 75px;
@@ -141,11 +140,21 @@ button{
 	position: relative;
 	float: left;
 }
-.generalVideoInfo{
+#videoInfoSection{
+
+}
+#descriptionId{
+	background-color: black;
+}
+#generalVideoInfo{
 	color: white;
 }
 .generalCommentSection{
 	
+}
+#videoPlayerStyle{
+	height: 300px;
+	max-width: 500px;
 }
 /****************************************************************************************/
 
