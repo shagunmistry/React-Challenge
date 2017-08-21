@@ -153,23 +153,27 @@ class CardContainer extends Component {
                     videoInfoSecDiv.setAttribute('id', 'videoInfoSection');
                     //The Row to the div
                     var videoInfoSecRow = document.createElement('div');
-                    videoInfoSecRow.setAttribute('className', 'row');
+                    videoInfoSecRow.className = "row";
                     //Col-md-1 for the pic
                     var videoInfoPic = document.createElement('div');
-                    videoInfoPic.setAttribute('className', 'col-md-1');
+                    videoInfoPic.className = "col-md-1";
                     var videoInfoPicPlace = document.createElement('img');
                     videoInfoPicPlace.className = "videoInfoPic";
                     videoInfoPicPlace.src = "https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/o/selfie1.PNG?alt=media&token=807a3afa-e4dc-4020-87ed-25219c305732";
                     videoInfoPic.appendChild(videoInfoPicPlace);
                     //col-md-11 for the video title and other information
+                    //create a list-group (bootstrap) to display the video information.
+                    //1st list-item = Title
+                    //2nd list-item = Description
+                    //3rd list-item = likes/dislikes/challenges
                     var videoInfoDesc = document.createElement('div');
-                    videoInfoDesc.setAttribute('className', 'col-md-11');
-                    videoInfoDesc.setAttribute("id", "descriptionId");
-                    var videoInfoDescPlace = document.createElement('div');
-                    videoInfoDescPlace.setAttribute("id", "generalVideoInfo");
-                    videoInfoDescPlace.innerHTML = data.val().videoTitle + "<br/>" + data.val().videoDesc;
+                    videoInfoDesc.className = "col-md-11";
+                    videoInfoDesc.setAttribute("id", "titlePlaceId");
+                    //creates a list of title, desc, and stats. 
+                    var infoList = createList(data.val().videoTitle, data.val().videoDesc, data.val().challenges);
 
-                    videoInfoDesc.appendChild(videoInfoDescPlace);
+
+                    videoInfoDesc.appendChild(infoList);
                     //Attach both of those divs to Row Div then to videoInfoSecDiv
                     videoInfoSecRow.appendChild(videoInfoPic);
                     videoInfoSecRow.appendChild(videoInfoDesc);
@@ -190,7 +194,39 @@ class CardContainer extends Component {
                 })
             });
         }
+        
+        /**
+         * Create a list-group then list-group items containing title, description, likes/dislikes/challenges. 
+         * Append it to the return the listgroup and then append it to the div 
+         */
+        function createList(title, description, stats){
+            var infoList = document.createElement("div");
+            infoList.className = "list-group";
+            infoList.setAttribute("id", "descriptionListId");
 
+            //list-group-item ---> TITLE
+            var infoListItemTitle = document.createElement("li");
+            infoListItemTitle.className = "list-group-item";
+            infoListItemTitle.innerText = title;
+
+            //list-group-item ---> DESCRIPTION
+            var infoListItemDesc = document.createElement("li");
+            infoListItemDesc.className = "list-group-item";
+            infoListItemDesc.innerText = description;
+
+            //list-group-item ---> STATS
+            var infoListItemStats = document.createElement("li");
+            infoListItemStats.className = "list-group-item";
+            infoListItemStats.innerText = stats;
+
+            //attach them back to the infoList
+            infoList.appendChild(infoListItemTitle);
+            infoList.appendChild(infoListItemDesc);
+            infoList.appendChild(infoListItemStats);
+
+            return infoList;
+            
+        }
         window.addEventListener('load', function () {
             //The load function is running twice. 
             // window.alert("This is a test");

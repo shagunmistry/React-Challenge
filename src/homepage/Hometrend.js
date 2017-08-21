@@ -12,7 +12,6 @@ class Hometrend extends Component{
         return(
             <div className="container">
                     <CardContainer categoryName="Latest"/>
-                    <CardContainer categoryName="Trending"/>
                     <ModalContainer/>
             </div>
         );

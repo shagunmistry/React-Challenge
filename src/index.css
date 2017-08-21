@@ -48,7 +48,6 @@ button{
 	transition: 0.5s;
 	box-shadow: none;
 	margin-top: 10px;
-	max-height: 600px;
 	max-width: 1000px;
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -128,7 +127,7 @@ button{
 /***********************************Card Container****************************************/
 #generalCard{
 	width: 525px;
-	max-height: 900px;
+	max-height: auto;
 }
 #singleVideoContainer{
 	max-height: 700px;
@@ -140,11 +139,14 @@ button{
 	position: relative;
 	float: left;
 }
-#videoInfoSection{
-
+#descriptionListId{
+	float: right;
+	margin: 5px;
+	color: black;
 }
-#descriptionId{
-	background-color: black;
+#titlePlaceId{
+	float: right;
+	color: white;
 }
 #generalVideoInfo{
 	color: white;
