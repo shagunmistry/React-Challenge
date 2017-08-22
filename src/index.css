@@ -1,3 +1,6 @@
+
+
+/************* Whole BODY Styles *******************/
 body {
   margin: 0;
   padding: 0;
@@ -44,6 +47,7 @@ button{
 button{
 	 transition: all 0.3s ease 0s;
 }
+/*************Card Styles*******************/
 .card{
 	transition: 0.5s;
 	box-shadow: none;
@@ -63,6 +67,8 @@ button{
 	background-color:white;
 	color: red;
 }
+
+/**************** Profile Page Container************************/
 .ProfileContainer{
 	max-width: 1300px; margin-right: auto; margin-left: auto;
 	max-height: 750px;
@@ -124,14 +130,22 @@ button{
 	height: 5px !important;
 }
 
-/***********************************Card Container****************************************/
+/***********************************Card Container <--Cards used in Homepage to show videos ****************************************/
 #generalCard{
 	width: 525px;
-	max-height: auto;
+	max-height: 900px;
 }
 #singleVideoContainer{
 	max-height: 700px;
 	padding: 3px;
+	background-color: transparent;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	background-color: white;
+}
+#videoInfoSection{
+	height: 75px;
+	padding: 5px;
 }
 .videoInfoPic{
 	max-height: 75px;
@@ -140,29 +154,21 @@ button{
 	float: left;
 }
 #descriptionListId{
-	float: right;
-	margin: 5px;
 	color: black;
 }
-#titlePlaceId{
-	float: right;
-	color: white;
-}
-#generalVideoInfo{
-	color: white;
-}
-.generalCommentSection{
-	
+#videoTitleId{
+	color:black;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	float: Left;
+	margin-bottom: -7px;
 }
 #videoPlayerStyle{
 	height: 300px;
 	max-width: 500px;
 }
-/****************************************************************************************/
 
 
-
-/*OnGoingChallenges page*/
+/****************************************OnGoingChallenges page****************************************/
 .onGoingCard{
 	width: 32rem;
 	height: 350px;
@@ -280,3 +286,4 @@ button{
 	max-height: 100px;
 	max-width: 275px;
 }
+
