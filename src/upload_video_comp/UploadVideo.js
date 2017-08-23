@@ -1,6 +1,7 @@
 /**
  * Allows the user to upload their Skill video if they are logged in. If not, lead to Login screen .
  */
+/**************************DON'T FORGET TO ADD THE PROFILE PIC INFORMATION*****************/
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 //Default firebase App 
