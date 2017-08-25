@@ -120,17 +120,12 @@ button{
 .profileCard{
 	background-color: white;
 }
-.progress{
-	width:100% !important;
-	margin: 10px 0 10px 0;
-	z-index: 100;
-}
-.progress-bar{
-	width:25%;
-	height: 5px !important;
-}
 
 /***********************************Card Container <--Cards used in Homepage to show videos ****************************************/
+.container{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
 #generalCard{
 	width: 525px;
 	max-height: 900px;
@@ -141,36 +136,29 @@ button{
 	background-color: transparent;
 	margin-bottom: 10px;
 	margin-top: 10px;
-	background-color: white;
+	background-color:white;
+	border-radius: 5px;
 }
 #videoInfoSection{
 	height: 75px;
 	padding: 5px;
 }
-.videoInfoPic{
-	max-height: 75px;
-	max-width: 50px;
-	position: relative;
+.supportButtons{
+	color: black;
+	font-size: 25px;
+	transition: all 0.3s ease 0s;	
+}
+.supportButtons:hover{
+	background-color: red;
+	box-shadow: 10px 10px;
+	border-radius: 5px;
+	font-size: 30px;
+	color: white;
+
+}
+#commentSection{
 	float: left;
 }
-#descriptionListId{
-	color: black;
-}
-#videoTitleId{
-	color:black;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	float: Left;
-	margin-bottom: -7px;
-}
-#videoPlayerStyle{
-	height: 300px;
-	max-width: 500px;
-}
-.progress_bar_div{
-	font-size: 14px;
-	text-align: right;
-}
-#challenge_button:hover{ cursor: pointer;} #like_button:hover{ cursor: pointer; } #dislike_button:hover{ cursor: pointer;}
 
 /****************************************OnGoingChallenges page****************************************/
 .onGoingCard{

@@ -1,0 +1,119 @@
+ /**
+         *The link to the profile div. Set it up here with the modal and then return it
+         */
+        function linkToProfileFunc(profileLink, profilePic) {
+
+            //link to modal and insert img into it. 
+            var linkToProfileVar = document.createElement("a");
+            linkToProfileVar.className = "col-md-2";
+            linkToProfileVar.href = "https://www.beztbaba.com/" + profileLink;
+            //image place
+            var videoInfoPicPlace = document.createElement('img');
+            videoInfoPicPlace.className = "videoInfoPic";
+            videoInfoPicPlace.src = profilePic;
+            //then you append the image to the <a></a> so that it links to the profile page. 
+            linkToProfileVar.appendChild(videoInfoPicPlace);
+
+            //Assign a tooltip to the image so that it shows the username when someone hovers on it.
+            //LATER
+
+            return linkToProfileVar;
+        }
+
+        /**
+         * Load the progress bars displaying likes/dislikes and the number of challenges.
+         */
+        function progressBarLoad(likes, dislikes, challenges) {
+            var ratio = (likes / (likes + dislikes)) * 100;
+
+            var progressBarArray = [];
+            //create the like/dislike progress div
+            var likeProgressDiv = document.createElement("div");
+            likeProgressDiv.setAttribute("id", "like_progress");
+
+            var likeProgressBarDiv = document.createElement("div");
+            likeProgressBarDiv.className = "progress";
+            //create the actual like/dislike progress bar
+            var likeProgressbar = document.createElement("div");
+            likeProgressbar.className = "progress-bar";
+            //Set up all the attributes: role, style, aria-valuenow, aria-valuemax, aria-valuemin
+            likeProgressbar.setAttribute("role", "progressbar");
+            likeProgressbar.setAttribute("style", "width:" + ratio + "%; height: 1px;");
+            likeProgressbar.setAttribute("aria-valuenow", ratio);
+            likeProgressbar.setAttribute("aria-valuemax", 1000000);
+            likeProgressbar.setAttribute("aria-valuemin", 0);
+            likeProgressbar.setAttribute("id", "like_progress_bar");
+            //create a text to show the numbers below it. 
+            var likesText = document.createElement("p");
+            likesText.innerHTML = "<a id='like_button' ><i class='fa fa-thumbs-up' data-toggle='tooltip' title='I like this'></i></a> " + likes + " <a id='dislike_button'><i class='fa fa-thumbs-down' data-toggle='tooltip' title='I dislike this'></i></a>  " + dislikes;
+            //append the like progress bar back to div. 
+            likeProgressBarDiv.appendChild(likeProgressbar);
+            likeProgressDiv.appendChild(likeProgressBarDiv);
+            likeProgressDiv.appendChild(likesText);
+
+
+            //create the Challenge Progress bar
+            var challengeDiv = document.createElement("div");
+            challengeDiv.setAttribute("id", "challenge_progress");
+
+            var challengeProgressDiv = document.createElement("div");
+            challengeProgressDiv.className = "progress";
+            //create the actual like/dislike progress bar
+            var challengeProgressBar = document.createElement("div");
+            challengeProgressBar.className = "progress-bar";
+            //Set up all the attributes: role, style, aria-valuenow, aria-valuemax, aria-valuemin
+            challengeProgressBar.setAttribute("role", "progressbar");
+            challengeProgressBar.setAttribute("style", "width:" + challenges + "%; height: 1px");
+            challengeProgressBar.setAttribute("aria-valuenow", likes);
+            challengeProgressBar.setAttribute("aria-valuemax", 100);
+            challengeProgressBar.setAttribute("aria-valuemin", 0);
+            challengeProgressBar.setAttribute("id", "challenge_progress_bar");
+            //create a text to show the numbers below it. 
+            var challengeText = document.createElement("p");
+            
+            var challengeButtonLink = document.createElement("a"); challengeButtonLink.setAttribute("id", "challenge_button");
+            //Fa Icon Set Up
+            var challengeButtonIcon = document.createElement("i"); challengeButtonIcon.className = "fa fa-shield";
+            challengeButtonIcon.setAttribute("data-toggle", "tooltip");
+            challengeButtonIcon.setAttribute("title", "I want to challenge");
+            challengeButtonIcon.innerText = "\t" + challenges;
+            challengeButtonLink.appendChild(challengeButtonIcon);
+            
+            challengeText.appendChild(challengeButtonLink);
+            
+            //append the like progress bar back to div. 
+            challengeProgressDiv.appendChild(challengeProgressBar);
+            challengeDiv.appendChild(challengeProgressDiv);
+            challengeDiv.appendChild(challengeText);
+
+            progressBarArray.push(likeProgressDiv);
+            progressBarArray.push(challengeDiv);
+            return progressBarArray;
+        }
+
+
+        /**
+         * Add an event listener for the like/dislike button and challenge button 
+         * FLOW ---->
+         *          - Click Detected    - Check user logged in  -Check if user has already liked it
+         *          - If(liked)unlike else like     - Update counter in database.      -update counter here 
+         *          - Notify uploader  
+         
+        function challenge_click() {
+            var challengeButton = document.getElementById("challenge_button");
+            challengeButton.addEventListener("click", function () {
+                //create an animation later
+
+                //Check User Logged in 
+                firebase.auth().onAuthStateChanged(function (user) {
+                    if (user) {
+                        //user has signed in so get their User UID string
+                        window.alert("User has signed in");
+
+                    } else {
+                        //user not logged in. So pop open a modal or alert to let them know. 
+                        window.alert("User has NOT signed in");
+                    }
+                });
+            });
+        }*/

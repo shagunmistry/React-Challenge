@@ -9,11 +9,15 @@ import {
     ForwardControl, CurrentTimeDisplay,
     TimeDivider, VolumeMenuButton, BigPlayButton
 } from 'video-react';
-
-import { firebaseApp } from '../firebase/firebase';
 import Modal from 'boron/WaveModal';
 
+//Default firebase App 
+import * as firebase from 'firebase';
+import { firebaseApp } from '../firebase/firebase';
+import SingleCardContainer from '../cards/SingleCardContainer';
+
 var dataRef = firebaseApp.database();
+var dataArray = [];
 
 class CardContainer extends Component {
     constructor(props) {
@@ -25,11 +29,14 @@ class CardContainer extends Component {
             challenges: "",
             videoCat: "",
             videoDesc: "",
-            videoTitle: ""
+            videoTitle: "",
+            profilePic: "",
+            disikes: ""
         }
 
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
+        this.componentWillMount = this.componentWillMount.bind(this);
     }
 
     showModal() {
@@ -39,175 +46,41 @@ class CardContainer extends Component {
         this.refs.modal.hide();
     }
 
-    /**
-     * The way we will set it up is: 
-     * Based on the category name, get the download URLS from the DATABASE and set the source of the videos by document.getElementID
-     * Also, figure out how to sort based on like/dislike rate and the date uploaded. 
-     */
+    componentWillMount() {
+        /******************************LOAD THE VIDEOS*****************************/
+        //var dataValues = [];
+        var videosRef = dataRef.ref('posts/');
+        videosRef.on('value', function (snapshot) {
+            snapshot.forEach(function (data) {
+                //9 items for 1 user. 
+                dataArray.push(data.val().userid); //0
+                dataArray.push(data.val().likes); //1
+                dataArray.push(data.val().dislikes); //2
+                dataArray.push(data.val().challenges); //3
+                dataArray.push(data.val().profilePic); //4
+                dataArray.push(data.val().videoCategory); //5
+                dataArray.push(data.val().videoDesc); //6
+                dataArray.push(data.val().videoTitle); //7
+                dataArray.push(data.val().videoURL); //8
+                                
+                //empty out the array at the end of this so you can start over and it doesn't bog down the system. 
+            })
+        });
+    }
+
 
     render() {
 
-        /**
-         * Add an event listener for the like/dislike button and challenge button 
-         */
-        document.addEventListener("click", function () {
-            var challenge_button = document.getElementById("challenge_button");
-            //have some form of minimal animation first and then switch a page or pop open a modal. 
-        });
-
+        //get all the data from Database and place it in an array. 
+        //iterate through the array for every user (8 values) and setState. 
+        //After you set state, pass down the state values as props to SingleCardContainer. 
+        //Listen for clicks on the buttons and if they occur, get the userID of the post and update in the database. 
         function initApp() {
-            var dataValues = [];
-            /**
-           * When the window loads, this will be ran. 
-           * ---------------This is being fired twice. Returns 48 length even though it should return 24. right now. 
-           */
-            var videosRef = dataRef.ref('posts/');
-            videosRef.once('value', function (snapshot) {
-                snapshot.forEach(function (data) {
-                    //Get the information of one video.
-                    dataValues.push(data.val().challenges);
-                    dataValues.push(data.val().dislikes);
-                    dataValues.push(data.val().likes);
-                    dataValues.push(data.val().userid);
-                    dataValues.push(data.val().videoCategory);
-                    dataValues.push(data.val().videoDesc);
-                    dataValues.push(data.val().videoTitle);
-                    dataValues.push(data.val().videoURL);
-                    dataValues.push(data.val().profilePic);
-
-                    //start creating new elements. Assign all the variables to create the row element. 
-                    let videoText = document.getElementById('videoText');
-                    var singlevideoConainer = document.createElement('div');
-                    singlevideoConainer.setAttribute('id', 'singleVideoContainer');
-                    //videoPlace --> videoLine --> videoInfoSecDiv --> videoInfoSecRow/Desc/Pic
-
-                    //H3 title of the video <---Add some formatting to it later, like font-family and size
-                    var videoTitle = document.createElement("h3");
-                    videoTitle.setAttribute("id", "videoTitleId");
-                    videoTitle.innerText = data.val().videoTitle;
-                    singlevideoConainer.appendChild(videoTitle);
-
-                    //Set up Profile Pic. Click on the profile pic and it leads to modal with Profile Info
-                    var linkToProfile = linkToProfileFunc(data.val().userid, data.val().profilePic);
-
-                    //create a div for the place where the profile pic and progress bars will be. 
-                    var videoInfoSecDiv = document.createElement('div');
-                    videoInfoSecDiv.className = "row";
-                    videoInfoSecDiv.setAttribute('id', 'videoInfoSection');
-                    videoInfoSecDiv.appendChild(linkToProfile);
 
 
-                    //create a video player, attach the src to it, format the css for it and the append it to singleVideoContainer. 
-                    var videoPlayer = document.createElement('VIDEO');
-                    videoPlayer.setAttribute("src", data.val().videoURL);
-                    videoPlayer.setAttribute("id", "videoPlayerStyle");
-                    videoPlayer.setAttribute("controls", "controls");
 
-                    //create progress bars to track the progress of Liks/dislikes and Challenges. 
-                    var progressbars = progressBarLoad(data.val().likes, data.val().dislikes, data.val().challenges);
-                    var likeProgress = progressbars[0];
-                    var challengeBar = progressbars[1];
-                    var progressbarDiv = document.createElement("div");
-                    progressbarDiv.className = "progress_bar_div col-md-10";
-                    progressbarDiv.appendChild(likeProgress);
-                    progressbarDiv.appendChild(challengeBar);
-                    videoInfoSecDiv.appendChild(progressbarDiv);
-
-
-                    //Create an Horizontal line after single video player
-                    //var horizontalLine = document.createElement("hr");
-                    // horizontalLine.setAttribute("width", "30%");
-
-                    //append the video's information box to the singleVideoContainer Div and then append the video to it as well.
-                    singlevideoConainer.appendChild(videoPlayer);
-                    singlevideoConainer.appendChild(videoInfoSecDiv);
-                    // singlevideoConainer.appendChild(horizontalLine);
-                    videoText.appendChild(singlevideoConainer);
-
-                })
-            });
         }
 
-        /**
-         *The link to the profile div. Set it up here with the modal and then return it
-         */
-        function linkToProfileFunc(profileLink, profilePic) {
-
-            //link to modal and insert img into it. 
-            var linkToProfileVar = document.createElement("a");
-            linkToProfileVar.className = "col-md-2";
-            linkToProfileVar.href = "https://www.beztbaba.com/" + profileLink;
-            //image place
-            var videoInfoPicPlace = document.createElement('img');
-            videoInfoPicPlace.className = "videoInfoPic";
-            videoInfoPicPlace.src = profilePic;
-            //then you append the image to the <a></a> so that it links to the profile page. 
-            linkToProfileVar.appendChild(videoInfoPicPlace);
-
-            //Assign a tooltip to the image so that it shows the username when someone hovers on it.
-            //LATER
-
-            return linkToProfileVar;
-        }
-
-        /**
-         * Load the progress bars displaying likes/dislikes and the number of challenges.
-         */
-        function progressBarLoad(likes, dislikes, challenges) {
-            var ratio = (likes / (likes + dislikes)) * 100;
-
-            var progressBarArray = [];
-            //create the like/dislike progress div
-            var likeProgressDiv = document.createElement("div");
-            likeProgressDiv.setAttribute("id", "like_progress");
-
-            var likeProgressBarDiv = document.createElement("div");
-            likeProgressBarDiv.className = "progress";
-            //create the actual like/dislike progress bar
-            var likeProgressbar = document.createElement("div");
-            likeProgressbar.className = "progress-bar";
-            //Set up all the attributes: role, style, aria-valuenow, aria-valuemax, aria-valuemin
-            likeProgressbar.setAttribute("role", "progressbar");
-            likeProgressbar.setAttribute("style", "width:" + ratio + "%; height: 1px;");
-            likeProgressbar.setAttribute("aria-valuenow", ratio);
-            likeProgressbar.setAttribute("aria-valuemax", 1000000);
-            likeProgressbar.setAttribute("aria-valuemin", 0);
-            //create a text to show the numbers below it. 
-            var likesText = document.createElement("p");
-            likesText.innerHTML = "<a id='like_button' ><i class='fa fa-thumbs-up' data-toggle='tooltip' title='I like this'></i></a> " + likes + " <a id='dislike_button'><i class='fa fa-thumbs-down' data-toggle='tooltip' title='I dislike this'></i></a>  " + dislikes;
-            //append the like progress bar back to div. 
-            likeProgressBarDiv.appendChild(likeProgressbar);
-            likeProgressDiv.appendChild(likeProgressBarDiv);
-            likeProgressDiv.appendChild(likesText);
-
-
-            //create the Challenge Progress bar
-            var challengeDiv = document.createElement("div");
-            challengeDiv.setAttribute("id", "challenge_progress");
-
-            var challengeProgressDiv = document.createElement("div");
-            challengeProgressDiv.className = "progress";
-            //create the actual like/dislike progress bar
-            var challengeProgressBar = document.createElement("div");
-            challengeProgressBar.className = "progress-bar";
-            //Set up all the attributes: role, style, aria-valuenow, aria-valuemax, aria-valuemin
-            challengeProgressBar.setAttribute("role", "progressbar");
-            challengeProgressBar.setAttribute("style", "width:" + challenges + "%; height: 1px");
-            challengeProgressBar.setAttribute("aria-valuenow", likes);
-            challengeProgressBar.setAttribute("aria-valuemax", 100);
-            challengeProgressBar.setAttribute("aria-valuemin", 0);
-            //create a text to show the numbers below it. 
-            var challengeText = document.createElement("p");
-            challengeText.innerHTML = "<a id='challenge_button'><i class='fa fa-shield' data-toggle='tooltip' title='I want to Challenge' ></i></a> " + challenges;
-            //append the like progress bar back to div. 
-            challengeProgressDiv.appendChild(challengeProgressBar);
-            challengeDiv.appendChild(challengeProgressDiv);
-            challengeDiv.appendChild(challengeText);
-
-            progressBarArray.push(likeProgressDiv);
-            progressBarArray.push(challengeDiv);
-            return progressBarArray;
-        }
 
         /**
          * This loads when the page loads (right before renders)
@@ -219,31 +92,15 @@ class CardContainer extends Component {
         });
 
         return (
-            <div>
-                <div className="card" id="generalCard">
-                    <h4 className="card-header" id="generalHeader">{this.props.categoryName}</h4>
-                    <div className="card-text" id="videoText">
-                        {/*    <div id="singleVideoContainer">
-                            <h3>Animals in the House</h3>
-                            <Player poster="" src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4">
-                            </Player>
-                            <div id="videoInfoSection">
-                                <a onClick={() => this.showModal()}><img className="videoInfoPic" src="https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/o/selfie1.PNG?alt=media&token=807a3afa-e4dc-4020-87ed-25219c305732" alt="Profile Pic" />
-                                </a>
-                            </div>
-                        </div>*/}
-                    </div>
-                    { /*  <button className="btn btn-danger btn-4" onClick={() => this.showVideos()}>Show Videos</button>*/}
-                    <p className="card-text"><a href={"http://www.beztbaba.com/" + this.props.categoryName}>More...</a></p>
-                </div>
-                <Modal ref="modal">
-                    <button className="btn btn-danger btn-4" onClick={() => this.hideModal()}>Close</button>
-                </Modal>
+            <div id="bodyType">
+                <SingleCardContainer userid="Shagun Mistry" title="Animals In the House" likes="1234" dislikes="123" challenges="345" 
+                 videoURL="https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/o/users%2FbEcyh6hrlGXbTq8ZE27BxFgvHXX2%2Fuploaded_videos%2FJacks_AQOtK?alt=media&token=fa77a283-1174-4881-9119-b3548db6b35c"/>
             </div>
         )
 
     }
 
 }
+
 
 export default CardContainer;
