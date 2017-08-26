@@ -7,7 +7,7 @@ export default class Navigationbar extends Component{
       //make sure all LINKS are wrapped in Router
       <Router>
          <nav className="navbar navbar-default fixed-top">
-            <div className="container">
+            <div className="container" id="navContainer">
                 <div className="navbar-header" >
                   <button type="button" className="navbar-toggle" data-toggle="collapse" data-target="#myNavbar" aria-controls="myNavbar" aria-expanded="false">
                   <span className="icon-bar"></span>

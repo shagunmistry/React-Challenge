@@ -18,6 +18,11 @@ import Modal from 'boron/WaveModal';
 class ChallengesCard extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            videoURL: "https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/" +
+            "o/users%2FbEcyh6hrlGXbTq8ZE27BxFgvHXX2%2Fuploaded_videos%2FJacks_AQOtK?alt=media&token=fa77a283-1174-4881-9119-b3548db6b35c"
+
+        }
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
     }
@@ -35,97 +40,44 @@ class ChallengesCard extends Component {
 
         return (
             <div>
-                <div className="row onGoingRow">
-                    <div className="col-md-4">
-                        <div className="card onGoingCard">
-                            <div className="card-img-top videoPlace" >
-                                <Player poster="" 
-                                    src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4">
-                                    <ControlBar>
-                                        <ForwardControl seconds={30} order={1.2} />
-                                        <CurrentTimeDisplay order={4.1} />
-                                        <TimeDivider order={4.2} />
-                                        <VolumeMenuButton enabled />
-                                    </ControlBar>
-                                    <BigPlayButton position="center" />
-                                </Player>
+                <div className="container">
+                    <div className="card groupCard">
+                        {/********** Each row will have video, profile info   **********/}
+                        <div className="row">
+                            <div className="col-md-6">
+                                <div id="challengerVideo">
+                                    <Player poster="" src={this.state.videoURL}></Player>
+                                </div>
                             </div>
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <img className="challengePic" src="https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/o/selfie1.PNG?alt=media&token=807a3afa-e4dc-4020-87ed-25219c305732" alt="Profile Pic" />
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="profileInfo">
-                                        <h4>User Name</h4>
+                            <div className="col-md-6">
+                                { <div id="challengerInfo">
+                                    <div className="row">
+                                        <div className="col-md-2" id="challengePicCol">
+                                            <img id="challengerPic" src="https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/o/users%2FbEcyh6hrlGXbTq8ZE27BxFgvHXX2%2Fimages%2Fselfie1.PNG?alt=media&token=7c177514-8b47-40e6-b375-018c6c94ff6f" />
+                                        </div>
+                                        <div className="col-md-7" id="titleInfoCol">
+                                            <h3 id="videoChallengeTitle"><strong>Animals In the House</strong></h3>
+                                            <p><i>Shagun Mistry</i></p>
+                                        </div>
+                                        <div className="col-md-3" id="likeButtonCol">
+                                            <button type="button" className="btn btn-danger btn-4"><i className="fa fa-bomb"></i> | Like</button>
+                                        </div>
                                     </div>
-                                </div>
+                                </div> }
                             </div>
                         </div>
-                    </div>
-                    <div className="col-md-4">
-                        <div className="card onGoingCard">
-                            <div className="card-img-top videoPlace">
-                                <Player poster=""
-                                    src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4">
-                                    <ControlBar>
-                                        <ForwardControl seconds={30} order={1.2} />
-                                        <CurrentTimeDisplay order={4.1} />
-                                        <TimeDivider order={4.2} />
-                                        <VolumeMenuButton enabled />
-                                    </ControlBar>
-                                    <BigPlayButton position="center" />
-                                </Player>
-                            </div>
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <img className="challengePic" src="https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/o/selfie1.PNG?alt=media&token=807a3afa-e4dc-4020-87ed-25219c305732" alt="Profile Pic" />
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="profileInfo">
-                                        <h4>User Name</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="comments">
 
+                        <div className="row">
+                            <div className="col-md-6">
+                                <div id="challengerVideo">
+                                    <Player className="videoChallenge" poster="" src={this.state.videoURL}></Player>
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <hr width="50%" />
-                <Modal ref="modal">
-                    <div id="compVideo">
-                        <Player poster=""
-                            src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4">
-                            <ControlBar>
-                                <ForwardControl seconds={30} order={1.2} />
-                                <CurrentTimeDisplay order={4.1} />
-                                <TimeDivider order={4.2} />
-                                <VolumeMenuButton enabled />
-                            </ControlBar>
-                            <BigPlayButton position="center" />
-                        </Player>
-                    </div>
-                    <button type="button" className="btn btn-danger btn-4"><i className="fa fa-bomb"></i> | Like</button>
-
-                    <button type="button"
-                        className="btn btn-danger btn-4"
-                        onClick={() => window.location.replace('http:/www.beztbaba.com/UploadVideo')} >
-                        <i className="fa fa-bomb"></i> | Challenge</button>
-
-                    <button type="button"
-                        className="btn btn-danger btn-4">
-                        <i className="fa fa-thumbs-o-down"></i> | Dislike</button>
-
-                    <p ><a id="userProfileLink">User Name</a></p>
-                    <p id="videoDescripton">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc eros odi</p>
-                    <div className="wrapper">
-                        <h3>Top Comments</h3>
-                        <p>asldkdlsadlkasjdkajsdlkajdlwkdjalkwdmalkwdmlakwdmlkawmd</p>
-                        <p>asldkdlsadlkasjdkajsdlkajdlwkdjalkwdmalkwdmlakwdmlkawmd</p>
-                    </div>
-                    <button className="btn btn-danger btn-4" onClick={() => this.hideModal()}>Close</button>
-                </Modal>
             </div>
 
 

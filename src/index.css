@@ -1,3 +1,7 @@
+/********navbar************/
+#navContainer{
+	margin-top: 0px;
+}
 
 
 /************* Whole BODY Styles *******************/
@@ -124,7 +128,7 @@ button{
 /***********************************Card Container <--Cards used in Homepage to show videos ****************************************/
 .container{
 	margin-top: 10px;
-	margin-bottom: 10px;
+	margin-bottom: 0px;
 }
 #generalCard{
 	width: 525px;
@@ -160,50 +164,34 @@ button{
 	float: left;
 }
 
-/****************************************OnGoingChallenges page****************************************/
-.onGoingCard{
-	width: 32rem;
-	height: 350px;
-	padding: 0;
-	border: 1px solid black;
-	left: 25%;
-	transition: 0.5s ease;
+/****************************************Challenges Page****************************************/
+.groupCard{
+	max-height: 100%;	
+	background-color: white;
 }
-.onGoingCard:hover{
-	height: 500px;
-	width: 500px;
-	background-color:white;
-	border:none;
-	color: black;
-	z-index: 100;
-	left: -5px;
+#challengerVideo{
+	margin: 5px;
+	max-width: 100%;
 }
-@media screen and (max-width: 1135px){
-	.onGoingCard{
-		left: 0;
-		margin: 5px;
-		float: left;
-	}
-	.onGoingCard:hover{
-		height: 450px;
-		width: 40rem;
-			left: -20px;
-		}
+#challengerInfo{
+	padding:5px;
 }
-.onGoingInfo{
-	float: left;
-	margin-left: 10px;
-	color: white;
-	white-space: pre-line;
+#videoChallengeTitle{
+	margin-top: 0;
 }
-.challengePic{
-	max-width: 100px !important;
-	max-height: 100px; 
-	position: relative;
-	margin: 5px 5px 5px 5px;
+#challengerPic{
+	max-height: 90px;
+	max-width: 100px;
+}
+#challengePicCol{
 	float: left;
 }
-/*Login Page*/
+#titleInfoCol{
+	font-size: 15px;
+}
+#likeButtonCol{
+}
+/******************************************Login Page************************************/
 .loginSection{
 	width: 40rem;
 	margin-left: auto;
@@ -214,7 +202,7 @@ button{
 	border-color: white;
 }
 
-/*Upload Video Card Page*/
+/********************************************************Upload Video Card Page***********************/
 .uploadCard{
 	margin-right: auto;
 	margin-left: auto;
@@ -234,7 +222,7 @@ button{
 	max-width: 100%;
 }
 
-/******EDIT PROFILE CARD PAGE******/
+/********************************************************EDIT PROFILE CARD PAGE******/
 #profilePicture{
 	max-height: 100px;
 	max-width: 275px;
