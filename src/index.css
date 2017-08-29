@@ -59,7 +59,6 @@ button{
 	max-width: 1000px;
 	overflow-y: auto;
 	overflow-x: hidden;
-	background-color: transparent;
 	margin-right: auto; margin-left: auto;
 	border: none;
 }
@@ -163,7 +162,9 @@ button{
 #commentSection{
 	float: left;
 }
-
+#buttonContainerRow{
+	border: 1px solid black;
+}
 /****************************************Challenges Page****************************************/
 .groupCard{
 	max-height: 100%;	
@@ -189,7 +190,12 @@ button{
 #titleInfoCol{
 	font-size: 15px;
 }
-#likeButtonCol{
+#challenge_button_place{
+	padding: 10px 10px 10px 10px;
+	float: right;
+}
+.style14{
+	margin: 1px; 
 }
 /******************************************Login Page************************************/
 .loginSection{
@@ -220,6 +226,15 @@ button{
 #challengeDescription{
 	max-height: 1000px;
 	max-width: 100%;
+}
+#progressChallenge{
+	padding: 5px;
+	margin-top: 10px;
+	width:300px;
+	float: left; 
+}
+#like_progress_bar{
+	height: 10px;
 }
 
 /********************************************************EDIT PROFILE CARD PAGE******/

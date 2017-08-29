@@ -36,7 +36,7 @@ class UploadVideo extends Component {
     onDrop(acceptedFiles, rejectedFiles) {
         if (rejectedFiles == undefined && acceptedFiles[0] == undefined) {
             window.alert("Please choose a valid video file!");
-            window.location.replace('http://www.beztbaba.com/UploadVideo');
+            window.location.replace('http://localhost:3000/UploadVideo');
         } else {
             console.log("Accepted File: " + acceptedFiles[0].type)
             //assign the state.array to filesToBeSent var then push this file into it and then assign it back to state.
@@ -147,7 +147,7 @@ class UploadVideo extends Component {
                 userid: userUID
             });
 
-            window.location.replace('http://www.beztbaba.com/');
+            window.location.replace('http://localhost:3000/');
         });
 
         //empty out array after everything is done. 
@@ -166,7 +166,7 @@ class UploadVideo extends Component {
                 } else {
                     //user not logged in.
                     window.alert("Please sign in first in order to upload a video");
-                    window.location.replace("http://www.beztbaba.com/ProfileCheck");
+                    window.location.replace("http://localhost:3000/ProfileCheck");
 
                 }
             });

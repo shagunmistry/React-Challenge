@@ -18,7 +18,7 @@ class Loginuser extends Component {
         
         // FirebaseUI config.
         var uiConfig = {
-            signInSuccessUrl: 'http://www.beztbaba.com/:userid',
+            signInSuccessUrl: 'http://localhost:3000/:userid',
             signInOptions: [
                 // Leave the lines as is for the providers you want to offer your users.
                 firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -43,7 +43,7 @@ class Loginuser extends Component {
                     userInfo.email = user.email;
                     userInfo.photoUrl = user.photoURL;
                     checkLog = true;
-                    window.location.replace('http://www.beztbaba.com/Profilepage/'+user.uid);
+                    window.location.replace('http://localhost:3000/Profilepage/'+user.uid);
                 } else {
                     //user is signed out
                 }

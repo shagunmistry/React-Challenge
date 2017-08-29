@@ -4,11 +4,6 @@
  * it will look like the Instagram time-line. 
  */
 import React, { Component } from 'react';
-import {
-    Player, ControlBar,
-    ForwardControl, CurrentTimeDisplay,
-    TimeDivider, VolumeMenuButton, BigPlayButton
-} from 'video-react';
 import Modal from 'boron/WaveModal';
 
 //Default firebase App 
@@ -17,21 +12,15 @@ import { firebaseApp } from '../firebase/firebase';
 import SingleCardContainer from '../cards/SingleCardContainer';
 
 var dataRef = firebaseApp.database();
-var dataArray = [];
+var dataArray = []; var userInfo = {};
+var userArray = [];
+var done = false;
 
 class CardContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userid: "",
-            videoLink: "",
-            likes: "",
-            challenges: "",
-            videoCat: "",
-            videoDesc: "",
-            videoTitle: "",
-            profilePic: "",
-            disikes: ""
+            usedArray: []
         }
 
         this.showModal = this.showModal.bind(this);
@@ -47,56 +36,55 @@ class CardContainer extends Component {
     }
 
     componentWillMount() {
-        /******************************LOAD THE VIDEOS*****************************/
-        //var dataValues = [];
+
+        //Get the data
         var videosRef = dataRef.ref('posts/');
         videosRef.on('value', function (snapshot) {
+            
             snapshot.forEach(function (data) {
-                //9 items for 1 user. 
-                dataArray.push(data.val().userid); //0
-                dataArray.push(data.val().likes); //1
-                dataArray.push(data.val().dislikes); //2
-                dataArray.push(data.val().challenges); //3
-                dataArray.push(data.val().profilePic); //4
-                dataArray.push(data.val().videoCategory); //5
-                dataArray.push(data.val().videoDesc); //6
-                dataArray.push(data.val().videoTitle); //7
-                dataArray.push(data.val().videoURL); //8
-                                
-                //empty out the array at the end of this so you can start over and it doesn't bog down the system. 
+                //Store each value into an name-based object. 
+                userInfo.userid = data.val().userid;
+                userInfo.likes = data.val().likes;
+                userInfo.dislikes = data.val().dislikes;
+                userInfo.challenges = data.val().challenges;
+                userInfo.profilePic = data.val().profilePic;
+                userInfo.videoCategory = data.val().videoCategory;
+                userInfo.videoDesc = data.val().videoDesc;
+                userInfo.videoTitle = data.val().videoTitle;
+                userInfo.videoURL = data.val().videoURL;
+                //console.log(userInfo);
+                //Then push the object into an array.
+                userArray.push(userInfo);
+                //reset the userInfo object (just in case);
+                userInfo = {};
+                console.log("Firebase function: " + userArray.length);
             })
         });
+        console.log("Component Will Mount: " + userArray.length);        
+        setTimeout(this.setState({
+            usedArray: userArray
+        }), 5000);
+        
     }
 
+    componentDidMount() {
+        console.log("Component Did Mount: " + userArray.length);
+    }
 
     render() {
-
-        //get all the data from Database and place it in an array. 
-        //iterate through the array for every user (8 values) and setState. 
-        //After you set state, pass down the state values as props to SingleCardContainer. 
-        //Listen for clicks on the buttons and if they occur, get the userID of the post and update in the database. 
         function initApp() {
 
-
-
         }
-
-
-        /**
-         * This loads when the page loads (right before renders)
-         */
         window.addEventListener('load', function () {
-            //The load function is running twice. 
-            // window.alert("This is a test");
             initApp()
         });
 
+        const { usedArray } = this.state;
         return (
             <div id="bodyType">
-                <SingleCardContainer userid="Shagun Mistry" title="Animals In the House" likes="1234" dislikes="123" challenges="345" 
-                 videoURL="https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/o/users%2FbEcyh6hrlGXbTq8ZE27BxFgvHXX2%2Fuploaded_videos%2FJacks_AQOtK?alt=media&token=fa77a283-1174-4881-9119-b3548db6b35c"/>
+                {usedArray.map(data => <SingleCardContainer {...data} />)}
             </div>
-        )
+        );
 
     }
 
