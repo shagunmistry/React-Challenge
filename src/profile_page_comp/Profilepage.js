@@ -32,6 +32,9 @@ class Profilepage extends Component {
         };
         this.logChange = this.logChange.bind(this);
         this.editProfie = this.editProfie.bind(this);
+        this.loadInformation = this.loadInformation.bind(this);
+        this.writeUserData = this.writeUserData.bind(this);
+        this.readUserData = this.readUserData.bind(this);
     }
     database = firebase.database();
 
@@ -46,7 +49,7 @@ class Profilepage extends Component {
             console.log("Sign Out Error: ", error);
         });
     }
-    
+
     /**
      * edit Profile page where you can change your picture and about status
      */
@@ -54,115 +57,126 @@ class Profilepage extends Component {
         window.location.replace('http://localhost:3000/EditProfile');
     }
 
+    /**
+     * Load the user's information based on whether or not they are first-time users
+     */
+    loadInformation() {
+        var referThis = this;
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+
+                userProfile = user;
+                userInfo.name = user.displayName;
+                userInfo.email = user.email;
+                userInfo.photoUrl = user.photoURL;
+                userInfo.userID = user.uid;
+
+                //Check if the user already exists under the users/ node in the database. 
+                //If they do, then continue loading information. If not, guide them to the 
+                //Edit Profile Page where they can enter in their information. 
+                databaseRef.ref('users/').child(user.uid).on('value', function (snapshot) {
+                    userInfo.exists = (snapshot.val() !== null);
+
+                    //If the user exits, then the refill the sections, if not ask to fill it in. 
+                    if (userInfo.exists) {
+                        //This means user exists.
+                        //get the user profile pic url;
+                        databaseRef.ref('/users/' + userInfo.userID).on('value', function (snapshot) {
+                            var profilePic = snapshot.val().profile_picture;
+                            var backgroundPic = snapshot.val().background_picture;
+                            document.getElementById("profilePic").src = profilePic;
+                            document.getElementById('imgTop').src = backgroundPic;
+                        });
+                        /**
+                        * Fill in the About section.
+                        */
+                        databaseRef.ref('/users/' + userInfo.userID + '/about_section/').on('value', function (snapshot) {
+                            var aboutInput = snapshot.val().aboutInput;
+                            document.getElementById('aboutSec').innerText = aboutInput;
+                        });
+                        databaseRef.ref('/users/' + userInfo.userID + '/social_media_links/').on('value', function (snapshot) {
+                            var facebook = snapshot.val().facebook;
+                            var twitter = snapshot.val().twitter;
+                            var linkedin = snapshot.val().linkedin;
+                            document.getElementById('facebookIcon').href = facebook;
+                            document.getElementById('twitterIcon').href = twitter;
+                            document.getElementById('linkedinIcon').href = linkedin;
+                        });
+
+                    } else {
+                        /**
+                         * First time signing in to the website so write new user data. 
+                         */
+                        referThis.writeUserData(user.uid, user.displayName, user.email, userInfo.photoUrl);
+                        var i = 0;
+                        do {
+                            i++;
+                            document.getElementById('aboutSec').innerText = (userInfo.exists);
+                        } while (!userInfo.exists)
+                        window.location.replace('http://localhost:3000/EditProfile');
+                    }
+
+
+                    /**
+                     * Have a state where if the person visiting the profile is a guest then change all the functions of all the buttons on page
+                     * If not, rever them back to normal.
+                     */
+
+                    //Check if the person visitin the Profilepage is the one logged in or a guest
+                    var currentURL = window.location.href;
+                    console.log(currentURL.substring(34, currentURL.length));
+                    if (currentURL.substring(33, currentURL.length) == user.uid) {
+                        document.getElementById('editButton').style.display = 'none';
+                    }
+                });
+
+                document.getElementById("userNameID").innerHTML = document.getElementById("userNameID").innerHTML + " " + userInfo.name;
+
+            } else {
+                //user not logged in
+                //same as replacing the current location in current window. 
+                window.location.replace("http://localhost:3000/Profilecheck");
+            }
+        });
+    }
+
+    /*
+    * WRITE USER DATA when the person signs in for the first time.
+    * UserID, userNAME, userEMAIL, profilepicURL, backgroundURL
+    */
+    writeUserData(userID, name, email, picURL) {
+        var aboutInput = "", defaultBackgroundPic = "";
+        databaseRef.ref('users/' + userID).set({
+            username: name,
+            email: email,
+            profile_picture: picURL,
+            background_picture: defaultBackgroundPic
+        });
+        databaseRef.ref('users/' + userID + '/about_section/').set({
+            aboutInput: "Please fill in your information"
+        });
+        databaseRef.ref('users/' + userID + '/social_media_links/').set({
+            facebook: " ",
+            twitter: " ",
+            linkedIn: " "
+        });
+
+    }
+    //read in the current profile information once.
+    readUserData(userID) {
+        databaseRef.ref('/users/' + userInfo.userID).once('value').then(function (snapshot) {
+            var profilePicURL = snapshot.val().profile_picture;
+        });
+    }
+
     render() {
 
         function initApp() {
-            firebase.auth().onAuthStateChanged(function (user) {
-                if (user) {
-
-                    userProfile = user;
-                    userInfo.name = user.displayName;
-                    userInfo.email = user.email;
-                    userInfo.photoUrl = user.photoURL;
-                    userInfo.userID = user.uid;
-
-                    databaseRef.ref('users/').child(user.uid).on('value', function (snapshot) {
-                        userInfo.exists = (snapshot.val() !== null);
-
-                        //If the user exits, then the refill the sections, if not ask to fill it in. 
-                        if (userInfo.exists) {
-                            //This means user exists.
-                            //get the user profile pic url;
-                            databaseRef.ref('/users/' + userInfo.userID).on('value', function (snapshot) {
-                                var profilePic = snapshot.val().profile_picture;
-                                var backgroundPic = snapshot.val().background_picture;
-                                document.getElementById("profilePic").src = profilePic;
-                                document.getElementById('imgTop').src = backgroundPic;
-                            });
-                            /**
-                            * Fill in the About section.
-                            */
-                            databaseRef.ref('/users/' + userInfo.userID + '/about_section/').on('value', function (snapshot) {
-                                var aboutInput = snapshot.val().aboutInput;
-                                //window.alert(aboutInput);
-                                document.getElementById('aboutSec').innerText = aboutInput;
-                            });
-                            databaseRef.ref('/users/' + userInfo.userID + '/social_media_links/').on('value', function (snapshot) {
-                                var facebook = snapshot.val().facebook;
-                                var twitter = snapshot.val().twitter;
-                                var linkedin = snapshot.val().linkedin;
-                                document.getElementById('facebookIcon').href = facebook;
-                                document.getElementById('twitterIcon').href = twitter;
-                                document.getElementById('linkedinIcon').href = linkedin;
-
-                            });
-
-                        } else {
-                            /**
-                             * First time signing in to the website so write new user data. 
-                             */
-                            writeUserData(user.uid, user.displayName, user.email, userInfo.photoUrl);
-                            var i = 0;
-                            do {
-                                i++;
-                                document.getElementById('aboutSec').innerText = (userInfo.exists);
-                            } while (!userInfo.exists)
-                            window.location.replace('http://localhost:3000/EditProfile');
-                        }
-
-
-                        /**
-                         * Have a state where if the person visiting the profile is a guest then change all the functions of all the buttons on page
-                         * If not, rever them back to normal.
-                         */
-
-                        //Check if the person visitin the Profilepage is the one logged in or a guest
-                        var currentURL = window.location.href;
-                        console.log(currentURL.substring(34, currentURL.length));
-                        if (currentURL.substring(33, currentURL.length) == user.uid) {
-                            document.getElementById('editButton').style.display = 'none';
-                        }
-                    });
-
-                    document.getElementById("userNameID").innerHTML = document.getElementById("userNameID").innerHTML + " " + userInfo.name;
-
-                } else {
-                    //user not logged in
-                    //same as replacing the current location in current window. 
-                    window.location.replace("http://localhost:3000/Profilecheck");
-                }
-            });
-        }
-
-
-        /**
-         * WRITE USER DATA when the person signs in for the first time.
-         * UserID, userNAME, userEMAIL, profilepicURL, backgroundURL
-         */
-        function writeUserData(userID, name, email, picURL) {
-            var aboutInput = "", defaultBackgroundPic = "https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/o/chessKing.jpeg?alt=media&token=53fea36b-d54a-41bb-9a03-92be2fc80544";
-            databaseRef.ref('users/' + userID).set({
-                username: name,
-                email: email,
-                profile_picture: picURL,
-                background_picture: defaultBackgroundPic
-            });
-            databaseRef.ref('users/' + userID + '/about_section/').set({
-                aboutInput
-            });
-            databaseRef.ref('users/' + userID + '/social_media_links/').set({
-                facebook: " ",
-                twitter: " ",
-                linkedIn: " "
-            });
 
         }
-        //read in the current profile information once.
-        function readUserData(userID) {
-            databaseRef.ref('/users/' + userInfo.userID).once('value').then(function (snapshot) {
-                var profilePicURL = snapshot.val().profile_picture;
-            });
-        }
+
+
+
 
         //load the initApp that checks user status on page load
         window.addEventListener('load', function () {

@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import {
     Player, ControlBar,
@@ -26,6 +25,7 @@ class SingleCardContainer extends Component {
 
     render() {
         const { userid, likes, dislikes, challenges, profilePic, videoCategory, videoDesc, videoTitle, videoURL } = this.props;
+        
         return (
             <div className="container">
                 <div className="card" id="generalCard">

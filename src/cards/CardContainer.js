@@ -25,7 +25,6 @@ class CardContainer extends Component {
 
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
-        this.componentWillMount = this.componentWillMount.bind(this);
     }
 
     showModal() {
@@ -36,11 +35,14 @@ class CardContainer extends Component {
     }
 
     componentWillMount() {
+        console.log("Component Will Mount: ");
+    }
 
+    componentDidMount() {
         //Get the data
+        var referThis = this;
         var videosRef = dataRef.ref('posts/');
         videosRef.on('value', function (snapshot) {
-            
             snapshot.forEach(function (data) {
                 //Store each value into an name-based object. 
                 userInfo.userid = data.val().userid;
@@ -59,27 +61,22 @@ class CardContainer extends Component {
                 userInfo = {};
                 console.log("Firebase function: " + userArray.length);
             })
+            referThis.setState({
+                usedArray: userArray
+            })
         });
-        console.log("Component Will Mount: " + userArray.length);        
-        setTimeout(this.setState({
-            usedArray: userArray
-        }), 5000);
-        
     }
 
-    componentDidMount() {
-        console.log("Component Did Mount: " + userArray.length);
-    }
 
     render() {
         function initApp() {
-
+            console.log("Init App()");
         }
         window.addEventListener('load', function () {
             initApp()
         });
 
-        const { usedArray } = this.state;
+        var usedArray = this.state.usedArray;
         return (
             <div id="bodyType">
                 {usedArray.map(data => <SingleCardContainer {...data} />)}
