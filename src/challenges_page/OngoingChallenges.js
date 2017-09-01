@@ -4,15 +4,7 @@
  */
 import React, { Component } from 'react';
 import ChallengesCard from '../cards/ChallengesCard';
-import Modal from 'boron/WaveModal';
 
-//Default firebase App 
-import * as firebase from 'firebase';
-import { firebaseApp } from '../firebase/firebase';
-import SingleCardContainer from '../cards/SingleCardContainer';
-
-var dataRef = firebaseApp.database();
-var dataArray = [];
 
 class OngoingChallenges extends Component {
     constructor(props) {
@@ -29,17 +21,17 @@ class OngoingChallenges extends Component {
             disikes: ""
         }
 
-        this.showModal = this.showModal.bind(this);
-        this.hideModal = this.hideModal.bind(this);
+        //  this.showModal = this.showModal.bind(this);
+        //   this.hideModal = this.hideModal.bind(this);
         this.componentWillMount = this.componentWillMount.bind(this);
     }
 
-    showModal() {
+    /*showModal() {
         this.refs.modal.show();
     }
     hideModal() {
         this.refs.modal.hide();
-    }
+    } */
 
     componentWillMount() {
 

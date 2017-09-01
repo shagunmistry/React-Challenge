@@ -3,9 +3,8 @@
  */
 /**************************DON'T FORGET TO ADD THE PROFILE PIC INFORMATION*****************/
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
 //Default firebase App 
-import { firebaseApp } from '../firebase/firebase';
+import { firebaseApp } from '../firebase/Firebase';
 //import ReactFileReader from 'react-file-reader';
 import Dropzone from 'react-dropzone';
 
@@ -99,10 +98,10 @@ class UploadVideo extends Component {
         uploadTask.on('state_changed', function (snapshot) {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             switch (snapshot.state) {
-                case firebase.storage.TaskState.PAUSED: // or 'paused'
+                case firebaseApp.storage.TaskState.PAUSED: // or 'paused'
                     console.log('Upload is paused');
                     break;
-                case firebase.storage.TaskState.RUNNING: // or 'running'
+                case firebaseApp.storage.TaskState.RUNNING: // or 'running'
                     console.log('Upload is running');
                     console.log(videoRef.fullPath);
                     break;
@@ -158,7 +157,7 @@ class UploadVideo extends Component {
     render() {
 
         function initApp() {
-            firebase.auth().onAuthStateChanged(function (user) {
+            firebaseApp.auth().onAuthStateChanged(function (user) {
                 if (user) {
                     //user has signed in so get their User UID string
                     userUID = user.uid;

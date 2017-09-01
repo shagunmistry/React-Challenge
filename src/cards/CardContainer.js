@@ -7,8 +7,7 @@ import React, { Component } from 'react';
 import Modal from 'boron/WaveModal';
 
 //Default firebase App 
-import * as firebase from 'firebase';
-import { firebaseApp } from '../firebase/firebase';
+import { firebaseApp } from '../firebase/Firebase';
 import SingleCardContainer from '../cards/SingleCardContainer';
 
 var dataRef = firebaseApp.database();
@@ -35,7 +34,7 @@ class CardContainer extends Component {
     }
 
     componentWillMount() {
-        console.log("Component Will Mount: ");
+     //   console.log("Component Will Mount: ");
     }
 
     componentDidMount() {
@@ -54,12 +53,11 @@ class CardContainer extends Component {
                 userInfo.videoDesc = data.val().videoDesc;
                 userInfo.videoTitle = data.val().videoTitle;
                 userInfo.videoURL = data.val().videoURL;
-                //console.log(userInfo);
                 //Then push the object into an array.
                 userArray.push(userInfo);
                 //reset the userInfo object (just in case);
                 userInfo = {};
-                console.log("Firebase function: " + userArray.length);
+                //console.log("Firebase function: " + userArray.length);
             })
             referThis.setState({
                 usedArray: userArray
@@ -70,7 +68,7 @@ class CardContainer extends Component {
 
     render() {
         function initApp() {
-            console.log("Init App()");
+            //console.log("Init App()");
         }
         window.addEventListener('load', function () {
             initApp()
