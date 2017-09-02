@@ -123,7 +123,39 @@ button{
 .profileCard{
 	background-color: white;
 }
+/**********************************New Profile Page Style *******************************/
+.profileSidebar{
+	position: fixed;
+	margin-left: 150px;	
+	margin-top: 10px;
+	overflow-y: visible;
+}
+.profileSideCard{
+	height: auto;
+	width: 300px;
+	background-color: white;
 
+}
+#img_top{
+	height: 250px;
+	width: 300px;
+	margin-top: auto;
+	box-shadow: 0px 10px 15px;
+}
+#nameTitle{
+	color: lightseagreen;
+	font-size:25px;
+	font-weight: bolder;
+}
+#userLocationField{
+	font-size: 12px;	
+}
+#followerNumer{ margin-bottom: -5px; } #challengeNumber{ margin-bottom: -5px; }
+#aboutMeParagraph{
+	float: left;
+	text-align: left;
+
+}
 /***********************************Card Container <--Cards used in Homepage to show videos ****************************************/
 .container{
 	margin-top: 10px;

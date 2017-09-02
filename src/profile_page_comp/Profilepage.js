@@ -37,13 +37,12 @@ class Profilepage extends Component {
         this.setState({
             userUID: this.props.userid
         })
-        this.signInStatusChange();
         this.loadInformation();
 
     }
 
     /**
-     * If the user logs out, lead back to the homepage. 
+     * Signout the user and lead them back to the home page. 
      */
     signInStatusChange() {
         firebaseApp.auth().signOut().then(function () {
@@ -113,9 +112,10 @@ class Profilepage extends Component {
                     }
                 });
 
-                document.getElementById("userNameID").innerHTML = document.getElementById("userNameID").innerHTML + " " + referThis.state.userName;
+                //  document.getElementById("userNameID").innerHTML = document.getElementById("userNameID").innerHTML + " " + referThis.state.userName;
 
             } else {
+                window.alert("User has not logged in");
                 //user not logged in
                 //same as replacing the current location in current window. 
                 window.location.replace("http://localhost:3000/Profilecheck");
@@ -138,7 +138,7 @@ class Profilepage extends Component {
         databaseRef.ref('users/' + userState.userUID + '/about_section/').set({
             aboutInput: aboutInputData
         });
-        databaseRef.ref('users/' + userState.userUID  + '/social_media_links/').set({
+        databaseRef.ref('users/' + userState.userUID + '/social_media_links/').set({
             facebook: " ",
             twitter: " ",
             linkedIn: " "
@@ -156,8 +156,8 @@ class Profilepage extends Component {
         databaseRef.ref('/users/' + userID).on('value', function (snapshot) {
             var profilePic = snapshot.val().profile_picture;
             var backgroundPic = snapshot.val().background_picture;
-            document.getElementById("profilePic").src = profilePic;
-            document.getElementById('imgTop').src = backgroundPic;
+            /*document.getElementById("profilePic").src = profilePic;
+            document.getElementById('imgTop').src = backgroundPic; */
         });
     }
 
@@ -165,15 +165,15 @@ class Profilepage extends Component {
     fillAboutSection(userid) {
         databaseRef.ref('/users/' + userid + '/about_section/').on('value', function (snapshot) {
             var aboutInput = snapshot.val().aboutInput;
-            document.getElementById('aboutSec').innerText = aboutInput;
+            /* document.getElementById('aboutSec').innerText = aboutInput; */
         });
         databaseRef.ref('/users/' + userid + '/social_media_links/').on('value', function (snapshot) {
             var facebook = snapshot.val().facebook;
             var twitter = snapshot.val().twitter;
             var linkedin = snapshot.val().linkedin;
-            document.getElementById('facebookIcon').href = facebook;
-            document.getElementById('twitterIcon').href = twitter;
-            document.getElementById('linkedinIcon').href = linkedin;
+            /* document.getElementById('facebookIcon').href = facebook;
+             document.getElementById('twitterIcon').href = twitter;
+             document.getElementById('linkedinIcon').href = linkedin; */
         });
     }
 
@@ -183,9 +183,6 @@ class Profilepage extends Component {
 
         }
 
-
-
-
         //load the initApp that checks user status on page load
         window.addEventListener('load', function () {
             initApp()
@@ -194,53 +191,47 @@ class Profilepage extends Component {
 
         {
             if (this.state.firstTimeSignIn) {
-                return <EditProfile userid={this.state.userUID} firstTime={this.state.firstTimeSignIn}/>
+                return <EditProfile userid={this.state.userUID} firstTime={this.state.firstTimeSignIn} />
             } else {
                 return (
                     <div>
                         <div className="profileContainer" >
-                            <div className="card profileCard" >
-                                <img className="card-img-top" id="imgTop" src="https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/o/chessKing.jpeg?alt=media&token=53fea36b-d54a-41bb-9a03-92be2fc80544" alt="Profile Background Pics" />
-                                <div className="card-block cardBlock" >
-                                    <h4 className="card-title cardTitle" >
-                                        <div className="row ">
-                                            <div className="col-sm-1 picSocial" >
-                                                <img id="profilePic" />
-                                                <a href="#" id="twitterIcon"><i className="fa fa-twitter"></i>  </a>
-                                                <a href="#" id="linkedinIcon"><i className="fa fa-linkedin"></i>  </a>
-                                                <a href="#" id="facebookIcon"><i className="fa fa-facebook"></i>  </a>
+                            <div className="profileSidebar">
+                                <div className="card profileSideCard">
+                                    <img className="card-img-top" id="img_top" src="http://i.dailymail.co.uk/i/pix/2015/09/21/16/2C96F60E00000578-0-image-a-126_1442848442984.jpg" alt="Profile Picture" />
+                                    <div className="card-block" >
+                                        <h4 className="card-title" id="nameTitle"> James Bond</h4>
+                                        <p id="userLocationField">Greenville, SC, USA</p>
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <button type="button" className="btn btn-danger btn-4"><p id="followerNumer">1234</p>Followers</button>
                                             </div>
-                                            <div className="col-sm-11 userRow">
-                                                <ul className="list-group">
-                                                    <li className="list-group-item" id="userNameID"><i className="fa fa-user"></i></li>
-                                                    <li className="list-group-item userButton logOut">
-                                                        <button type="button" onClick={() => this.signInStatusChange()} className="btn btn-danger btn-4"><i className="fa fa-shield"></i> | Log Out</button>
-                                                    </li>
-                                                    <li className="list-group-item userButton">
-                                                        <button type="button" className="btn btn-danger btn-4"><i className="fa fa-users"></i> | Followers</button>
-                                                    </li>
-                                                    <li className="list-group-item userButton">
-                                                        <button type="button" className="btn btn-danger btn-4"><i className="fa fa-shield"></i> | Challenges</button>
-                                                    </li>
-                                                </ul>
+                                            <div className="col-md-6">
+                                                <button type="button" className="btn btn-danger btn-4"><p id="challengeNumber">1234</p>Challenges</button>
                                             </div>
                                         </div>
-                                    </h4>
-                                    <div className="card-text">
-                                        <strong>About section</strong>
-                                        <button type="button" id="editButton" className="btn btn-danger btn-4" onClick={() => this.editProfie()}><i className="fa fa-pencil"></i> | Edit Profile</button>
-                                        <ul className="list-group">
-                                            <li className="list-group-item aboutSection" id="aboutSec">
-                                            </li>
-                                        </ul>
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <button id="aboutMe" type="button" className="btn btn-info btn-4" data-toggle="collapse" data-target="#aboutMeSection">About </button>                                            </div>
+                                            <div className="col-md-6">
+                                                <button id="editButton" type="button" className="btn btn-info btn-4" onClick={() => this.editProfie()}>Edit Profile </button>
+                                            </div>
+                                        </div>
+                                        <div className="collapse" id="aboutMeSection">
+                                            <p id="aboutMeParagraph">
+                                                A fictional British Secret Service agent created in 1953
+                                                by writer Ian Fleming, who featured him in twelve
+                                                novels and two short-story collections.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-
                             </div>
+
                             <CardContainer categoryName="Trending" />
                         </div>
                         <ModalContainer />
-                    </div>
+                    </div >
                 );
             }
         }
