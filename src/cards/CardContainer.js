@@ -34,7 +34,7 @@ class CardContainer extends Component {
     }
 
     componentWillMount() {
-     //   console.log("Component Will Mount: ");
+        //   console.log("Component Will Mount: ");
     }
 
     componentDidMount() {
@@ -53,6 +53,7 @@ class CardContainer extends Component {
                 userInfo.videoDesc = data.val().videoDesc;
                 userInfo.videoTitle = data.val().videoTitle;
                 userInfo.videoURL = data.val().videoURL;
+                userInfo.uniqueKey = data.key;
                 //Then push the object into an array.
                 userArray.push(userInfo);
                 //reset the userInfo object (just in case);
@@ -75,14 +76,11 @@ class CardContainer extends Component {
         });
 
         var usedArray = this.state.usedArray;
+
         return (
             <div id="bodyType">
-            {   /*This should render each <SingleCardContainer /> depending on the amount of data in Firebase but
-                *It does not because this.state.usedArray is not being set in either ComponentDidMount
-                * or ComponentWillMount. I can't use this.setState inside the firebase-data-fetch function so I don't know any other way.
-                */
-                usedArray.map(data => <SingleCardContainer {...data} />)
-            }
+                {usedArray.map(data => <SingleCardContainer {...data} key={data.uniqueKey} />)
+                }
             </div>
         );
 

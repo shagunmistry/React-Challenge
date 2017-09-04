@@ -21,7 +21,7 @@ class Profilepage extends Component {
             userExists: false,
             firstTimeSignIn: false
         };
-        this.signInStatusChange = this.signInStatusChange.bind(this);
+        this.logOut = this.logOut.bind(this);
         this.editProfie = this.editProfie.bind(this);
         this.loadInformation = this.loadInformation.bind(this);
         this.writeUserData = this.writeUserData.bind(this);
@@ -44,7 +44,7 @@ class Profilepage extends Component {
     /**
      * Signout the user and lead them back to the home page. 
      */
-    signInStatusChange() {
+    logOut() {
         firebaseApp.auth().signOut().then(function () {
             window.location.replace("http://localhost:3000/");
         }).catch(function (error) {
@@ -112,10 +112,10 @@ class Profilepage extends Component {
                     }
                 });
 
-                //  document.getElementById("userNameID").innerHTML = document.getElementById("userNameID").innerHTML + " " + referThis.state.userName;
+                document.getElementById("nameTitle").innerText = referThis.state.userName;
 
             } else {
-                window.alert("User has not logged in");
+                console.log("User has not logged in");
                 //user not logged in
                 //same as replacing the current location in current window. 
                 window.location.replace("http://localhost:3000/Profilecheck");
@@ -127,16 +127,31 @@ class Profilepage extends Component {
     * WRITE USER DATA when the person signs in for the first time.
     */
     writeUserData(userState) {
+        console.log("This is the user's first time so write some to database");
+        var aboutInputData = "", locationInput = "South Carolina, USA";
 
-        var aboutInputData = "", defaultBackgroundPic = "";
+        //Write to the Database their usename, email, prof_pic, and back_pic. 
+        //The .then return whether or not it was successful. 
         databaseRef.ref('users/' + userState.userUID).set({
             username: userState.userName,
             email: userState.userEmail,
             profile_picture: userState.userPicture,
-            background_picture: defaultBackgroundPic
+        }).then(function (success) {
+            console.log("Success writing to the Database");
+        }, function (error) {
+            console.log("There is an error writing to database: " + error.message);
         });
+
+        //Write to the About section and if there is an error, give out an error. 
         databaseRef.ref('users/' + userState.userUID + '/about_section/').set({
-            aboutInput: aboutInputData
+            aboutInput: aboutInputData,
+            locationInp: locationInput
+        }).then({
+            function(success) {
+                console.log("Success Writing the location and about Input");
+            }, function(error) {
+                console.log(error.message);
+            }
         });
         databaseRef.ref('users/' + userState.userUID + '/social_media_links/').set({
             facebook: " ",
@@ -155,17 +170,21 @@ class Profilepage extends Component {
         var profilePic, backgroundPic;
         databaseRef.ref('/users/' + userID).on('value', function (snapshot) {
             var profilePic = snapshot.val().profile_picture;
-            var backgroundPic = snapshot.val().background_picture;
-            /*document.getElementById("profilePic").src = profilePic;
-            document.getElementById('imgTop').src = backgroundPic; */
+            document.getElementById('img_top').src = profilePic;
         });
     }
 
     //Fill in the about Section and Social Media Links
     fillAboutSection(userid) {
         databaseRef.ref('/users/' + userid + '/about_section/').on('value', function (snapshot) {
+            if (snapshot.val() == null) {
+                console.log("Please fill out your Profile Information First");
+                window.location.replace('http://localhost:3000/Editprofile');
+            }
             var aboutInput = snapshot.val().aboutInput;
-            /* document.getElementById('aboutSec').innerText = aboutInput; */
+            var locationField = snapshot.val().locationInp;
+            document.getElementById('aboutMeParagraph').innerText = aboutInput;
+            document.getElementById('userLocationField').innerText = locationField;
         });
         databaseRef.ref('/users/' + userid + '/social_media_links/').on('value', function (snapshot) {
             var facebook = snapshot.val().facebook;
@@ -198,10 +217,10 @@ class Profilepage extends Component {
                         <div className="profileContainer" >
                             <div className="profileSidebar">
                                 <div className="card profileSideCard">
-                                    <img className="card-img-top" id="img_top" src="http://i.dailymail.co.uk/i/pix/2015/09/21/16/2C96F60E00000578-0-image-a-126_1442848442984.jpg" alt="Profile Picture" />
+                                    <img className="card-img-top" id="img_top" src="" alt="Profile Picture" />
                                     <div className="card-block" >
-                                        <h4 className="card-title" id="nameTitle"> James Bond</h4>
-                                        <p id="userLocationField">Greenville, SC, USA</p>
+                                        <h4 className="card-title" id="nameTitle"></h4>
+                                        <p id="userLocationField"></p>
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <button type="button" className="btn btn-danger btn-4"><p id="followerNumer">1234</p>Followers</button>
@@ -219,16 +238,13 @@ class Profilepage extends Component {
                                         </div>
                                         <div className="collapse" id="aboutMeSection">
                                             <p id="aboutMeParagraph">
-                                                A fictional British Secret Service agent created in 1953
-                                                by writer Ian Fleming, who featured him in twelve
-                                                novels and two short-story collections.
                                             </p>
                                         </div>
+                                        <button id="logOutButton" type="button" className="btn btn-link" onClick={() => this.logOut()}>Log Out</button>
                                     </div>
                                 </div>
                             </div>
-
-                            <CardContainer categoryName="Trending" />
+                            <CardContainer />
                         </div>
                         <ModalContainer />
                     </div >

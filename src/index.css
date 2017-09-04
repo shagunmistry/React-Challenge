@@ -138,9 +138,12 @@ button{
 }
 #img_top{
 	height: 250px;
-	width: 300px;
+	max-width: 300px;
 	margin-top: auto;
-	box-shadow: 0px 10px 15px;
+	box-shadow: 10px 10px 15px;
+	background-color: black;
+	margin-right: auto;
+	margin-left: auto;
 }
 #nameTitle{
 	color: lightseagreen;
@@ -273,10 +276,12 @@ button{
 #profilePicture{
 	max-height: 100px;
 	max-width: 275px;
+	float: left;
 }
 .editAboutCard{
 	width: 700px;
 	max-height: 100%;
+	background-color: white;
 }
 #editProfileCard{
 	color:white;
@@ -284,8 +289,9 @@ button{
 }
 #userName{
 	font-size: 25px;
-	text-align: right;
-	color:white;
+	text-align: left;
+	color:lightseagreen;
+	margin-top: 0px;
 }
 #facebookLinkInput{
 	background-color: #3b5998;
@@ -300,17 +306,11 @@ button{
 	color:white;
 }
 #picUploadZone{
-	max-width: 165px;
-	max-height: 30px;
-    padding: 1px 12px;
-}
-#backPicUploadZone{
 	max-width: 200px;
-	max-height: 50px;
+	max-height: 30px;
 	padding: 1px 12px;
-}
-#backgroundPicture{
-	max-height: 100px;
-	max-width: 275px;
+	float: right;
+	background-color: transparent;
+	color: #3b5998;
 }
 

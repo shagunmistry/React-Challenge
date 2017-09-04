@@ -8,6 +8,9 @@ import { firebaseApp } from '../firebase/Firebase';
 //import ReactFileReader from 'react-file-reader';
 import Dropzone from 'react-dropzone';
 
+//this firebase is required for upload process. 
+var firebase = require('firebase');
+
 var defStorageRef = firebaseApp.storage().ref(), databaseRef = firebaseApp.database();
 var userUID = "";
 
@@ -98,10 +101,10 @@ class UploadVideo extends Component {
         uploadTask.on('state_changed', function (snapshot) {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             switch (snapshot.state) {
-                case firebaseApp.storage.TaskState.PAUSED: // or 'paused'
+                case firebase.storage.TaskState.PAUSED: // or 'paused'
                     console.log('Upload is paused');
                     break;
-                case firebaseApp.storage.TaskState.RUNNING: // or 'running'
+                case firebase.storage.TaskState.RUNNING: // or 'running'
                     console.log('Upload is running');
                     console.log(videoRef.fullPath);
                     break;

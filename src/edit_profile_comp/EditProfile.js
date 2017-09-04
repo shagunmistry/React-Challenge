@@ -5,11 +5,12 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 import { firebaseApp } from '../firebase/Firebase';
+var firebase = require('firebase');
 
 
 //Other firebaseApp for storing Videos and Files.
 
-var defStorageRef = firebaseApp.storage().ref();
+var defStorageRef = firebaseApp.storage().ref(), databaseRef = firebaseApp.database();
 var downloadURL = "";
 
 
@@ -32,93 +33,65 @@ class EditProfile extends Component {
         this.emptyArray = this.emptyArray.bind(this);
         this.submitChanges = this.submitChanges.bind(this);
         this.changePic = this.changePic.bind(this);
-        this.changeBackPic = this.changeBackPic.bind(this);
         this.componentWillMount = this.componentWillMount.bind(this);
-
+        this.cancelChanges = this.cancelChanges.bind(this);
+    }
+    /**
+     * Cancel the Changes in the Edit Form 
+     */
+    cancelChanges() {
+        document.getElementById('card_header').innerText = "Canceling Changes";
+        window.location.replace('http://localhost:3000/ProfileCheck');
     }
 
     /**
      * Validate the form and update the data in the database.
      */
     submitChanges() {
-        var referThis = this;
         var aboutInput = document.getElementById('aboutInput').value;
+        var locationIn = document.getElementById('locationInput').value;
         var facebookLink = document.getElementById('facebookLinkInput').value;
+        var linkedLink = document.getElementById('linkedInLinkInput').value;
         var twitterLink = document.getElementById('twitterLinkInput').value;
-        var linkedinLink = document.getElementById('linkedInLinkInput').value;
+        console.log("Here are all the input values: " + aboutInput + '\n' + locationIn
+            + '\n' + facebookLink + '\n' + linkedLink + '\n' + twitterLink);
 
-        /**write to the Firebase database if any of the input fields have information in them  */
-        if (aboutInput != "") {
-            firebaseApp.database().ref('users/' + referThis.userUID).child('about_section').set({
-                aboutInput
-            });
-        }
-        /**
-        * all the social media links are stored under users/uid/social_medi_links
-        */
-        if ((facebookLink != "") || (twitterLink != "") || (linkedinLink != "")) {
-            firebaseApp.database().ref('users/' + referThis.userUID).child('social_media_links').set({
-                facebook: facebookLink,
-                twitter: twitterLink,
-                linkedin: linkedinLink
-            });
-        }
-        window.location.replace('http://www.beztbaba.com/profilepage');
+        //Write to the About section and if there is an error, give out an error. 
+
+        databaseRef.ref('users/' + this.state.userUID + '/about_section/').set({
+            aboutInput: aboutInput,
+            locationInp: locationIn
+        }).then({
+            function(success) {
+                //window.alert("Success Writing the location and about Input");
+            }, function(error) {
+                window.alert(error.message);
+            }
+        });
+        //write the social media links to the Database.
+        databaseRef.ref('users/' + this.state.userUID + '/social_media_links/').set({
+            facebook: facebookLink,
+            linkedin: linkedLink,
+            twitter: twitterLink
+        }).then({ //I don't think this works, by the way. It's somehow set up wrong.    
+            function(success) {
+                // window.alert("Success writing social media links");
+            }, function(error) {
+                window.alert(error.message);
+            }
+        });
+        window.location.replace("http://localhost:3000/Profilecheck");
+
     }
 
-    /**
-     * Upload new Background picture.
-     */
-    changeBackPic(acceptedFiles, rejectedFiles) {
-        var referThis = this;
-        if (rejectedFiles == undefined && acceptedFiles[0] == undefined) {
-            window.alert("Please choose a valid video file!");
-        } else {
-            //use the state to store the pic URL first and then setState -> upload that to firebase.
-            var filesToBeSent = this.state.filesToBeSent;
-            filesToBeSent.push(acceptedFiles[0]);
-            this.setState({ filesToBeSent });
-
-            //set up the variables for imageReference to the new profile pic.
-            var imageRef = defStorageRef.child('users/' + referThis.userUID + '/background_images/' + this.state.filesToBeSent[0].name);
-            //use put the file in the reference then upload it to firebase. 
-            var uploadTask = imageRef.put(this.state.filesToBeSent[0]);
-            uploadTask.on('state_changed', function (snapshot) {
-                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                switch (snapshot.state) {
-                    case firebaseApp.storage.TaskState.PAUSED: // or 'paused'
-                        //console.log('Upload is paused');
-                        break;
-                    case firebaseApp.storage.TaskState.RUNNING: // or 'running'
-                        //console.log('Upload is running');
-                        //console.log(imageRef.fullPath);
-                        break;
-                }
-
-            }, function (error) {
-                window.alert("Upload Unsuccessfull. Please try again later! " + error.message);
-            }, function () {
-                // Handle successful uploads on complete
-                downloadURL = uploadTask.snapshot.downloadURL;
-                /**
-                 * upload the download URL link to firebase Database so it's always updated with the latest picture taken.
-                 */
-                var updates = {};
-                updates['/users/' + referThis.userUID + '/background_picture'] = downloadURL;
-                firebaseApp.database().ref().update(
-                    updates
-                );
-            });
-            this.emptyArray();
-        }
-    }
 
     /**
      * Upload a new Profile picture. Store in Storage and the download URL goes to the Firebase Database. 
      */
     changePic(acceptedFiles, rejectedFiles) {
+        var referThis = this;
         if (rejectedFiles == undefined && acceptedFiles[0] == undefined) {
-            window.alert("Please choose a valid video file!");
+            window.alert("Please choose a valid IMAGE file!");
         } else {
             // console.log("Accepted File: " + acceptedFiles[0].type)
             //var objectURL = URL.createObjectURL(acceptedFiles[0]);
@@ -129,15 +102,15 @@ class EditProfile extends Component {
             this.setState({ filesToBeSent });
 
             //set up the variables for imageReference to the new profile pic.
-            var imageRef = defStorageRef.child('users/' + this.state.userUID + '/images/' + this.state.filesToBeSent[0].name);
+            var imageRef = defStorageRef.child('users/' + referThis.state.userUID + '/images/' + this.state.filesToBeSent[0].name);
             //use put the file in the reference then upload it to firebase. 
-            var uploadTask = imageRef.put(this.state.filesToBeSent[0]);
+            var uploadTask = imageRef.put(referThis.state.filesToBeSent[0]);
             uploadTask.on('state_changed', function (snapshot) {
                 var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 switch (snapshot.state) {
-                    case firebaseApp.storage.TaskState.PAUSED: // or 'paused'
+                    case firebase.storage.TaskState.PAUSED: // or 'paused'
                         break;
-                    case firebaseApp.storage.TaskState.RUNNING: // or 'running'
+                    case firebase.storage.TaskState.RUNNING: // or 'running'
                         break;
                 }
             }, function (error) {
@@ -149,8 +122,8 @@ class EditProfile extends Component {
                  * upload the download URL link to firebase Database so it's always updated with the latest picture taken.
                  */
                 var updates = {};
-                updates['/users/' + this.state.userUID + '/profile_picture'] = downloadURL;
-                firebaseApp.database().ref().update(
+                updates['/users/' + referThis.state.userUID + '/profile_picture'] = downloadURL;
+                databaseRef.ref().update(
                     updates
                 );
             });
@@ -184,25 +157,22 @@ class EditProfile extends Component {
                 })
 
                 //get the user profile pic url;
-                firebaseApp.database().ref('/users/' + user.uid).on('value', function (snapshot) {
+                databaseRef.ref('/users/' + user.uid).on('value', function (snapshot) {
                     var profilePic = snapshot.val().profile_picture;
-                    var backgroundPic = snapshot.val().background_picture;
                     document.getElementById("profilePicture").src = profilePic;
-                    document.getElementById('backgroundPicture').src = backgroundPic;
                 });
-                //get the user about section information;
-                firebaseApp.database().ref('/users/' + this.state.userUID + '/about_section/').on('value', function (snapshot) {
-                    console.log("About Input: " + snapshot.val());
-                    var aboutInput;
-                    if (referThis.props.firstTime) {
-                        aboutInput = "";
-                    } else {
-                        var aboutInput = snapshot.val().aboutInput;
-                    }
 
+                //Get the "About Section" data of the User.
+                databaseRef.ref('/users/' + referThis.state.userUID + '/about_section/').on('value', function (snapshot) {
+                    console.log("About Input: " + snapshot.val().aboutInput);
+                    var aboutInput = snapshot.val().aboutInput;
+                    var locationInput = snapshot.val().locationInp;
+                    document.getElementById("aboutInput").value = aboutInput;
+                    document.getElementById('locationInput').value = locationInput;
                 });
+
                 //get the user social_media_links information;
-                firebaseApp.database().ref('/users/' + this.state.userUID + '/social_media_links/').on('value', function (snapshot) {
+                databaseRef.ref('/users/' + referThis.state.userUID + '/social_media_links/').on('value', function (snapshot) {
                     var fbLink = snapshot.val().facebook;
                     var twLink = snapshot.val().twitter;
                     var inLink = snapshot.val().linkedin;
@@ -233,24 +203,19 @@ class EditProfile extends Component {
         window.addEventListener('load', function () {
             initApp()
         });
-
         return (
             <div className="card editAboutCard">
-                <div className="card-header"> Edit Profile</div>
+                <div className="card-header" id="card_header"> Edit Profile</div>
                 <div className="card-block" id="EditProfileCard">
                     <div className="row">
                         <div className="col-md-6">
+                            <strong><h3 id="userName"></h3></strong>
                             <img alt="ProfilePic" id="profilePicture" />
-                            <Dropzone id="picUploadZone" type="file" onDrop={(files) => this.changePic(files)} accept="image/*" multiple={false}>
-                                <div>Upload Picture</div>
-                            </Dropzone>
-                            <img alt="ProfileBackgroundPic" id="backgroundPicture" />
-                            <Dropzone id="backPicUploadZone" type="file" onDrop={(files) => this.changeBackPic(files)} accept="image/*" multiple={false}>
-                                <div>Upload Background Picture</div>
-                            </Dropzone>
                         </div>
                         <div className="col-md-6">
-                            <strong><div className="card-title" id="userName"></div></strong>
+                            <Dropzone id="picUploadZone" type="file" onDrop={(files) => this.changePic(files)} accept="image/*" multiple={false}>
+                                <div>Upload New Picture</div>
+                            </Dropzone>
                         </div>
                     </div>
                     <form>
@@ -258,6 +223,9 @@ class EditProfile extends Component {
                         <textarea id="aboutInput" className="form-control" type="text" placeholder="Say something about yourself and your content" rows="5"
                             required="true" />
                         <br />
+                        <label>Where are you from</label>
+                        <textarea id="locationInput" className="form-control" type="text" placeholder="{City, } State, Country" rows="1"
+                            required="true" />
                         <label id="facebookInput">Facebook Link</label>
                         <input type="url" className="form-control" id="facebookLinkInput" placeholder="https://www.facebook.com/username" />
                         <br />
@@ -267,11 +235,11 @@ class EditProfile extends Component {
                         <label id="twitterInput">Twitter Link</label>
                         <input type="url" className="form-control" id="twitterLinkInput" placeholder="https://www.twitter.com/username" />
                         <br />
-                        <button type="submit" className="btn btn-danger btn-4" id="saveButton" onClick={() => this.submitChanges()}>Save Changes</button>
-                        <button className="btn btn-danger btn-4" id="cancelButton" onClick={() => window.location.replace('localhost:3000/ProfilePage')}>Cancel</button>
+                        <button type="button" className="btn btn-danger btn-4" id="saveButton" onClick={() => this.submitChanges()}>Save Changes</button>
+                        <button type="button" className="btn btn-link" id="cancelButton" onClick={() => this.cancelChanges()}>Cancel</button>
                     </form>
                 </div>
-            </div>
+            </div >
         )
 
     }
