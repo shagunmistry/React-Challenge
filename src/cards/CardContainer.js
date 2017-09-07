@@ -34,10 +34,6 @@ class CardContainer extends Component {
     }
 
     componentWillMount() {
-        //   console.log("Component Will Mount: ");
-    }
-
-    componentDidMount() {
         //Get the data
         var referThis = this;
         var videosRef = dataRef.ref('posts/');
@@ -79,7 +75,7 @@ class CardContainer extends Component {
 
         return (
             <div id="bodyType">
-                {usedArray.map(data => <SingleCardContainer {...data} key={data.uniqueKey} />)
+                {usedArray.map((data,i) => <SingleCardContainer {...data} key={data.uniqueKey+i} />)
                 }
             </div>
         );

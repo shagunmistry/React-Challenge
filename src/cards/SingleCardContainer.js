@@ -24,7 +24,6 @@ class SingleCardContainer extends Component {
         this.dislikeButton = this.dislikeButton.bind(this);
         this.componentWillMount = this.componentWillMount.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
-        this.statCheck = this.statCheck.bind(this);
     }
 
     /**
@@ -46,8 +45,8 @@ class SingleCardContainer extends Component {
         */
         var likeNumber, referThis = this, newLikeNumber;
         if (this.state.activeUser) {
+            var firstTimeLike = false;
             //user is logged in so they can like the video. 
-
             //Get the original like from the database. 
             databaseRef.ref('posts/' + uniqueKey).on('value', function (snapshot) {
                 likeNumber = snapshot.val().likes;
@@ -56,21 +55,17 @@ class SingleCardContainer extends Component {
             //Check if the user has already liked it
             //If so, unlike it. If not, like it. <-- do this in the same method. 
             databaseRef.ref('statkeeper/' + this.state.activeUserID + '/' + uniqueKey).on('value', function (snapshot) {
-                console.log("StatKeeper: " + snapshot.val().like + "\n" + snapshot.val().dislike + "\n" + snapshot.val().challenge);
-                if (!(snapshot.val().like)) {
-                    //increment the number by 1.
-                    newLikeNumber = likeNumber + 1;
-                } else {
-                    newLikeNumber = likeNumber - 1;
-                }
             });
-            setInterval(function () {
+
+            //After the database calls have been made, update the new like number. 
+            setTimeout(function () {
                 var updates = {};
                 updates['posts/' + uniqueKey + '/likes'] = newLikeNumber;
                 //Update it in the database
                 databaseRef.ref().update(updates);
             }, 2000);
-            
+
+
         } else {
             //They have not logged in so tell them to log in. 
             window.alert('Please log in to like!');
@@ -109,16 +104,6 @@ class SingleCardContainer extends Component {
             document.getElementById('dislikeNumber').innerText = snapshot.val().dislikes;
             document.getElementById('challengeNumber').innerText = snapshot.val().challenges;            
         }); */
-    }
-
-    /**
-     * Check if the user has already liked/disliked/challenged the post's user. 
-     */
-    statCheck(userid, uniquePostKey) {
-        var referThis = this;
-        //See if the user has already liked it. If so, set the state to that. 
-        //Structure: statkeeper --> userid --> uniquePostKey --> like / dislike / challenge <-- booleans
-
     }
 
     //We will have to pass down the states from CardContainer as props to this so that they get updated in real-time *fingers-crossed*
