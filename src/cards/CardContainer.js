@@ -75,7 +75,8 @@ class CardContainer extends Component {
 
         return (
             <div id="bodyType">
-                {usedArray.map((data,i) => <SingleCardContainer {...data} key={data.uniqueKey+i} />)
+                {
+                    usedArray.map((data,i) => <SingleCardContainer {...data} key={data.uniqueKey+i+i} />)
                 }
             </div>
         );

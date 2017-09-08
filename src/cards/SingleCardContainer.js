@@ -5,6 +5,7 @@ import {
     TimeDivider, VolumeMenuButton, BigPlayButton
 } from 'video-react';
 import ModalContainer from '../cards/ModalContainer';
+import SocialButtonComponent from '../buttons/SocialButtonComponent';
 
 import { firebaseApp } from '../firebase/Firebase';
 var databaseRef = firebaseApp.database();
@@ -19,62 +20,11 @@ class SingleCardContainer extends Component {
             dislike: false,
             challenge: false
         });
-        this.likeButton = this.likeButton.bind(this);
-        this.challengeButton = this.challengeButton.bind(this);
-        this.dislikeButton = this.dislikeButton.bind(this);
+
         this.componentWillMount = this.componentWillMount.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
     }
 
-    /**
-     * Use the unique key of each post to distinguish from one another. 
-     * 
-     */
-    likeButton(uniqueKey) {
-        //First you have to get the likes numbers from database, assign it to a variable, then add to that when the user 
-        //clicks on it and then use that to update the new like in the database. 
-        /* To check if the user has already liked the video before, create a new node in the database
-        * 'userLikes' and then everytime a user likes something, add the post's uniquekey under that user's id. .
-        * Whenever they click on a "Like" button, go through that list as well and if they have liked it, 
-        * remove it from that and decrease the counter by 1.
-        * If they have NOT liked it, increase the counter by 1. 
-        * Also, you will want to set up the feature where if the user has already liked it, 
-        * go through the loggedIn user's id and then change the color of like button to something else. 
-        * 
-        * ALSO.. Make sure that the user can only like or dislike. Not both. 
-        */
-        var likeNumber, referThis = this, newLikeNumber;
-        if (this.state.activeUser) {
-            var firstTimeLike = false;
-            //user is logged in so they can like the video. 
-            //Get the original like from the database. 
-            databaseRef.ref('posts/' + uniqueKey).on('value', function (snapshot) {
-                likeNumber = snapshot.val().likes;
-            });
-
-            //Check if the user has already liked it
-            //If so, unlike it. If not, like it. <-- do this in the same method. 
-            databaseRef.ref('statkeeper/' + this.state.activeUserID + '/' + uniqueKey).on('value', function (snapshot) {
-            });
-
-            //After the database calls have been made, update the new like number. 
-            setTimeout(function () {
-                var updates = {};
-                updates['posts/' + uniqueKey + '/likes'] = newLikeNumber;
-                //Update it in the database
-                databaseRef.ref().update(updates);
-            }, 2000);
-
-
-        } else {
-            //They have not logged in so tell them to log in. 
-            window.alert('Please log in to like!');
-        }
-    }
-    challengeButton() {
-    }
-    dislikeButton() {
-    }
 
     //Check if the user is logged in and then setState if he/she is. If not, they won't be able to like/dislike/challenge.
     componentWillMount() {
@@ -121,16 +71,25 @@ class SingleCardContainer extends Component {
                             <div id="videoInfoSection">
                                 <div className="row" id="buttonContainerRow">
                                     <div className="col-md-4 col-xs-6 col-sm-4">
-                                        <a className="supportButtons" onClick={() => this.likeButton(this.props.uniqueKey)} role="button"><i className="fa fa-thumbs-up"></i></a>
-                                        <p id="likeNumber" >{likes}</p>
+                                        <SocialButtonComponent buttonType="like" 
+                                        activeUserID={this.state.activeUserID}  activeUser={this.state.activeUser}
+                                        userid={userid} 
+                                        like={likes} 
+                                        uniqueKey={uniqueKey} />
                                     </div>
                                     <div className="col-md-4 col-xs-6 col-sm-4">
-                                        <a className="supportButtons" onClick={() => this.challengeButton()} role="button"><i className="fa fa-shield"></i></a>
-                                        <p id="challengeNumber">{challenges}</p>
+                                        <SocialButtonComponent buttonType="challenge"  
+                                        activeUserID={this.state.activeUserID} activeUser={this.state.activeUser}
+                                        userid={userid} 
+                                        challenges={challenges} 
+                                        uniqueKey={uniqueKey} />
                                     </div>
                                     <div className="col-md-4 col-xs-6 col-sm-4">
-                                        <a className="supportButtons" onClick={() => this.dislikeButton()} role="button"><i className="fa fa-thumbs-down"></i></a>
-                                        <p id="dislikeNumber">{dislikes}</p>
+                                        <SocialButtonComponent buttonType="dislike" 
+                                        activeUserID={this.state.activeUserID}  activeUser={this.state.activeUser}
+                                        userid={userid} 
+                                        dislikes={dislikes} 
+                                        uniqueKey={uniqueKey} />
                                     </div>
                                 </div>
                                 <div id="commentSection">
