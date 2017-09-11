@@ -59,7 +59,7 @@ class SingleCardContainer extends Component {
     //We will have to pass down the states from CardContainer as props to this so that they get updated in real-time *fingers-crossed*
 
     render() {
-        const { userid, likes, dislikes, challenges, profilePic, videoCategory, videoDesc, videoTitle, videoURL, uniqueKey } = this.props;
+        const { userid, profilePic, videoCategory, videoDesc, videoTitle, videoURL, uniqueKey } = this.props;
         return (
             <div className="container">
                 <div className="card" id="generalCard">
@@ -74,21 +74,18 @@ class SingleCardContainer extends Component {
                                         <SocialButtonComponent buttonType="like" 
                                         activeUserID={this.state.activeUserID}  activeUser={this.state.activeUser}
                                         userid={userid} 
-                                        like={likes} 
                                         uniqueKey={uniqueKey} />
                                     </div>
                                     <div className="col-md-4 col-xs-6 col-sm-4">
                                         <SocialButtonComponent buttonType="challenge"  
                                         activeUserID={this.state.activeUserID} activeUser={this.state.activeUser}
                                         userid={userid} 
-                                        challenges={challenges} 
                                         uniqueKey={uniqueKey} />
                                     </div>
                                     <div className="col-md-4 col-xs-6 col-sm-4">
                                         <SocialButtonComponent buttonType="dislike" 
                                         activeUserID={this.state.activeUserID}  activeUser={this.state.activeUser}
                                         userid={userid} 
-                                        dislikes={dislikes} 
                                         uniqueKey={uniqueKey} />
                                     </div>
                                 </div>

@@ -122,15 +122,12 @@ class UploadVideo extends Component {
             /**
              * Upload the uploaded video information to the Firebase DATABASE.
              */
-            var personalPageUpload = databaseRef.ref('videos/' + userUID + '/uploaded_videos/').push();
-            personalPageUpload.set({
+            var videoUserIDUpload = databaseRef.ref('videos/' + userUID + '/uploaded_videos/').push();
+            videoUserIDUpload.set({
                 videoURL: downloadURL,
                 videoTitle: title,
                 videoDesc: description,
-                videoCategory: category,
-                likes: 0,
-                dislikes: 0,
-                challenges: 0
+                videoCategory: category
             });
 
             /**
@@ -143,11 +140,20 @@ class UploadVideo extends Component {
                 videoTitle: title,
                 videoDesc: description,
                 videoCategory: category,
-                likes: 0,
-                dislikes: 0,
-                challenges: 0,
                 userid: userUID
             });
+            /**
+             * Upload the likes/dislikes/challenge stats to status/key/---
+             * This helps refresh the numbers in real time on page
+             */
+            var keyToUploadUnder = newVideoRef.key;
+            var statsUpload = databaseRef.ref('stats/'+keyToUploadUnder+'/');
+            statsUpload.set({
+                likes:0, 
+                dislikes: 0, 
+                challenges: 0
+            });
+
 
             window.location.replace('http://localhost:3000/');
         });

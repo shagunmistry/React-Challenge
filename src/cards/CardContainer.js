@@ -41,9 +41,6 @@ class CardContainer extends Component {
             snapshot.forEach(function (data) {
                 //Store each value into an name-based object. 
                 userInfo.userid = data.val().userid;
-                userInfo.likes = data.val().likes;
-                userInfo.dislikes = data.val().dislikes;
-                userInfo.challenges = data.val().challenges;
                 userInfo.profilePic = data.val().profilePic;
                 userInfo.videoCategory = data.val().videoCategory;
                 userInfo.videoDesc = data.val().videoDesc;
