@@ -21,7 +21,8 @@ class UploadVideo extends Component {
         this.state = {
             filesToBeSent: [],
             videoURL: "",
-            downloadProgress: 0
+            downloadProgress: 0,
+            profilePic: ""
         }
         // this.handleChange = this.handleChange.bind(this);
         this.onDrop = this.onDrop.bind(this);
@@ -29,6 +30,31 @@ class UploadVideo extends Component {
         this.submitChallenge = this.submitChallenge.bind(this);
         this.randomString = this.randomString.bind(this);
     }
+
+    /*
+    *Get the user's login Information and if they are logged in, get their profile pic information.
+    */
+    componentWillMount() {
+        var referThis = this;
+        firebaseApp.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                //user has signed in so get their User UID string
+                userUID = user.uid;
+                databaseRef.ref('/users/' + userUID).on('value', function (snapshot) {
+                    referThis.setState({
+                        profilePic: snapshot.val().profile_picture
+                    })
+                });
+
+            } else {
+                //user not logged in.
+                window.alert("Please sign in first in order to upload a video");
+                window.location.replace("http://localhost:3000/ProfileCheck");
+
+            }
+        });
+    }
+
 
     /**
      * ONDROP() - checks whether or not the chosen file is acceptable and then uploads it to Firebase Storage. 
@@ -82,12 +108,11 @@ class UploadVideo extends Component {
      * Sumbit the whole challenge by uploading to storage as well as writing values to database 
      */
     submitChallenge() {
+        var referThis = this;
         //get the TITLE, DESCRIPTION, and CATEGORY
-        var title = document.getElementById('videoTitle').value;
-        var description = document.getElementById('challengeDescription').value;
+        var title = document.getElementById('videoTitle').value, description = document.getElementById('challengeDescription').value;
         //get the radio button chosen
-        var category;
-        var e = document.getElementById('categoryPicker');
+        var category, e = document.getElementById('categoryPicker');
         category = e.options[e.selectedIndex].text;
 
         //name of the file uploaded.
@@ -109,7 +134,7 @@ class UploadVideo extends Component {
                     console.log(videoRef.fullPath);
                     break;
             }
-            console.log('Upload is ' + progress + '% done');
+            //console.log('Upload is ' + progress + '% done');
             document.getElementById('submitButton').innerText = Math.ceil(progress) + "%";
         }, function (error) {
             window.alert("Upload Unsuccessfull. Please try again later! " + error.message);
@@ -140,17 +165,18 @@ class UploadVideo extends Component {
                 videoTitle: title,
                 videoDesc: description,
                 videoCategory: category,
-                userid: userUID
+                userid: userUID, 
+                profilePic: referThis.state.profilePic
             });
             /**
              * Upload the likes/dislikes/challenge stats to status/key/---
              * This helps refresh the numbers in real time on page
              */
             var keyToUploadUnder = newVideoRef.key;
-            var statsUpload = databaseRef.ref('stats/'+keyToUploadUnder+'/');
+            var statsUpload = databaseRef.ref('stats/' + keyToUploadUnder + '/');
             statsUpload.set({
-                likes:0, 
-                dislikes: 0, 
+                likes: 0,
+                dislikes: 0,
                 challenges: 0
             });
 
@@ -160,24 +186,15 @@ class UploadVideo extends Component {
 
         //empty out array after everything is done. 
         this.emptyArray();
-
     }
+
+
+
 
     render() {
 
         function initApp() {
-            firebaseApp.auth().onAuthStateChanged(function (user) {
-                if (user) {
-                    //user has signed in so get their User UID string
-                    userUID = user.uid;
-                    console.log("User UID: " + userUID);
-                } else {
-                    //user not logged in.
-                    window.alert("Please sign in first in order to upload a video");
-                    window.location.replace("http://localhost:3000/ProfileCheck");
 
-                }
-            });
         }
         //load the initApp that checks user status on page load
         window.addEventListener('load', function () {

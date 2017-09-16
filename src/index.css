@@ -197,8 +197,10 @@ button{
 #commentSection{
 	float: left;
 }
-#buttonContainerRow{
-
+#singleCardProfilePic{
+	height: 100px;
+	width: 85px;
+	border-radius: 15%;
 }
 /****************************************Challenges Page****************************************/
 .groupCard{

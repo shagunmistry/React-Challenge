@@ -66,31 +66,30 @@ class SingleCardContainer extends Component {
                     <div className="card-text">
                         <div id="singleVideoContainer">
                             <h3>{videoTitle}</h3>
-                            <p> {userid}</p><p>{uniqueKey}</p>
                             <Player poster="" src={videoURL}></Player>
                             <div id="videoInfoSection">
                                 <div className="row" id="buttonContainerRow">
                                     <div className="col-md-4 col-xs-6 col-sm-4">
-                                        <SocialButtonComponent buttonType="like" 
-                                        activeUserID={this.state.activeUserID}  activeUser={this.state.activeUser}
-                                        userid={userid} 
-                                        uniqueKey={uniqueKey} />
+                                        <SocialButtonComponent buttonType="like"
+                                            activeUserID={this.state.activeUserID} activeUser={this.state.activeUser}
+                                            userid={userid}
+                                            uniqueKey={uniqueKey} />
                                     </div>
                                     <div className="col-md-4 col-xs-6 col-sm-4">
-                                        <SocialButtonComponent buttonType="challenge"  
-                                        activeUserID={this.state.activeUserID} activeUser={this.state.activeUser}
-                                        userid={userid} 
-                                        uniqueKey={uniqueKey} />
+                                        <SocialButtonComponent buttonType="challenge"
+                                            activeUserID={this.state.activeUserID} activeUser={this.state.activeUser}
+                                            userid={userid}
+                                            uniqueKey={uniqueKey} />
                                     </div>
                                     <div className="col-md-4 col-xs-6 col-sm-4">
-                                        <SocialButtonComponent buttonType="dislike" 
-                                        activeUserID={this.state.activeUserID}  activeUser={this.state.activeUser}
-                                        userid={userid} 
-                                        uniqueKey={uniqueKey} />
+                                        <SocialButtonComponent buttonType="dislike"
+                                            activeUserID={this.state.activeUserID} activeUser={this.state.activeUser}
+                                            userid={userid}
+                                            uniqueKey={uniqueKey} />
                                     </div>
                                 </div>
                                 <div id="commentSection">
-                                    <p>{videoCategory}</p>
+                                    <img src={profilePic} alt="Profile Pic" id="singleCardProfilePic"/>
                                 </div>
                             </div>
                         </div>
