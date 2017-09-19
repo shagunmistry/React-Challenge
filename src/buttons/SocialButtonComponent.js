@@ -14,7 +14,7 @@ class SocialButtonComponent extends Component {
         });
         this.likeButton = this.likeButton.bind(this);
         this.challengeButton = this.challengeButton.bind(this);
-        this.showModal = this.showModal.bind(this);
+        this.showModal = this.showModal.bind(this); this.closeModal = this.closeModal.bind(this);
         this.dislikeButton = this.dislikeButton.bind(this);
         this.componentWillMount = this.componentWillMount.bind(this);
     }
@@ -164,8 +164,12 @@ class SocialButtonComponent extends Component {
     }
 
     //Show Modal
-    showModal(){
+    showModal() {
         this.refs.modal.show();
+    }
+    //Close Modal
+    closeModal() {
+        this.refs.modal.hide();
     }
 
 
@@ -175,11 +179,85 @@ class SocialButtonComponent extends Component {
      * Also, pass in something to Upload video page so that it looks different if its an upload. 
      * @param {*} uniqueKey 
      */
-    challengeButton(uniqueKey, decision) {
-        var originalChallengeNum, newChallengeNum;
+    challengeButton(uniqueKey) {
+        var originalChallengeNum, newChallengeNum, referThis = this, challengerUserID = referThis.props.activeUserID;
+
         //Check if they are logged in
         if (this.props.activeUser) {
+            //Make Sure user can't challenge ThemSelves!
+            //Challenges --> UniqueKey --> ChallengerUserID --> videoURL ... HIT1 ... HIT2
+            
+            //Check if the user has already challenged the person first. 
+            var checkChallengeStatus = databaseRef.ref('challenges/' + uniqueKey);
+            checkChallengeStatus.once('value', function (snapshot) {                
+                if (!snapshot.exists()) {
+                    //If there are currently no challenges, create one under this user. 
+                    checkChallengeStatus.child(challengerUserID).set({
+                        //Set the fields 
+                        challengerVideo: "", 
+                        challengerUniqueKey: "",
+                        challengedHits: 0, 
+                        challengerHits: 0
+                    }).then(
+                        console.log("Challenger user has been set up. ")
+                        
+                    )
+                   
+                }else{
+                    //There have already been challenges to this video by either this user or others before. 
+                    snapshot.forEach(function (childSnapshot) {
+                        if (challengerUserID == (childSnapshot.key)) {
+                            //The challenge already exists
+                            window.alert("You have already challenged this video");
 
+                        } else {
+                            //Challenge does not already exist so create a new one. 
+                            checkChallengeStatus.child(challengerUserID).set({
+                                //Set the fields 
+                                challengerVideo: "", 
+                                challengerUniqueKey: "",
+                                challengedHits: 0, 
+                                challengerHits: 0
+                            }).then(
+                                console.log("Challenger user has been set up. ")
+                            )
+                        }
+                    })
+                }
+
+
+            })
+
+            /*).then(function (snapshot) {
+                    //Go through the list of the USERIds
+                    
+                    //If the challenge does not exist, push out a new one to this DatabaseRef 
+                    if (snapshot.val() == null) {
+                        //Push out a new Challenge
+                        var newChallengeRef = databaseRef.ref('challenges/');
+                        newChallengeRef.child(uniqueKey).set({
+                            challengeOneHits: 0,
+                            challengeTwoHits: 0
+                        }).then(
+                            window.alert("New Challenge Created")
+                            );
+                        //Add the Video Information In it
+                        var addUserInfo = databaseRef.ref('challenges/' + uniqueKey);
+                        addUserInfo.child('UserOneID').set({
+                            userid: referThis.props.userid
+                        }).then(
+                            window.alert("User ONE has been set up")
+                            )
+                        //Add the Second User Information In
+                        addUserInfo.child('UserTwoID').set({
+                            userid: referThis.props.activeUserID,
+                            //And then once this user uploads a video, update this: 
+                            challengeVideo: ""
+                        }).then(
+                            window.alert("User TWO has been set up")
+                        )
+            }
+        })*/
 
         }
 
@@ -188,12 +266,13 @@ class SocialButtonComponent extends Component {
 
 
     render() {
+
         if (this.props.buttonType == "like") {
             return (
                 <div>
                     <a className="supportButtons" onClick={() => this.likeButton(this.props.uniqueKey)} role="button"><i className="fa fa-thumbs-up"></i></a>
                     <p id="likeNumber">{this.state.likes}</p>
-                    
+
                 </div>
             )
         } else if (this.props.buttonType == "challenge") {
@@ -203,10 +282,10 @@ class SocialButtonComponent extends Component {
                     <p id="challengeNumber">{this.state.challenges}</p>
                     <Modal ref="modal">
                         <h4>Are you sure you want to challenge this person?</h4>
-                        <button type="button" className="btn btn-lg btn-danger" 
-                        onClick={() => this.challengeButton(this.props.uniqueKey, true)} >Challenge</button>
+                        <button type="button" className="btn btn-lg btn-danger"
+                            onClick={() => this.challengeButton(this.props.uniqueKey)} >Challenge</button>
                         <button type="button" className="btn btn-lg btn-secondary"
-                        onClick={() => this.challengeButton(this.props.uniqueKey, false)}> Cancel </button>
+                            onClick={() => this.closeModal()}> Cancel </button>
                     </Modal>
                 </div>
             );
