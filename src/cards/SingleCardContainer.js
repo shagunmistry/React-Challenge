@@ -79,7 +79,7 @@ class SingleCardContainer extends Component {
                                         <SocialButtonComponent buttonType="challenge"
                                             activeUserID={this.state.activeUserID} activeUser={this.state.activeUser}
                                             userid={userid}
-                                            uniqueKey={uniqueKey} />
+                                            uniqueKey={uniqueKey} profilePic={profilePic}/>
                                     </div>
                                     <div className="col-md-4 col-xs-6 col-sm-4">
                                         <SocialButtonComponent buttonType="dislike"
