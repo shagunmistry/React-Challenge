@@ -4,6 +4,11 @@
  * The person who was the one to challenge the Original User, his video will show on the right. 
  * There will be a status bar on the bottom which shows who is winning. 
  * 
+ * 
+ * ********************************
+ * NEED TO CHANGE HOW THE VIDEOS ARE LOADED. IT WOULD BE MUCH BETTER IF THE TECHNIQUE WAS SIMILAR TO HOW
+ * SINGLE CARD CONTAINER IS LOADED!
+ * 
  */
 import React, { Component } from 'react';
 import {

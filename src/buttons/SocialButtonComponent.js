@@ -186,7 +186,11 @@ class SocialButtonComponent extends Component {
 
     //Show Modal
     showModal() {
-        this.refs.modal.show();
+        if(this.props.activeUser){
+            this.refs.modal.show();            
+        }else{
+            window.alert("Please log in to Challenge the user");                
+        }
     }
     //Close Modal
     closeModal() {
@@ -221,14 +225,14 @@ class SocialButtonComponent extends Component {
                             challengedHits: 0,
                             challengerHits: 0
                         }).then(
-                            referThis.submitChallenge()
+                            referThis.submitChallenge(uniqueKey)
                             )
 
                     } else {
                         //There have already been challenges to this video by either this user or others before. 
                         snapshot.forEach(function (childSnapshot) {
                             if (challengerUserID == (childSnapshot.key)) {
-                                //The challenge already exists
+                                //The challenge between this video and the user already exists
                                 window.alert("You have already challenged this video");
 
                             } else {
@@ -280,7 +284,7 @@ class SocialButtonComponent extends Component {
     /**
     * Sumbit the whole challenge by uploading to storage as well as writing values to database 
     */
-    submitChallenge() {
+    submitChallenge(uniqueKey) {
         var referThis = this;
         //get the TITLE, DESCRIPTION, and CATEGORY
         var title = document.getElementById('videoTitle').value, description = document.getElementById('challengeDescription').value;
@@ -342,11 +346,11 @@ class SocialButtonComponent extends Component {
                 videoDesc: description,
                 videoCategory: category,
                 userid: referThis.props.activeUserID,
-                profilePic: ""
+                profilePic: referThis.props.profilePicURL
             });
-            var updateProfiles =[];
-            updateProfiles['posts/' + newVideoRef.key + '/profilePic'] = referThis.props.profilePic;
-            databaseRef.ref().update(updateProfiles);
+            /*     var updateProfiles =[];
+                 updateProfiles['posts/' + newVideoRef.key + '/profilePic'] = referThis.props.profilePic;
+                 databaseRef.ref().update(updateProfiles); */
             /**
              * Upload the likes/dislikes/challenge numbers to status/key/---
              * This helps refresh the numbers in real time on page
@@ -363,10 +367,10 @@ class SocialButtonComponent extends Component {
              * Update the CHALLENGE HITS and ChallengerVideo / ChallengerUniqueKey
              */
             var updates = {};
-            updates['challenges/' + keyToUploadUnder + '/' + referThis.props.activeUserID + '/challengerUniqueKey'] = keyToUploadUnder;
-            updates['challenges/' + keyToUploadUnder + '/' + referThis.props.activeUserID + '/challengerVideo'] = downloadURL;
-            updates['challenges/' + keyToUploadUnder + '/' + referThis.props.activeUserID + '/challengedHits'] = 0;
-            updates['challenges/' + keyToUploadUnder + '/' + referThis.props.activeUserID + '/challengerHits'] = 0;
+            updates['challenges/' + uniqueKey + '/' + referThis.props.activeUserID + '/challengerUniqueKey'] = keyToUploadUnder;
+            updates['challenges/' + uniqueKey + '/' + referThis.props.activeUserID + '/challengerVideo'] = downloadURL;
+            updates['challenges/' + uniqueKey + '/' + referThis.props.activeUserID + '/challengedHits'] = 0;
+            updates['challenges/' + uniqueKey + '/' + referThis.props.activeUserID + '/challengerHits'] = 0;
             databaseRef.ref().update(updates);
 
             //Replace the location to the homepage -- FOR NOW, change it later. 
@@ -419,7 +423,7 @@ class SocialButtonComponent extends Component {
                     <p id="challengeNumber">{this.state.challenges}</p>
                     <Modal ref="modal" modalStyle={modalStyle}>
                         <div className="card uploadCard">
-                            <div className="card-block">
+                            <div className="card-block">      
                                 <form>
                                     <h2 className="form-signin-heading text-center" id="CardHeader">Upload Challenge Video</h2>
                                     <hr />
