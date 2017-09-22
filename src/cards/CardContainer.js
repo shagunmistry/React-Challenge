@@ -56,13 +56,13 @@ class CardContainer extends Component {
             referThis.setState({
                 usedArray: userArray
             })
+           // console.log(referThis.state.usedArray);
         });
     }
 
 
     render() {
         function initApp() {
-            //console.log("Init App()");
         }
         window.addEventListener('load', function () {
             initApp()

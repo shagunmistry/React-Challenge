@@ -1,7 +1,6 @@
 /**
- * Need to Update How a profile Picture get's updated (Make sure it's the user who uploads the challenge not who gets challenged)
- * Also, For some reason, it posts a video right way but when it creates a challenge, it creates an empty one under the Challenged User's Key
- * And then creates a Filled-out challenge under the Challenger USer's Key .... 
+ * 
+ * 
  */
 import React, { Component } from 'react';
 import { firebaseApp } from '../firebase/Firebase';
@@ -188,8 +187,8 @@ class SocialButtonComponent extends Component {
     showModal() {
         if(this.props.activeUser){
             this.refs.modal.show();            
-        }else{
-            window.alert("Please log in to Challenge the user");                
+        }else {
+            window.alert("Please log in to challenge this person!");                
         }
     }
     //Close Modal
@@ -252,10 +251,10 @@ class SocialButtonComponent extends Component {
 
 
                 })
-            }
-        } else {
+            }else {
             window.alert("You can not challenge you own video");
         }
+    }
     }
 
     /**

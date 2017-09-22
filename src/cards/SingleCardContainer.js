@@ -18,7 +18,8 @@ class SingleCardContainer extends Component {
             activeUserID: "",
             like: false,
             dislike: false,
-            challenge: false
+            challenge: false,
+            activeProfilePic: ""
         });
 
         this.componentWillMount = this.componentWillMount.bind(this);
@@ -32,10 +33,14 @@ class SingleCardContainer extends Component {
         var referThis = this;
         firebaseApp.auth().onAuthStateChanged(function (user) {
             if (user) {
-                referThis.setState({
-                    activeUser: true,
-                    activeUserID: user.uid
-                })
+                var activeUserid = user.uid;
+                databaseRef.ref('/users/' + activeUserid).on('value', function (snapshot) {
+                    referThis.setState({
+                        activeProfilePic: snapshot.val().profile_picture,
+                        activeUser: true,
+                        activeUserID: activeUserid
+                    });
+                });
             } else {
                 referThis.setState({
                     activeUser: false
@@ -79,7 +84,7 @@ class SingleCardContainer extends Component {
                                         <SocialButtonComponent buttonType="challenge"
                                             activeUserID={this.state.activeUserID} activeUser={this.state.activeUser}
                                             userid={userid}
-                                            uniqueKey={uniqueKey} profilePicURL={profilePic}/>
+                                            uniqueKey={uniqueKey} profilePicURL={this.state.activeProfilePic}/>
                                     </div>
                                     <div className="col-md-4 col-xs-6 col-sm-4">
                                         <SocialButtonComponent buttonType="dislike"

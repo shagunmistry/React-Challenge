@@ -51,6 +51,7 @@ class ChallengesCard extends Component {
     hideModal() {
         this.refs.modal.hide();
     }
+    
 
     componentDidMount(likes, dislikes, challenges) {
         likes = parseInt(this.state.likes);
