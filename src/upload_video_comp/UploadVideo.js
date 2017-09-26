@@ -1,7 +1,7 @@
 /**
  * Allows the user to upload their Skill video if they are logged in. If not, lead to Login screen .
  */
-/**************************DON'T FORGET TO ADD THE PROFILE PIC INFORMATION*****************/
+/*****PULL IN THE USER'S NAME SO THAT YOU CAN SHOW IT ON THE CARD CONTAINERS" */
 import React, { Component } from 'react';
 //Default firebase App 
 import { firebaseApp } from '../firebase/Firebase';
@@ -22,7 +22,8 @@ class UploadVideo extends Component {
             filesToBeSent: [],
             videoURL: "",
             downloadProgress: 0,
-            profilePic: ""
+            profilePic: "",
+            userName: ""
         }
         // this.handleChange = this.handleChange.bind(this);
         this.onDrop = this.onDrop.bind(this);
@@ -42,7 +43,8 @@ class UploadVideo extends Component {
                 userUID = user.uid;
                 databaseRef.ref('/users/' + userUID).on('value', function (snapshot) {
                     referThis.setState({
-                        profilePic: snapshot.val().profile_picture
+                        profilePic: snapshot.val().profile_picture,
+                        userName: snapshot.val().username
                     })
                 });
 
@@ -166,7 +168,8 @@ class UploadVideo extends Component {
                 videoDesc: description,
                 videoCategory: category,
                 userid: userUID, 
-                profilePic: referThis.state.profilePic
+                profilePic: referThis.state.profilePic,
+                userName: referThis.state.userName
             });
             /**
              * Upload the likes/dislikes/challenge stats to status/key/---

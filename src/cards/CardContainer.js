@@ -5,6 +5,7 @@
  */
 import React, { Component } from 'react';
 import Modal from 'boron/WaveModal';
+//For scrolling animation
 
 //Default firebase App 
 import { firebaseApp } from '../firebase/Firebase';
@@ -46,6 +47,7 @@ class CardContainer extends Component {
                 userInfo.videoDesc = data.val().videoDesc;
                 userInfo.videoTitle = data.val().videoTitle;
                 userInfo.videoURL = data.val().videoURL;
+                userInfo.userName = data.val().userName;
                 userInfo.uniqueKey = data.key;
                 //Then push the object into an array.
                 userArray.push(userInfo);

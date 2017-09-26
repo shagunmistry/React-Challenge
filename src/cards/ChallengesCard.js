@@ -3,12 +3,7 @@
  * A person who is challenged, their video will appear on the left. 
  * The person who was the one to challenge the Original User, his video will show on the right. 
  * There will be a status bar on the bottom which shows who is winning. 
- * 
- * 
- * ********************************
- * NEED TO CHANGE HOW THE VIDEOS ARE LOADED. IT WOULD BE MUCH BETTER IF THE TECHNIQUE WAS SIMILAR TO HOW
- * SINGLE CARD CONTAINER IS LOADED!
- * 
+ *  
  */
 import React, { Component } from 'react';
 import {
@@ -16,8 +11,12 @@ import {
     ForwardControl, CurrentTimeDisplay,
     TimeDivider, VolumeMenuButton, BigPlayButton
 } from 'video-react';
+import { firebaseApp } from '../firebase/Firebase';
+import HeartButton from "../buttons/HeartButton";
 
-import Modal from 'boron/WaveModal';
+var databaseRef = firebaseApp.database();
+
+// var ratio = ((likes / (likes + dislikes)) * 100);
 
 /**
  * For the ChallengeButton() == 
@@ -29,174 +28,141 @@ class ChallengesCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            videoURL: this.props.videoURL,
-            likes: this.props.likes,
-            dislikes: this.props.dislikes,
-            challenges: this.props.challenges,
-            title: this.props.title,
-            userid: this.props.userid,
-            userImage: this.props.userImage,
-            progressBarLikes: "",
-            progressBarChallenges: ""
+            challengedUserName: "",
+            challengedVideoURL: "",
+            challengedVideoTitle: "",
+            challengedVideoDesc: "",
+            challengedProfilePic: "",
+
+            challengerUserName: "",
+            challengerVideoURL: "",
+            challengerVideoTitle: "",
+            challengerVideoDesc: "",
+            challengerProfilePic: "",
+            challengerUserID: "",
 
         }
-        this.showModal = this.showModal.bind(this);
-        this.hideModal = this.hideModal.bind(this);
+        this.componentWillMount = this.componentWillMount.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
     }
 
-    showModal() {
-        this.refs.modal.show();
-    }
-    hideModal() {
-        this.refs.modal.hide();
-    }
-    
+    /**
+     * Load all the information from the POSTS/ database by using the keys passed in as props
+     */
+    componentWillMount() {
+        var referThis = this, challengerVideoKey = this.props.challengerUniqueKey, challengedVideoKey = this.props.challengedVideoKey;
 
-    componentDidMount(likes, dislikes, challenges) {
-        likes = parseInt(this.state.likes);
-        dislikes = parseInt(this.state.dislikes);
-        challenges = parseInt(this.state.challenges);
+        //Get the CHALLENGED videos from Post
+        /* var challengedRef = databaseRef.ref('posts/' + challengedVideoKey);
+         challengedRef.on('value', function (snapshot) {
+             referThis.setState({
+                 challengedUserName: snapshot.val().userName,
+                 challengedVideoURL: snapshot.val().videoURL,
+                 challengedVideoTitle: snapshot.val().videoTitle,
+                 challengedVideoDesc: snapshot.val().videoDesc,
+                 challengedProfilePic: snapshot.val().profilePic,
+             });
+         });
+ 
+         //Get the CHALLENGER video info
+         var challengerRef = databaseRef.ref('posts/' + challengerVideoKey);
+         challengerRef.on('value', function (snapshot) {
+             referThis.setState({
+                 challengerUserName: snapshot.val().userName,
+                 challengerVideoURL: snapshot.val().videoURL,
+                 challengerVideoTitle: snapshot.val().videoTitle,
+                 challengerVideoDesc: snapshot.val().videoDesc,
+                 challengerProfilePic: snapshot.val().profilePic,
+                 challengerUserID: snapshot.val().userid,
+             });
+         }); */
 
-        var ratio = ((likes / (likes + dislikes)) * 100);
+        //Trial 1: Set the State for all challenger and challenged variables under one Firebase callback
+        var challengeRef = databaseRef.ref('posts/');
+        //If a key of the snapshot matches that of challengedVidKey, then set the state for Challenged. 
+        //If it matches Challengers, set it to that. 
+        challengeRef.on('value', function (snapshot) {
+            snapshot.forEach(function (childSnapShot) {
+                if (childSnapShot.key === challengedVideoKey) {
+                    //console.log("First IF statement" + snapshot.val().userName);
+                    referThis.setState({
+                        challengedUserName: childSnapShot.val().userName,
+                        challengedVideoURL: childSnapShot.val().videoURL,
+                        challengedVideoTitle: childSnapShot.val().videoTitle,
+                        challengedVideoDesc: childSnapShot.val().videoDesc,
+                        challengedProfilePic: childSnapShot.val().profilePic,
+                    });
+                } else if (childSnapShot.key === challengerVideoKey) {
+                   // console.log("Second IF statement" + childSnapShot.val().userName);
+                    referThis.setState({
+                        challengerUserName: childSnapShot.val().userName,
+                        challengerVideoURL: childSnapShot.val().videoURL,
+                        challengerVideoTitle: childSnapShot.val().videoTitle,
+                        challengerVideoDesc: childSnapShot.val().videoDesc,
+                        challengerProfilePic: childSnapShot.val().profilePic,
+                        challengerUserID: childSnapShot.val().userid,
+                    });
+                } else {
+                    //Do nothing.
+                }
+            });
+        });
 
-        var progressBarArray = [];
-        //create the like/dislike progress div
-        var likeProgressDiv = document.createElement("div");
-        likeProgressDiv.setAttribute("id", "like_progress");
-
-        var likeProgressBarDiv = document.createElement("div");
-        likeProgressBarDiv.className = "progress";
-        //create the actual like/dislike progress bar
-        var likeProgressbar = document.createElement("div");
-        likeProgressbar.className = "progress-bar";
-        //Set up all the attributes: role, style, aria-valuenow, aria-valuemax, aria-valuemin
-        likeProgressbar.setAttribute("role", "progressbar");
-        likeProgressbar.setAttribute("style", "width:" + ratio + "%; height: 7px;");
-        likeProgressbar.setAttribute("aria-valuenow", ratio);
-        likeProgressbar.setAttribute("aria-valuemax", 1000000);
-        likeProgressbar.setAttribute("aria-valuemin", 0);
-        likeProgressbar.setAttribute("id", "like_progress_bar");
-        //create a text to show the numbers below it. 
-        var likesText = document.createElement("p");
-        likesText.innerHTML = "<a id='like_button' ><i class='fa fa-thumbs-up' data-toggle='tooltip' title='I like this'></i></a> " + likes + " <a id='dislike_button'><i class='fa fa-thumbs-down' data-toggle='tooltip' title='I dislike this'></i></a>  " + dislikes;
-        //append the like progress bar back to div. 
-        likeProgressBarDiv.appendChild(likeProgressbar);
-        likeProgressDiv.appendChild(likeProgressBarDiv);
-        likeProgressDiv.appendChild(likesText);
-
-
-        //create the Challenge Progress bar
-        var challengeDiv = document.createElement("div");
-        challengeDiv.setAttribute("id", "challenge_progress");
-
-        var challengeProgressDiv = document.createElement("div");
-        challengeProgressDiv.className = "progress";
-        //create the actual like/dislike progress bar
-        var challengeProgressBar = document.createElement("div");
-        challengeProgressBar.className = "progress-bar";
-        //Set up all the attributes: role, style, aria-valuenow, aria-valuemax, aria-valuemin
-        challengeProgressBar.setAttribute("role", "progressbar");
-        challengeProgressBar.setAttribute("style", "width:" + challenges + "%; height: 7px");
-        challengeProgressBar.setAttribute("aria-valuenow", likes);
-        challengeProgressBar.setAttribute("aria-valuemax", 500);
-        challengeProgressBar.setAttribute("aria-valuemin", 0);
-        challengeProgressBar.setAttribute("id", "challenge_progress_bar");
-        //create a text to show the numbers below it. 
-        var challengeText = document.createElement("p");
-
-        var challengeButtonLink = document.createElement("a"); challengeButtonLink.setAttribute("id", "challenge_button");
-        //Fa Icon Set Up
-        var challengeButtonIcon = document.createElement("i"); challengeButtonIcon.className = "fa fa-shield";
-        challengeButtonIcon.setAttribute("data-toggle", "tooltip");
-        challengeButtonIcon.setAttribute("title", "I want to challenge");
-        challengeButtonIcon.innerText = "\t" + challenges;
-        challengeButtonLink.appendChild(challengeButtonIcon);
-
-        challengeText.appendChild(challengeButtonLink);
-
-        //append the like progress bar back to div. 
-        challengeProgressDiv.appendChild(challengeProgressBar);
-        challengeDiv.appendChild(challengeProgressDiv);
-        challengeDiv.appendChild(challengeText);
-
-        progressBarArray.push(likeProgressDiv);
-        progressBarArray.push(challengeDiv);
-
-        document.getElementById("progressChallenge").appendChild(progressBarArray[0]);
-        document.getElementById("progressChallenge").appendChild(progressBarArray[1]);
-        //return progressBarArray;
     }
 
 
+    componentDidMount() {
+    }
 
     render() {
-
+        //Get all the props
+        const { challengedHits, challengedVideoKey, challengerHits, challengerUniqueKey } = this.props;
         return (
             <div>
                 <div className="container">
                     <div className="card groupCard">
-                        {/********** Each row will have video, profile info   **********/}
-                        <div className="row">
+                        {/*************************CHALLENGED******************/}
+                        <div className="row" id="challengedRow">
                             <div className="col-md-6">
-                                <div id="challengerVideo">
-                                    <Player poster="" src={this.state.videoURL}></Player>
+                                <div className="challengedVideo" id="challengeVideos" >
+                                    <Player poster="" src={this.state.challengedVideoURL}></Player>
                                 </div>
                             </div>
                             <div className="col-md-6">
-                                {   //This contains Pic, Title, and Like Button. 
-                                    <div id="challengerInfo">
-                                        <div className="row">
-                                            <div className="col-md-2" id="challengePicCol">
-                                                <img id="challengerPic" src={this.state.userImage} />
-                                            </div>
-                                            <div className="col-md-7" id="titleInfoCol">
-                                                <h3 id="videoChallengeTitle"><strong>{this.state.title}</strong></h3>
-                                                <p><i>{this.state.userid}</i></p>
-                                            </div>
-                                            <div className="col-md-3" id="likeButtonCol">
-                                                <button type="button" className="btn btn-danger btn-4"><i className="fa fa-bomb"></i> | Like</button>
-                                            </div>
-                                        </div>
-                                    </div>}
-                                {//This contains the Progress Bar statsand Challenge Button. 
-                                    <div id="progressChallenge">
-                                    </div>
-                                }
-                                <div id="challenge_button_place">
-                                    <button type="button" className="btn btn-danger btn-4"><i className="fa fa-bomb"></i> | Challenge</button>
+                                <div id="videoInfoDiv">
+                                    <h4>{this.state.challengedUserName}</h4>
+                                    <p id="videoDescChallengePage"><i className="fa fa-quote-left"></i>{this.state.challengedVideoDesc}<i className="fa fa-quote-right"></i></p>
                                 </div>
+                                <HeartButton 
+                                    key={challengedVideoKey + challengerUniqueKey + "challenged"} 
+                                    challengedKey={challengedVideoKey} whoToHeart="challenged"
+                                    challengerUserID={this.state.challengerUserID}
+                                    challengerKey={challengerUniqueKey}
+                                    challengedHits={challengedHits} challengerHits={challengerHits}
+                                    idName="challengedHitBtn" >
+                                </HeartButton>
                             </div>
+
                         </div>
-                        <hr className="style14" />
-                        <div className="row">
+                        {/*************************CHALLENGER******************/}
+                        <div className="row" id="challengerRow">
                             <div className="col-md-6">
-                                <div id="challengerVideo">
-                                    <Player className="videoChallenge" poster="" src={this.state.videoURL}></Player>
+                                <div id="videoInfoDiv">
+                                    <h4>{this.state.challengerUserName}</h4>
+                                    <p id="videoDescChallengePage"><i className="fa fa-quote-left"></i>{this.state.challengerVideoDesc}<i className="fa fa-quote-right"></i></p>
                                 </div>
+                                <HeartButton 
+                                    key={challengedVideoKey + challengerUniqueKey + "challenger"} 
+                                    challengedKey={challengedVideoKey} whoToHeart="challenger"
+                                    challengerUserID={this.state.challengerUserID}
+                                    challengerKey={challengerUniqueKey}
+                                    challengedHits={challengedHits} challengerHits={challengerHits}
+                                    idName="challengerHitBtn">
+                                </HeartButton>
                             </div>
                             <div className="col-md-6">
-                                {   //This contains Pic, Title, and Like Button. 
-                                    <div id="challengerInfo">
-                                        <div className="row">
-                                            <div className="col-md-2" id="challengePicCol">
-                                                <img id="challengerPic" src={this.state.userImage} />
-                                            </div>
-                                            <div className="col-md-7" id="titleInfoCol">
-                                                <h3 id="videoChallengeTitle"><strong>{this.state.title}</strong></h3>
-                                                <p><i>{this.state.userid}</i></p>
-                                            </div>
-                                            <div className="col-md-3" id="likeButtonCol">
-                                                <button type="button" className="btn btn-danger btn-4"><i className="fa fa-bomb"></i> | Like</button>
-                                            </div>
-                                        </div>
-                                    </div>}
-                                {//This contains the Progress Bar statsand Challenge Button. 
-                                    <div id="progressChallenge2">
-                                    </div>
-                                }
-                                <div id="challenge_button_place">
-                                    <button type="button" className="btn btn-danger btn-4"><i className="fa fa-bomb"></i> | Challenge</button>
+                                <div className="challengerVideo" id="challengeVideos">
+                                    <Player className="videoChallenge" poster="" src={this.state.challengerVideoURL}></Player>
                                 </div>
                             </div>
                         </div>

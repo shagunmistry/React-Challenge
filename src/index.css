@@ -10,6 +10,12 @@ body {
   padding: 0;
   font-family: 'Raleway', sans-serif;
   font-size: 16px;
+  background: url("https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/o/Deer_Wallpaper.jpg?alt=media&token=2299de45-78c8-4d7b-ab4c-4c890ff90d9d") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
 }
 .modal-dialog{
 		position: relative;
@@ -140,7 +146,7 @@ button{
 	height: 250px;
 	max-width: 300px;
 	margin-top: auto;
-	box-shadow: 10px 10px 15px;
+	box-shadow: 5px 0px 2px;
 	background-color: black;
 	margin-right: auto;
 	margin-left: auto;
@@ -167,55 +173,78 @@ button{
 #generalCard{
 	width: 525px;
 	max-height: 900px;
+	overflow-y: visible;
+	border: 2px black solid;
 }
 #singleVideoContainer{
-	height: 550px;
+	min-height: 550px;
+	overflow-y: visible;
 	padding: 3px;
-	background-color: transparent;
 	margin-bottom: 10px;
 	margin-top: 10px;
-	background-color:white;
 	border-radius: 5px;
+	
 }
-#videoInfoSection{
-	height: 75px;
-	padding: 5px;
-}
+
 .supportButtons{
 	color: black;
 	font-size: 25px;
-	transition: all 0.3s ease 0s;	
+	transition: all 0.2s ease 0s;	
 }
 .supportButtons:hover{
-	background-color: red;
-	box-shadow: 10px 10px;
 	border-radius: 5px;
+	border: 2px solid white;
+	color: black;
 	font-size: 30px;
-	color: white;
-
 }
-#commentSection{
-	float: left;
+#vidProfilePicDiv{
+	margin-left: -10px;
 }
 #singleCardProfilePic{
 	height: 100px;
 	width: 85px;
 	border-radius: 15%;
 }
+/**BLOCK_Quote_DESC**/
+blockquote {
+	background:white;
+	border-left: 10px solid red;
+	margin: 2px 2px;
+	padding: 0.5em 10px;
+	quotes: "\201C""\201D""\2018""\2019";
+  }
+  blockquote:before {
+	color: black;
+	content: open-quote;
+	font-size: 4em;
+	line-height: 0.1em;
+	margin-right: 0.25em;
+	vertical-align: -0.4em;
+  }
+  blockquote p {
+	display: inline;
+	color: black;
+  }
+#videoUserName{
+	float: right;
+	font-size: 23px;
+}
+
 /****************************************Challenges Page****************************************/
 .groupCard{
 	max-height: 100%;	
-	background-color: white;
+	border: 2px solid black;
+	min-width: 500px;
 }
-#challengerVideo{
+#challengerRow{
+	background:rgba(20, 255, 255,0.5);
+}
+#challengeVideos{
 	margin: 5px;
 	max-width: 100%;
 }
 #challengerInfo{
 	padding:5px;
-}
-#videoChallengeTitle{
-	margin-top: 0;
 }
 #challengerPic{
 	max-height: 90px;
@@ -227,12 +256,28 @@ button{
 #titleInfoCol{
 	font-size: 15px;
 }
-#challenge_button_place{
-	padding: 10px 10px 10px 10px;
-	float: right;
+#videoDescChallengePage{
+	background: rgba(255, 255, 255, 0.5);
+	font-size: 20px;
 }
-.style14{
-	margin: 1px; 
+#challengedHitBtn{ 
+	padding: 30px;
+	font-size: 40px;
+	background-color: white;
+	color: red;
+	border-radius: 49%;
+	border: 2px solid red;
+}	
+#challengerHitBtn{
+	padding: 30px;
+	font-size: 40px;
+	background-color: white;
+	color: red;
+	border-radius: 49%;
+	border: 2px solid red;
+}
+#challengerHitDiv{
+	padding: 0px;
 }
 /******************************************Login Page************************************/
 .loginSection{

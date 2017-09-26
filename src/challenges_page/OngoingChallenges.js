@@ -47,7 +47,6 @@ class OngoingChallenges extends Component {
                     userInfo.challengedHits = childSnapshot.val().challengedHits;
                     userInfo.challengerHits = childSnapshot.val().challengerHits;
                     userArray.push(userInfo);
-                    console.log(userArray);
 
                     //Empty out userInfo;
                     userInfo = {};
@@ -58,42 +57,6 @@ class OngoingChallenges extends Component {
                 });
             })
         });
-
-        //Figure out how to 
-        var i = 0;
-        for (i = 0; i < referThis.state.secHalfChallengeInfo.length; i++) {
-            var secHalfArray = {};
-            var challengerRefKey = userArray[i].challengerUniqueKey;
-            var challengedRefKey = userArray[i].challengedVideoKey;
-
-            var challengedRef = databaseRef.ref('posts/' + challengedRefKey);
-            var challengerRef = databaseRef.ref('posts/' + challengerRefKey);
-
-            //Get the Challenged Person's video info
-            challengedRef.on('value', function (challengedSnapshot) {
-                secHalfArray.challengedPic = challengedSnapshot.val().profilePic;
-                secHalfArray.challengedUserId = challengedSnapshot.val().userid;
-                secHalfArray.challengedVideoCategory = challengedSnapshot.val().videoCategory;
-                secHalfArray.challengedVideoDesc = challengedSnapshot.val().videoDesc;
-                secHalfArray.challengedVideoTitle = challengedSnapshot.val().videoTitle;
-                secHalfArray.challengedVideoURL = challengedSnapshot.val().videoURL;
-            });
-
-            //Get the Challenger Person's Video Info;
-            challengerRef.on('value', function (challengerSnapshot) {
-                secHalfArray.challengerPic = challengerSnapshot.val().profilePic;
-                secHalfArray.challengerUserId = challengerSnapshot.val().userid;
-                secHalfArray.challengerVideoCategory = challengerSnapshot.val().videoCategory;
-                secHalfArray.challengerVideoDesc = challengerSnapshot.val().videoDesc;
-                secHalfArray.challengerVideoTitle = challengerSnapshot.val().videoTitle;
-                secHalfArray.challengerVideoURL = challengerSnapshot.val().videoURL;
-            });
-
-            referThis.setState({
-                secHalfChallengeInfo: secHalfArray
-            });
-            console.log("Sec Half Array: " + secHalfArray + "\n" + referThis.state.secHalfChallengeInfo);
-        }
     }
 
 
@@ -116,7 +79,7 @@ class OngoingChallenges extends Component {
         return (
             <div>
                 {
-                    arrayToPass.map((data, i) => <ChallengesCard {...data} key={data.uniqueKey + i + i} />)
+                    arrayToPass.map((data) => <ChallengesCard {...data} key={data.challengerUniqueKey+data.challengedVideoKey} />)
                 }
             </div>
         )

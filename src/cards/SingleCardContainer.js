@@ -48,6 +48,7 @@ class SingleCardContainer extends Component {
             }
         });
     }
+    
 
     componentDidMount() {
         //Update the likes/dislikes/challenges everytime they get updated in database. 
@@ -59,12 +60,14 @@ class SingleCardContainer extends Component {
             document.getElementById('dislikeNumber').innerText = snapshot.val().dislikes;
             document.getElementById('challengeNumber').innerText = snapshot.val().challenges;            
         }); */
+   
     }
+
 
     //We will have to pass down the states from CardContainer as props to this so that they get updated in real-time *fingers-crossed*
 
     render() {
-        const { userid, profilePic, videoCategory, videoDesc, videoTitle, videoURL, uniqueKey } = this.props;
+        const { userid, profilePic, videoCategory, videoDesc, videoTitle, videoURL, userName, uniqueKey } = this.props;
         return (
             <div className="container">
                 <div className="card" id="generalCard">
@@ -93,8 +96,12 @@ class SingleCardContainer extends Component {
                                             uniqueKey={uniqueKey} />
                                     </div>
                                 </div>
-                                <div id="commentSection">
+                                <div id="vidProfilePicDiv" className="col-md-4 col-xs-6 col-sm-4">
                                     <img src={profilePic} alt="Profile Pic" id="singleCardProfilePic"/>
+                                </div>
+                                <div id="descriptionDiv" className="col-md-8 col-xs-12 col-sm-8">
+                                    <blockquote><p id="videoDescription">{videoDesc}</p></blockquote>
+                                    <p id="videoUserName">-{userName}</p>
                                 </div>
                             </div>
                         </div>
