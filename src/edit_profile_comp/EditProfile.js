@@ -186,7 +186,7 @@ class EditProfile extends Component {
                 //user not logged in
                 //same as replacing the current location in current window. 
                 window.alert("Please log in");
-                window.location.replace("http://www.beztbaba.com/Profilecheck");
+                window.location.replace("http://localhost:3000/Profilecheck");
             }
         });
     }

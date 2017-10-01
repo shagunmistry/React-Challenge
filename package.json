@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "antd": "^2.13.4",
     "aos": "^2.2.0",
     "axios": "^0.16.2",
     "blob-util": "^1.2.1",

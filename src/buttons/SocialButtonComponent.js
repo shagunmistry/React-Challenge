@@ -1,5 +1,5 @@
 /**
- * 
+ * In the LIKE method, make sure that the .SET is not interfering with the CHALLENGE DATA set. 
  * 
  */
 import React, { Component } from 'react';
@@ -314,7 +314,7 @@ class SocialButtonComponent extends Component {
         }, function (error) {
             //Upload was unsuccessfull so let them try again later and refresh the page. 
             window.alert("Upload Unsuccessfull. Please try again later! " + error.message);
-            window.location.replace('http:localhost:3000/ProfilePage');
+            window.location.replace('http://localhost:3000/ProfilePage');
 
             //empty out array after everything is done. 
             this.emptyArray();

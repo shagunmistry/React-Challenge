@@ -140,7 +140,7 @@ class UploadVideo extends Component {
             document.getElementById('submitButton').innerText = Math.ceil(progress) + "%";
         }, function (error) {
             window.alert("Upload Unsuccessfull. Please try again later! " + error.message);
-            window.location.replace('http:localhost:3000/ProfilePage');
+            window.location.replace('http://localhost:3000/ProfilePage');
             //empty out array after everything is done. 
             this.emptyArray();
         }, function () {

@@ -14,7 +14,6 @@ body {
 }
 	button{
 		 transition: all 0.3s ease 0s;
-		 margin: 3px;
 	}
 	#myPlayer{
 		margin-top:10px;
@@ -40,9 +39,6 @@ body {
 		overflow-x: auto;
 		width: auto;
 		min-width: 300px; 
-	}
-	button{
-		 transition: all 0.3s ease 0s;
 	}
 	.card{
 		transition: 0.5s;

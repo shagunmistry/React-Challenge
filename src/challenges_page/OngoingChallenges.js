@@ -1,16 +1,16 @@
 
 /**
- * ChallengePage will render the ChallengesCards for the list of current trending challenges
- * 
- *FIGURE OUT HOW TO GET THEIR VIDEO INFO AFTER GETTING THEIR UNIQUE KEY 
+ *  -- challengedUniqueKey -- The data can be retrieved but the last uniqueKey in the database is passed to
+ *                            the child Components, not the other prev ones. Those are passed as UNDEFINED
+ *                            ***TURNS OUT WE NEED THIS......
  */
 import React, { Component } from 'react';
 import ChallengesCard from '../cards/ChallengesCard';
-//Defautlt Firebase App
+//Default Firebase App
 import { firebaseApp } from '../firebase/Firebase';
 
 var databaseRef = firebaseApp.database();
-var dataArray = []; var userInfo = {};
+var userInfo = {}, hitsInfo = {}, hitsArray = [];
 var userArray = [];
 var done = false;
 
@@ -18,8 +18,7 @@ class OngoingChallenges extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            firstHalfChallengeInfo: [],
-            secHalfChallengeInfo: []
+            arrayOfChallengeData: []
         }
         this.componentWillMount = this.componentWillMount.bind(this);
     }
@@ -37,49 +36,74 @@ class OngoingChallenges extends Component {
         //Get the data
         var referThis = this, challengedVideoKey = "", challengerVideoKey = "";
         var videosRef = databaseRef.ref('challenges');
-        videosRef.on('value', function (snapshot) {
-            snapshot.forEach(function (data) {
 
-                //Get the challenged Person's video Key
-                userInfo.challengedVideoKey = data.key;
-                data.forEach(function (childSnapshot) {
-                    userInfo.challengerUniqueKey = childSnapshot.val().challengerUniqueKey;
-                    userInfo.challengedHits = childSnapshot.val().challengedHits;
-                    userInfo.challengerHits = childSnapshot.val().challengerHits;
+        //Read the challenges once
+        videosRef.once('value').then(function (snapshot) {
+            snapshot.forEach(function (challengesData) {
+                userInfo = {};
+                //Get the person CHALLENGED's unique Key
+                userInfo.challengedUniqueKey = challengesData.key;
+                hitsInfo.challengedUniqueKey = challengesData.key;
+
+                challengesData.forEach(function (eachChallenge) {
+                    //Get Each Challenge's HITS, uniqueKeys
+                    userInfo.challengerUniqueKey = eachChallenge.val().challengerUniqueKey;
+
+                    hitsInfo.challengedHits = eachChallenge.val().challengedHits;
+                    hitsInfo.challengerHits = eachChallenge.val().challengerHits;
+                    hitsInfo.challengeruserid = eachChallenge.key;
+                    hitsArray.push(hitsInfo);
+                });
+
+                //console.log(hitsArray[0]);
+                //The data is different right now. 
+                //Get the challenger's Information 
+                databaseRef.ref('posts/' + userInfo.challengerUniqueKey).once('value').then(function (challengerSnapshot) {
+
+                    userInfo.challengerProfilePic = challengerSnapshot.val().profilePic;
+                    userInfo.challengeruserName = challengerSnapshot.val().userName;
+                    userInfo.challengervideoDesc = challengerSnapshot.val().videoDesc;
+                    userInfo.challengervideoTitle = challengerSnapshot.val().videoTitle;
+                    userInfo.challengervideoURL = challengerSnapshot.val().videoURL;
+                    userInfo.challengeruserid = challengerSnapshot.val().userid;
+                    //console.log("A: " + userInfo.challengervideoDesc);
+                });
+
+                databaseRef.ref('posts/' + userInfo.challengedUniqueKey).once('value').then(function (challengedSnapShot) {
+                    userInfo.challengedProfilePic = challengedSnapShot.val().profilePic;
+                    userInfo.challengeduserName = challengedSnapShot.val().userName;
+                    userInfo.challengedvideoDesc = challengedSnapShot.val().videoDesc;
+                    userInfo.challengedvideoTitle = challengedSnapShot.val().videoTitle;
+                    userInfo.challengedvideoURL = challengedSnapShot.val().videoURL;
+                    userInfo.challengeduserid = challengedSnapShot.val().userid;
+                    //console.log("B: " + userInfo.challengedvideoDesc);
+
+                }).then(function (onResolve) {
+                    //Set the state to the arrayOfChallengeData after you push userInfo to userArray;
                     userArray.push(userInfo);
-
-                    //Empty out userInfo;
+                    referThis.setState({
+                        arrayOfChallengeData: userArray
+                    });
+                    //Empty it out so the next information can set in.
                     userInfo = {};
                 });
 
-                referThis.setState({
-                    firstHalfChallengeInfo: userArray
-                });
-            })
+                hitsInfo = {};
+            });
         });
+
     }
 
 
     render() {
 
-
-        function initApp() {
-        }
-
-
-        /**
-         * This loads when the page loads (right before renders)
-         */
-        window.addEventListener('load', function () {
-            initApp()
-        });
-
-        var arrayToPass = this.state.firstHalfChallengeInfo;
-
+        var arrayToPass = this.state.arrayOfChallengeData;
         return (
             <div>
                 {
-                    arrayToPass.map((data) => <ChallengesCard {...data} key={data.challengerUniqueKey+data.challengedVideoKey} />)
+                    arrayToPass.map((data, i) => <ChallengesCard {...data} key={data.challengerUniqueKey + i}
+                        hitsInformation={hitsArray[i]}
+                    />)
                 }
             </div>
         )
