@@ -68,6 +68,7 @@ class HeartButton extends Component {
                     console.log(snapshot.val().hearted);
                     if (!snapshot.exists() || !snapshot.val().hearted) {
                         //Do nothing since the person has not hearted it before 
+                        hitButton.style.backgroundColor = "white";
                         hitButton.style.border = "transparent";
                         referThis.setState({
                             challengedHearted: false
@@ -77,7 +78,6 @@ class HeartButton extends Component {
                         hitButton.style.backgroundColor = "transparent";
                         hitButton.style.color = "red";
                         hitButton.style.border = "1px solid white";
-                        hitButton.style.borderRadius = "35%";
                         referThis.setState({
                             challengedHearted: true
                         });
@@ -88,7 +88,9 @@ class HeartButton extends Component {
                     var hitButton = document.getElementById(challengeruserid + challengedUniqueKey);
                     if (!snapshot.exists() || !snapshot.val().hearted) {
                         //Do nothing since the person has not hearted it before 
+                        hitButton.style.backgroundColor = "white";
                         hitButton.style.border = "transparent";
+                        
                         referThis.setState({
                             challengerHearted: false
                         });
@@ -97,7 +99,6 @@ class HeartButton extends Component {
                         hitButton.style.backgroundColor = "transparent";
                         hitButton.style.color = "red";
                         hitButton.style.border = "1px solid white";
-                        hitButton.style.borderRadius = "35%";
                         referThis.setState({
                             challengerHearted: true
                         });
@@ -155,6 +156,13 @@ class HeartButton extends Component {
                     challengedUpdates['statKeeper/' + this.state.activeUserId + '/' + challengedUniqueKey + '/hearted'] = true;
                     //Set the Challenger's status to false so that if they have HEARTED that one before, it dis-hearts it 
                     challengedUpdates['statKeeper/' + this.state.activeUserId + '/' + challengerUniqueKey + '/hearted'] = false;
+                    
+                    //Check if they have hearted the Challenger's video as wel
+                    if(this.state.challengerHearted){
+                        //Decrement that
+                        challengedUpdates['challenges/' + challengedUniqueKey + '/' + challengeruserid + '/challengerHits'] = this.state.challengerHits - 1;
+                    }
+
                     //Set the state to the new challengedHearted
                     referThis.setState({
                         challengedHearted: true,
@@ -186,6 +194,13 @@ class HeartButton extends Component {
                     challengerUpdates['statKeeper/' + this.state.activeUserId + '/' + challengerUniqueKey + '/hearted'] = true;
                     //Set the Challenger's status to false so that if they have HEARTED that one before, it dis-hearts it 
                     challengerUpdates['statKeeper/' + this.state.activeUserId + '/' + challengedUniqueKey + '/hearted'] = false;
+
+                    //Check if they have hearted CHALLENGED vid before
+                    if(this.state.challengedHearted){
+                        //Decrement that
+                        challengerUpdates['challenges/' + challengedUniqueKey + '/' + challengeruserid + '/challengedHits'] = this.state.challengedHits - 1;
+                    }
+
                     //Set the state to the new challengerHearted
                     referThis.setState({
                         challengerHearted: true,

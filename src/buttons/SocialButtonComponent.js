@@ -23,7 +23,7 @@ class SocialButtonComponent extends Component {
             likes: 0,
             dislikes: 0,
             challenges: 0,
-            filesToBeSent: []
+            filesToBeSent: [],
         });
         this.likeButton = this.likeButton.bind(this);
         this.dislikeButton = this.dislikeButton.bind(this);
@@ -47,7 +47,7 @@ class SocialButtonComponent extends Component {
 
         //Go to the database under STATS/ and use the key to get all the information. 
         var statRef = databaseRef.ref('stats/' + key);
-        statRef.once('value').then(function (snapshot) {
+        statRef.on('value', function (snapshot) {
             var dataLikes = snapshot.val().likes;
             var dataDislikes = snapshot.val().dislikes;
             var dataChallenges = snapshot.val().challenges;
@@ -57,125 +57,98 @@ class SocialButtonComponent extends Component {
                 challenges: dataChallenges,
             });
         });
+
     }
 
+    /**
+     * - Like the video based on whether or not they have liked it before or disliked it before. 
+     * @param {*} uniqueKey 
+     */
     likeButton(uniqueKey) {
-        var originalLikes, newLikeNumber, referThis = this;
+        var originalLikes, newLikeNumber, referThis = this, liked = false, disliked = false, updates = {};
+
         //User has logged in.
         if (this.props.activeUser) {
 
-            //Get the Original Like number from Database and update it depending on their like status. 
-            databaseRef.ref('stats/' + uniqueKey).once('value').then(function (snapshot) {
-                originalLikes = snapshot.val().likes;
+            //Get the original like number
+            originalLikes = this.state.likes;
+            var originalDislikes = this.state.dislikes;
+            //Check if the user has liked it before
+            var checkStatRef = databaseRef.ref('statKeeper/' + referThis.props.userid + '/' + uniqueKey);
+            checkStatRef.once('value').then(function (snapshot) {
+                if ((snapshot.val()) == null || !(snapshot.val().like)) {
+                    //If the user has not liked it before set LIKE to true and dislike to false
+                    updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/like'] = true;
+                    updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/dislike'] = false;
+                    updates['stats/' + uniqueKey + '/likes'] = originalLikes + 1;
 
-                //Check if the user has liked it before. 
-                var checkStatRef = databaseRef.ref('statKeeper/' + referThis.props.userid + '/' + uniqueKey);
-                checkStatRef.once('value').then(function (snapshot) {
-                    //if this returns null then, create a new one. 
-                    if ((snapshot.val()) == null) {
-                        checkStatRef.set({
-                            like: true,
-                            dislike: false,
-                        });
-                        newLikeNumber = originalLikes + 1;
-                    } else if (snapshot.val().like) {
-                        //if the user has liked it before, unlike it. 
-                        newLikeNumber = originalLikes - 1;
-                        //update the database with the like status.
-                        var updates = {};
-                        updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/like'] = false;
-                        databaseRef.ref().update(updates);
-                    } else if (!(snapshot.val().like)) {
-                        console.log("User's LIKE STATUS: " + snapshot.val().like);
-                        //If the user has not liked it before then like it. 
-                        newLikeNumber = originalLikes + 1;
-                        //Update the new like status 
-                        var updates = {};
-                        updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/like'] = true;
-                        updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/dislike'] = false;
-                        databaseRef.ref().update(updates);
+                    //If the user has DISLIKED it before, then un-dislike it
+                    if(snapshot.val().dislike){
+                        updates['stats/' + uniqueKey + '/dislikes'] = originalDislikes - 1;
                     }
-                });
 
-                //update with the new like number (wait 3 seconds before updating so that the prev firebase function can complete)
-                setTimeout(function () {
-                    var updates = {};
-                    updates['stats/' + uniqueKey + '/likes'] = newLikeNumber;
+                    //Push out the updates
                     databaseRef.ref().update(updates);
-                    //Update the state with the new like number; 
-                    referThis.setState({
-                        likes: newLikeNumber
-                    });
-                }, 3000);
+                    console.log("A: " + snapshot.exists());
+                } else if (snapshot.val().like) {
+                    //if the user has liked it before, then set the like to false, dislike to true, and increment the dislike #
+                    updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/like'] = false;
+                    updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/dislike'] = true;
+                    updates['stats/' + uniqueKey + '/likes'] = originalLikes - 1;
+                    updates['stats/' + uniqueKey + '/dislikes'] = originalLikes + 1;
 
+                    //Push out the updates
+                    databaseRef.ref().update(updates);
+                    console.log("B: " + snapshot.val().like);
+                }
             });
+
         } else {
             //If the User has not logged in, then alert them and let them know. 
             window.alert("Please log in to Like or Challenge");
         }
     }
 
+    /**
+     * Dislike the video based on whether or not they have liked it before or disliked it before. 
+     * @param {*} uniqueKey 
+     */
     dislikeButton(uniqueKey) {
-        var originalDislikes, newDislikeNumber, referThis = this, originalLikeNumber, newLikeNumber;
+        var originalDislikes, newDislikeNumber, referThis = this, dislikeUpdates = {};
         //User has logged in.
         if (this.props.activeUser) {
 
-            //Get the Original Dislike number from Database and update it depending on their Dislike status. 
-            databaseRef.ref('stats/' + uniqueKey).once('value').then(function (snapshot) {
-                originalDislikes = snapshot.val().dislikes;
-                originalLikeNumber = snapshot.val().likes;
+            //Get the original like number
+            originalDislikes = this.state.dislikes;
+            var originalLikes = this.state.likes;
+            //Check if the user has liked it before
+            var checkStatRef = databaseRef.ref('statKeeper/' + referThis.props.userid + '/' + uniqueKey);
+            checkStatRef.once('value').then(function (snapshot) {
+                if ((snapshot.val()) == null || !(snapshot.val().dislike)) {
+                    //If the user has not liked it before set LIKE to true and dislike to false
+                    dislikeUpdates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/like'] = false;
+                    dislikeUpdates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/dislike'] = true;
+                    dislikeUpdates['stats/' + uniqueKey + '/dislikes'] = originalDislikes + 1;
 
-                //Check if the user has liked it before. 
-                var checkStatRef = databaseRef.ref('statKeeper/' + referThis.props.userid + '/' + uniqueKey);
-                checkStatRef.once('value').then(function (snapshot) {
-                    //if this returns null then, create a new one. 
-                    if ((snapshot.val()) == null) {
-                        checkStatRef.set({
-                            like: false,
-                            dislike: true,
-                        });
-                        newDislikeNumber = originalDislikes + 1;
-                    } else if (snapshot.val().dislike) {
-                        //if the user has disliked it before, un-dislike it. 
-                        newDislikeNumber = originalDislikes - 1;
-                        //update the database with the Dislike status.
-                        var updates = {};
-                        updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/dislike'] = false;
-                        databaseRef.ref().update(updates);
-                    } else if (!(snapshot.val().like) || (snapshot.val().like)) {
-                        //If the user has not disliked it before then dislike it. 
-                        //If the user has liked it before, unlike. 
-                        var updates = {};
-                        newDislikeNumber = originalDislikes + 1;
-
-                        //if the user has liked it before, decrease the like number
-                        if (snapshot.val().like) {
-                            window.alert("User has liked it before");
-                            newLikeNumber = originalLikeNumber - 1;
-                            updates['stats/' + uniqueKey + '/likes'] = newLikeNumber;
-                            referThis.setState({
-                                likes: newLikeNumber
-                            });
-                        }
-                        //Update the new like status 
-                        updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/like'] = false;
-                        updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/dislike'] = true;
-                        databaseRef.ref().update(updates);
+                    //If the user has LIKED the video before then unlike it
+                    if (snapshot.val().like) {
+                        dislikeUpdates['stats/' + uniqueKey + '/likes'] = originalLikes - 1;
                     }
-                });
 
-                //update with the new like number (wait 3 seconds before updating so that the prev firebase function can complete)
-                setTimeout(function () {
-                    var updates = {};
-                    updates['stats/' + uniqueKey + '/dislikes'] = newDislikeNumber;
-                    databaseRef.ref().update(updates);
-                    //Update the state with the new like number; 
-                    referThis.setState({
-                        dislikes: newDislikeNumber
-                    });
-                }, 3000);
+                    //Push out the dislikeUpdates
+                    databaseRef.ref().update(dislikeUpdates);
+                    console.log("DislikeButton A: " + snapshot.exists());
+                } else if (snapshot.val().dislike) {
+                    //if the user has disliked it before, then set the dislike to false and decrement the dislike #
+                    dislikeUpdates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/dislike'] = false;
+                    dislikeUpdates['stats/' + uniqueKey + '/dislikes'] = originalDislikes - 1;
 
+                    //Push out the dislikeUpdates
+                    databaseRef.ref().update(dislikeUpdates);
+                    console.log("DislikeButton B: " + snapshot.val().dislike);
+                }
             });
+
         } else {
             //If the User has not logged in, then alert them and let them know. 
             window.alert("Please log in to Like or Challenge");
@@ -185,10 +158,10 @@ class SocialButtonComponent extends Component {
 
     //Show Modal
     showModal() {
-        if(this.props.activeUser){
-            this.refs.modal.show();            
-        }else {
-            window.alert("Please log in to challenge this person!");                
+        if (this.props.activeUser) {
+            this.refs.modal.show();
+        } else {
+            window.alert("Please log in to challenge this person!");
         }
     }
     //Close Modal
@@ -251,15 +224,15 @@ class SocialButtonComponent extends Component {
 
 
                 })
-            }else {
-            window.alert("You can not challenge you own video");
+            } else {
+                window.alert("You can not challenge you own video");
+            }
         }
-    }
     }
 
     /**
-   * Empty out the array used for storage 
-   */
+    * Empty out the array used for storage 
+    */
     emptyArray() {
         //Empty out the array after submission.
         var filesToBeSent = this.state.filesToBeSent;
@@ -422,7 +395,7 @@ class SocialButtonComponent extends Component {
                     <p id="challengeNumber">{this.state.challenges}</p>
                     <Modal ref="modal" modalStyle={modalStyle}>
                         <div className="card uploadCard">
-                            <div className="card-block">      
+                            <div className="card-block">
                                 <form>
                                     <h2 className="form-signin-heading text-center" id="CardHeader">Upload Challenge Video</h2>
                                     <hr />
