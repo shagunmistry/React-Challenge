@@ -6,10 +6,6 @@ var firebaseui = require('firebaseui');
 class Loginuser extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            userExists: false
-        };
-
     }
 
     render() {
@@ -17,7 +13,7 @@ class Loginuser extends Component {
         // FirebaseUI config.
         var uiConfig = {
             //Ignore this url. It's only there because its required but it't not where it goes. :) 
-            signInSuccessUrl: 'http://localhost:3000/:userid',
+            signInSuccessUrl: 'https://www.beztbaba.com/:userid',
             signInOptions: [
                 // Leave the lines as is for the providers you want to offer your users.
                 firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -34,16 +30,6 @@ class Loginuser extends Component {
         //Check if the user exists once they sign in. 
         function initApp() {
 
-            firebase.auth().onAuthStateChanged(function (user) {
-                if (user) {
-                    //when the user has signed in, go to this page. 
-                   window.location.replace('http://localhost:3000/Profilepage/' + user.uid);
-                } else {
-                    //user is signed out
-                }
-            }, function (error) {
-                console.log("User not signed in");
-            });
         };
 
         //this is fired when before the page is fully rendered.

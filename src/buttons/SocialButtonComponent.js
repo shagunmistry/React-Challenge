@@ -58,6 +58,38 @@ class SocialButtonComponent extends Component {
             });
         });
 
+
+        //ID of the buttons = userid+uniquekey        
+        //Find out if the user has liked/disliked it before and then change the color
+        databaseRef.ref('statKeeper/' + referThis.props.userid + '/' + key).on('value', function (snapshot) {
+            var dislikeBtnID = document.getElementById(referThis.props.userid + referThis.props.uniqueKey + 'dislike');
+            var likeBtn = document.getElementById(referThis.props.userid + referThis.props.uniqueKey + 'like');
+
+            if (snapshot.exists()) {
+                //If the user has interacted with the like/dislike feature of this video before: continue
+
+                if (snapshot.val().like) {
+                    //if the user has liked it
+                    likeBtn.style.backgroundColor = "white";
+                    likeBtn.style.color = "red";
+                    likeBtn.style.border = "none";
+                } else {
+                    likeBtn.style.backgroundColor = "transparent";
+                    likeBtn.style.color = "black";
+                }
+
+                if (snapshot.val().dislike) {
+                    //if the user has disliked the video then do the same
+                    dislikeBtnID.style.backgroundColor = "white";
+                    dislikeBtnID.style.color = "red";
+                    dislikeBtnID.style.border = "none";
+                } else {
+                    dislikeBtnID.style.backgroundColor = "transparent";
+                    dislikeBtnID.style.color = "black";
+                }
+            }
+
+        });
     }
 
     /**
@@ -83,7 +115,7 @@ class SocialButtonComponent extends Component {
                     updates['stats/' + uniqueKey + '/likes'] = originalLikes + 1;
 
                     //If the user has DISLIKED it before, then un-dislike it
-                    if(snapshot.val().dislike){
+                    if (snapshot.val().dislike) {
                         updates['stats/' + uniqueKey + '/dislikes'] = originalDislikes - 1;
                     }
 
@@ -93,9 +125,7 @@ class SocialButtonComponent extends Component {
                 } else if (snapshot.val().like) {
                     //if the user has liked it before, then set the like to false, dislike to true, and increment the dislike #
                     updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/like'] = false;
-                    updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/dislike'] = true;
                     updates['stats/' + uniqueKey + '/likes'] = originalLikes - 1;
-                    updates['stats/' + uniqueKey + '/dislikes'] = originalLikes + 1;
 
                     //Push out the updates
                     databaseRef.ref().update(updates);
@@ -287,7 +317,7 @@ class SocialButtonComponent extends Component {
         }, function (error) {
             //Upload was unsuccessfull so let them try again later and refresh the page. 
             window.alert("Upload Unsuccessfull. Please try again later! " + error.message);
-            window.location.replace('http://localhost:3000/ProfilePage');
+            window.location.replace('https://www.beztbaba.com/ProfilePage');
 
             //empty out array after everything is done. 
             this.emptyArray();
@@ -346,7 +376,7 @@ class SocialButtonComponent extends Component {
             databaseRef.ref().update(updates);
 
             //Replace the location to the homepage -- FOR NOW, change it later. 
-            window.location.replace('http://localhost:3000/');
+            window.location.replace('https://www.beztbaba.com/');
         });
         //empty out array after everything is done. 
         this.emptyArray();
@@ -360,7 +390,7 @@ class SocialButtonComponent extends Component {
     onDrop(acceptedFiles, rejectedFiles) {
         if (rejectedFiles == undefined && acceptedFiles[0] == undefined) {
             window.alert("Please choose a valid video file!");
-            window.location.replace('http://localhost:3000/UploadVideo');
+            window.location.replace('https://www.beztbaba.com/UploadVideo');
         } else {
             console.log("Accepted File: " + acceptedFiles[0].type)
             //assign the state.array to filesToBeSent var then push this file into it and then assign it back to state.
@@ -383,7 +413,7 @@ class SocialButtonComponent extends Component {
         if (this.props.buttonType == "like") {
             return (
                 <div>
-                    <a className="supportButtons" onClick={() => this.likeButton(this.props.uniqueKey)} role="button"><i className="fa fa-thumbs-up"></i></a>
+                    <a id={this.props.userid + this.props.uniqueKey + 'like'} className="supportButtons" onClick={() => this.likeButton(this.props.uniqueKey)} role="button"><i className="fa fa-thumbs-up"></i></a>
                     <p id="likeNumber">{this.state.likes}</p>
 
                 </div>
@@ -391,7 +421,7 @@ class SocialButtonComponent extends Component {
         } else if (this.props.buttonType == "challenge") {
             return (
                 <div>
-                    <a className="supportButtons" onClick={() => this.showModal()} role="button"><i className="fa fa-shield"></i></a>
+                    <a id={this.props.userid + this.props.uniqueKey + 'challenge'} className="supportButtons" onClick={() => this.showModal()} role="button"><i className="fa fa-shield"></i></a>
                     <p id="challengeNumber">{this.state.challenges}</p>
                     <Modal ref="modal" modalStyle={modalStyle}>
                         <div className="card uploadCard">
@@ -438,7 +468,7 @@ class SocialButtonComponent extends Component {
         } else if (this.props.buttonType == "dislike") {
             return (
                 <div>
-                    <a className="supportButtons" onClick={() => this.dislikeButton(this.props.uniqueKey)} role="button"><i className="fa fa-thumbs-down"></i></a>
+                    <a id={this.props.userid + this.props.uniqueKey + 'dislike'} className="supportButtons" onClick={() => this.dislikeButton(this.props.uniqueKey)} role="button"><i className="fa fa-thumbs-down"></i></a>
                     <p id="dislikeNumber">{this.state.dislikes}</p>
                 </div>
             );

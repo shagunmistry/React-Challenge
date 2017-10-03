@@ -51,7 +51,7 @@ class UploadVideo extends Component {
             } else {
                 //user not logged in.
                 window.alert("Please sign in first in order to upload a video");
-                window.location.replace("http://localhost:3000/ProfileCheck");
+                window.location.replace("https://www.beztbaba.com/ProfileCheck");
 
             }
         });
@@ -66,7 +66,7 @@ class UploadVideo extends Component {
     onDrop(acceptedFiles, rejectedFiles) {
         if (rejectedFiles == undefined && acceptedFiles[0] == undefined) {
             window.alert("Please choose a valid video file!");
-            window.location.replace('http://localhost:3000/UploadVideo');
+            window.location.replace('https://www.beztbaba.com/UploadVideo');
         } else {
             console.log("Accepted File: " + acceptedFiles[0].type)
             //assign the state.array to filesToBeSent var then push this file into it and then assign it back to state.
@@ -140,7 +140,7 @@ class UploadVideo extends Component {
             document.getElementById('submitButton').innerText = Math.ceil(progress) + "%";
         }, function (error) {
             window.alert("Upload Unsuccessfull. Please try again later! " + error.message);
-            window.location.replace('http://localhost:3000/ProfilePage');
+            window.location.replace('https://www.beztbaba.com/ProfilePage');
             //empty out array after everything is done. 
             this.emptyArray();
         }, function () {
@@ -184,7 +184,7 @@ class UploadVideo extends Component {
             });
 
 
-            window.location.replace('http://localhost:3000/');
+            window.location.replace('https://www.beztbaba.com/');
         });
 
         //empty out array after everything is done. 

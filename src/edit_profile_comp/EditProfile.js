@@ -41,7 +41,7 @@ class EditProfile extends Component {
      */
     cancelChanges() {
         document.getElementById('card_header').innerText = "Canceling Changes";
-        window.location.replace('http://localhost:3000/ProfileCheck');
+        window.location.replace('https://www.beztbaba.com/ProfileCheck');
     }
 
     /**
@@ -80,7 +80,7 @@ class EditProfile extends Component {
                 window.alert(error.message);
             }
         });
-        window.location.replace("http://localhost:3000/Profilecheck");
+        window.location.replace("https://www.beztbaba.com/Profilecheck");
 
     }
 
@@ -186,7 +186,7 @@ class EditProfile extends Component {
                 //user not logged in
                 //same as replacing the current location in current window. 
                 window.alert("Please log in");
-                window.location.replace("http://localhost:3000/Profilecheck");
+                window.location.replace("https://www.beztbaba.com/Profilecheck");
             }
         });
     }

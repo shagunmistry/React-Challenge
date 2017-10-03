@@ -1,5 +1,6 @@
 /**
  * Profile Page showing the informaiton on the user. Will lead to a login screen if not logged in 
+ * --SEPARATE  out the Profile SideCard into another component Later once all bugs are out of the way
  */
 import React, { Component } from 'react';
 import ModalContainer from '../cards/ModalContainer';
@@ -46,7 +47,7 @@ class Profilepage extends Component {
      */
     logOut() {
         firebaseApp.auth().signOut().then(function () {
-            window.location.replace("http://localhost:3000/");
+            window.location.replace("https://www.beztbaba.com/");
         }).catch(function (error) {
             window.alert("There was an error, please try again later");
             window.location.reload();
@@ -57,7 +58,7 @@ class Profilepage extends Component {
      * edit Profile page where you can change your picture and about status
      */
     editProfie() {
-        window.location.replace('http://localhost:3000/EditProfile');
+        window.location.replace('https://www.beztbaba.com/EditProfile');
     }
 
     /**
@@ -118,7 +119,7 @@ class Profilepage extends Component {
                 console.log("User has not logged in");
                 //user not logged in
                 //same as replacing the current location in current window. 
-                window.location.replace("http://localhost:3000/Profilecheck");
+                window.location.replace("https://www.beztbaba.com/Profilecheck");
             }
         });
     }
@@ -174,12 +175,15 @@ class Profilepage extends Component {
         });
     }
 
-    //Fill in the about Section and Social Media Links
+    /**
+     * Fill in the about section and (the social Media links -- will add later)
+     * @param {*} userid 
+     */
     fillAboutSection(userid) {
         databaseRef.ref('/users/' + userid + '/about_section/').on('value', function (snapshot) {
             if (snapshot.val() == null) {
                 console.log("Please fill out your Profile Information First");
-                window.location.replace('http://localhost:3000/Editprofile');
+                window.location.replace('https://www.beztbaba.com/Editprofile');
             }
             var aboutInput = snapshot.val().aboutInput;
             var locationField = snapshot.val().locationInp;
@@ -197,16 +201,6 @@ class Profilepage extends Component {
     }
 
     render() {
-
-        function initApp() {
-
-        }
-
-        //load the initApp that checks user status on page load
-        window.addEventListener('load', function () {
-            initApp()
-        });
-
 
         {
             if (this.state.firstTimeSignIn) {
