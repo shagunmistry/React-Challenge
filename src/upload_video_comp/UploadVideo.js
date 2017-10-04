@@ -5,14 +5,14 @@
 import React, { Component } from 'react';
 //Default firebase App 
 import { firebaseApp } from '../firebase/Firebase';
-//import ReactFileReader from 'react-file-reader';
 import Dropzone from 'react-dropzone';
+import VideoPreview from '../cards/VideoPreview';
 
 //this firebase is required for upload process. 
 var firebase = require('firebase');
 
 var defStorageRef = firebaseApp.storage().ref(), databaseRef = firebaseApp.database();
-var userUID = "";
+var userUID = "", videoDownloadURL = "";
 
 
 class UploadVideo extends Component {
@@ -23,7 +23,10 @@ class UploadVideo extends Component {
             videoURL: "",
             downloadProgress: 0,
             profilePic: "",
-            userName: ""
+            userName: "",
+            readyToSee: false,
+            videoKey: "",
+            videoURL: "",
         }
         // this.handleChange = this.handleChange.bind(this);
         this.onDrop = this.onDrop.bind(this);
@@ -113,6 +116,7 @@ class UploadVideo extends Component {
         var referThis = this;
         //get the TITLE, DESCRIPTION, and CATEGORY
         var title = document.getElementById('videoTitle').value, description = document.getElementById('challengeDescription').value;
+
         //get the radio button chosen
         var category, e = document.getElementById('categoryPicker');
         category = e.options[e.selectedIndex].text;
@@ -125,6 +129,7 @@ class UploadVideo extends Component {
 
         //upload task is where it actually gets uploaded and if not, it will throw an error. 
         var uploadTask = videoRef.put(this.state.filesToBeSent[0]);
+
         uploadTask.on('state_changed', function (snapshot) {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             switch (snapshot.state) {
@@ -133,23 +138,31 @@ class UploadVideo extends Component {
                     break;
                 case firebase.storage.TaskState.RUNNING: // or 'running'
                     console.log('Upload is running');
-                    console.log(videoRef.fullPath);
                     break;
             }
-            //console.log('Upload is ' + progress + '% done');
             document.getElementById('submitButton').innerText = Math.ceil(progress) + "%";
         }, function (error) {
+            //There was an error so it will lead back to the home page after displaying Error Message. 
             window.alert("Upload Unsuccessfull. Please try again later! " + error.message);
             window.location.replace('https://www.beztbaba.com/ProfilePage');
+
+            //The video was not uploaded and therefore, it is not ready to see. 
+            referThis.setState({
+                readyToSee: false
+            });
             //empty out array after everything is done. 
             this.emptyArray();
+
         }, function () {
+
             // Handle successful uploads on complete
             var downloadURL = uploadTask.snapshot.downloadURL;
             /**
              * Upload the uploaded video information to the Firebase DATABASE.
              */
             var videoUserIDUpload = databaseRef.ref('videos/' + userUID + '/uploaded_videos/').push();
+            console.log("Video User Upload ID: " + videoUserIDUpload.key);
+
             videoUserIDUpload.set({
                 videoURL: downloadURL,
                 videoTitle: title,
@@ -161,21 +174,22 @@ class UploadVideo extends Component {
              * In order to keep all the video lists on web updated, under the 'POSTS' node, push out links to all the videos uploaded by user.
              * This way, it's easier to sort them by time updated and other features.
              */
-            var newVideoRef = databaseRef.ref('posts/').push();
+            var newVideoRef = databaseRef.ref('posts/' + videoUserIDUpload.key + '/');
             newVideoRef.set({
                 videoURL: downloadURL,
                 videoTitle: title,
                 videoDesc: description,
                 videoCategory: category,
-                userid: userUID, 
+                userid: userUID,
                 profilePic: referThis.state.profilePic,
                 userName: referThis.state.userName
             });
+
             /**
              * Upload the likes/dislikes/challenge stats to status/key/---
              * This helps refresh the numbers in real time on page
              */
-            var keyToUploadUnder = newVideoRef.key;
+            var keyToUploadUnder = videoUserIDUpload.key;
             var statsUpload = databaseRef.ref('stats/' + keyToUploadUnder + '/');
             statsUpload.set({
                 likes: 0,
@@ -183,8 +197,21 @@ class UploadVideo extends Component {
                 challenges: 0
             });
 
+            /**
+             * Set up STATKEEPR node which is used to check whether or not the person has liked the video before
+             */
+            var statKeeperRef = databaseRef.ref('statKeeper/' + userUID + '/' + keyToUploadUnder);
+            statKeeperRef.set({
+                like: false,
+                dislike: false,
+                hearted: false
+            });
 
-            window.location.replace('https://www.beztbaba.com/');
+            referThis.setState({
+                videoURL: downloadURL,
+                readyToSee: true,
+                keyToUploadUnder: keyToUploadUnder,
+            });
         });
 
         //empty out array after everything is done. 
@@ -195,50 +222,48 @@ class UploadVideo extends Component {
 
 
     render() {
+        if (this.state.readyToSee) {
+            return (
+                <VideoPreview userid={userUID} videoKey={this.state.videoKey}
+                    profilePic={this.state.profilePic} userName={this.state.userName} videourl={this.state.videoURL} />
+            );
+        } else {
+            return (
+                <div className="card uploadCard">
+                    <div className="card-block uploadBlock">
+                        <form>
+                            <h2 className="form-signin-heading text-center">Upload Video</h2>
+                            <hr />
+                            <div className="form-group" id="afterVideo">
+                                <h4>Title</h4>
+                                <input type="text" className="form-control" id="videoTitle" placeholder="Video Title" required />
+                                <br />
 
-        function initApp() {
+                                <label>File input</label>
+                                <Dropzone id="dropZzone" type="file" onDrop={(files) => this.onDrop(files)} accept="video/*" multiple={false} required>
+                                    <div>Click to Upload or Drag your video here</div>
+                                </Dropzone>
+                                <small id="fileHelp" className="form-text text-muted">Supported: All Video Formats </small>
+                                <br /><br />
+                                <label>Description</label>
+                                <textarea className="form-control" id="challengeDescription" rows="3" placeholder="Please provide a meaningfull description" required></textarea>
+                                <br />
 
-        }
-        //load the initApp that checks user status on page load
-        window.addEventListener('load', function () {
-            initApp()
-        });
-
-
-        return (
-            <div className="card uploadCard">
-                <div className="card-block uploadBlock">
-                    <form>
-                        <h2 className="form-signin-heading text-center">Upload Video</h2>
-                        <hr />
-                        <div className="form-group" id="afterVideo">
-                            <h4>Title</h4>
-                            <input type="text" className="form-control" id="videoTitle" placeholder="Video Title" required />
-                            <br />
-
-                            <label>File input</label>
-                            <Dropzone id="dropZzone" type="file" onDrop={(files) => this.onDrop(files)} accept="video/*" multiple={false} required>
-                                <div>Click to Upload or Drag your video here</div>
-                            </Dropzone>
-                            <small id="fileHelp" className="form-text text-muted">Supported: All Video Formats </small>
-                            <br /><br />
-                            <label>Description</label>
-                            <textarea className="form-control" id="challengeDescription" rows="3" placeholder="Please provide a meaningfull description" required></textarea>
-                            <br />
-
-                            <label>Choose a Category</label> <br />
-                            <select className="selectpicker" id="categoryPicker" required>
-                                <option>Comedy</option>
-                                <option>Cooking</option>
-                                <option>Dance</option>
-                                <option>Sports</option>
-                            </select>
-                            <button type="button" className="btn btn-lg btn-danger btn-block" id="submitButton" onClick={() => this.submitChallenge()} >Challenge</button>
-                        </div>
-                    </form>
+                                <label>Choose a Category</label> <br />
+                                <select className="selectpicker" id="categoryPicker" required>
+                                    <option>Comedy</option>
+                                    <option>Cooking</option>
+                                    <option>Dance</option>
+                                    <option>Sports</option>
+                                </select>
+                                <button type="button" className="btn btn-lg btn-danger btn-block" id="submitButton" onClick={() => this.submitChallenge()} >Challenge</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
+
     }
 }
 

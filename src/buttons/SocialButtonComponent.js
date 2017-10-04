@@ -48,14 +48,20 @@ class SocialButtonComponent extends Component {
         //Go to the database under STATS/ and use the key to get all the information. 
         var statRef = databaseRef.ref('stats/' + key);
         statRef.on('value', function (snapshot) {
-            var dataLikes = snapshot.val().likes;
-            var dataDislikes = snapshot.val().dislikes;
-            var dataChallenges = snapshot.val().challenges;
-            referThis.setState({
-                likes: dataLikes,
-                dislikes: dataDislikes,
-                challenges: dataChallenges,
-            });
+            if (snapshot.exists()) {
+                var dataLikes = snapshot.val().likes;
+                var dataDislikes = snapshot.val().dislikes;
+                var dataChallenges = snapshot.val().challenges;
+                referThis.setState({
+                    likes: dataLikes,
+                    dislikes: dataDislikes,
+                    challenges: dataChallenges,
+                });
+            }else{
+                //It does not exists so do nothing.
+                console.log("Returning NULL for this key: " + key);
+            }
+
         });
 
 
@@ -105,6 +111,7 @@ class SocialButtonComponent extends Component {
             //Get the original like number
             originalLikes = this.state.likes;
             var originalDislikes = this.state.dislikes;
+            
             //Check if the user has liked it before
             var checkStatRef = databaseRef.ref('statKeeper/' + referThis.props.userid + '/' + uniqueKey);
             checkStatRef.once('value').then(function (snapshot) {
