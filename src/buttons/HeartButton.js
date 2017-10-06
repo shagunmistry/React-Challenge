@@ -65,7 +65,6 @@ class HeartButton extends Component {
                 //CHALLENGED
                 databaseRef.ref('statKeeper/' + referThis.state.activeUserId + '/' + challengedUniqueKey).on('value', function (snapshot) {
                     var hitButton = document.getElementById(challengedUniqueKey + challengeruserid);
-                    console.log(snapshot.val().hearted);
                     if (!snapshot.exists() || !snapshot.val().hearted) {
                         //Do nothing since the person has not hearted it before 
                         hitButton.style.backgroundColor = "white";

@@ -11,7 +11,6 @@ import EditProfile from '../edit_profile_comp/EditProfile';
 var databaseRef = firebaseApp.database();
 
 class Profilepage extends Component {
-    //props recieved are: USERID
     constructor(props) {
         super(props);
         this.state = {
@@ -34,12 +33,7 @@ class Profilepage extends Component {
 
 
     componentWillMount() {
-        //Assign the props to the state first. 
-        this.setState({
-            userUID: this.props.userid
-        })
         this.loadInformation();
-
     }
 
     /**
@@ -76,7 +70,7 @@ class Profilepage extends Component {
                     userName: user.displayName,
                     userEmail: user.email,
                     userPicture: user.photoURL
-                })
+                });
 
                 /* Check if the user already exists under the users/ node in the database. 
                 * If they do, then continue loading information. If not, guide them to the 
@@ -100,8 +94,6 @@ class Profilepage extends Component {
                         * Fill in the About section.
                         */
                         referThis.fillAboutSection(referThis.state.userUID);
-
-
                     } else {
                         /**
                          * First time signing in to the website so write new user data. 
@@ -238,7 +230,7 @@ class Profilepage extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <CardContainer />
+                            <CardContainer/>
                         </div>
                         <ModalContainer />
                     </div >

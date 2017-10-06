@@ -12,6 +12,7 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.2.1",
+    "express": "^4.16.1",
     "filereader": "^0.10.3",
     "firebase": "^4.1.2",
     "firebaseui": "^2.1.1",

@@ -22,7 +22,6 @@ class CardContainer extends Component {
         this.state = {
             usedArray: []
         }
-
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
     }
@@ -37,6 +36,7 @@ class CardContainer extends Component {
     componentWillMount() {
         //Get the data
         var referThis = this;
+
         var videosRef = dataRef.ref('posts/');
         videosRef.on('value', function (snapshot) {
             snapshot.forEach(function (data) {
@@ -58,8 +58,10 @@ class CardContainer extends Component {
             referThis.setState({
                 usedArray: userArray
             })
-           // console.log(referThis.state.usedArray);
+            // console.log(referThis.state.usedArray);
         });
+
+
     }
 
 
@@ -75,7 +77,7 @@ class CardContainer extends Component {
         return (
             <div id="bodyType">
                 {
-                    usedArray.map((data,i) => <SingleCardContainer {...data} key={data.uniqueKey+i+i} />)
+                    usedArray.map((data, i) => <SingleCardContainer {...data} key={data.uniqueKey + i + i} />)
                 }
             </div>
         );
