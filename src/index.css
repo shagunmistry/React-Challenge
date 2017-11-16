@@ -372,3 +372,28 @@ blockquote {
 	color: #3b5998;
 }
 
+/******************************************NEW _ PROFILE _ PAGE ********************************/
+#profile_pic{
+	max-width: 150px;
+	max-height: 200px;
+	margin:10px;
+}
+#profile_card{
+	margin-right: auto;
+	margin-left: auto;
+	border: 1px solid black;
+	max-width: 800px;
+}
+#test_row{
+	text-align: left;	padding-left:30px;
+}
+
+@media screen and (max-width: 994px) {
+	#profile_card{
+		max-width: 400px;
+		min-width: 400px;
+	}
+	#profile_pic{
+		float:left;
+	}
+}

@@ -4,7 +4,7 @@
  * it will look like the Instagram time-line. 
  */
 import React, { Component } from 'react';
-import Modal from 'boron/WaveModal';
+//import Modal from 'boron/WaveModal';
 //For scrolling animation
 
 //Default firebase App 
@@ -12,9 +12,10 @@ import { firebaseApp } from '../firebase/Firebase';
 import SingleCardContainer from '../cards/SingleCardContainer';
 
 var dataRef = firebaseApp.database();
-var dataArray = []; var userInfo = {};
+//var dataArray = [];  var done = false;
+var userInfo = {};
 var userArray = [];
-var done = false;
+
 
 class CardContainer extends Component {
     constructor(props) {
@@ -37,33 +38,70 @@ class CardContainer extends Component {
         //Get the data
         var referThis = this;
 
-        var videosRef = dataRef.ref('posts/');
-        videosRef.on('value', function (snapshot) {
-            snapshot.forEach(function (data) {
-                //Store each value into an name-based object. 
-                userInfo.userid = data.val().userid;
-                userInfo.profilePic = data.val().profilePic;
-                userInfo.videoCategory = data.val().videoCategory;
-                userInfo.videoDesc = data.val().videoDesc;
-                userInfo.videoTitle = data.val().videoTitle;
-                userInfo.videoURL = data.val().videoURL;
-                userInfo.userName = data.val().userName;
-                userInfo.uniqueKey = data.key;
-                //Then push the object into an array.
-                userArray.push(userInfo);
-                //reset the userInfo object (just in case);
-                userInfo = {};
-                //console.log("Firebase function: " + userArray.length);
-            })
-            referThis.setState({
-                usedArray: userArray
-            })
-            // console.log(referThis.state.usedArray);
-        });
+        //Only for homepage
+        //The ELSE part is for categorized or for User's page. 
+        if (!this.props.customize) {
+            var videosRef = dataRef.ref('posts/');
+            videosRef.on('value', function (snapshot) {
+                snapshot.forEach(function (data) {
+                    //Store each value into an name-based object. 
+                    userInfo.userid = data.val().userid;
+                    userInfo.profilePic = data.val().profilePic;
+                    userInfo.videoCategory = data.val().videoCategory;
+                    userInfo.videoDesc = data.val().videoDesc;
+                    userInfo.videoTitle = data.val().videoTitle;
+                    userInfo.videoURL = data.val().videoURL;
+                    userInfo.userName = data.val().userName;
+                    userInfo.uniqueKey = data.key;
+                    //Then push the object into an array.
+                    userArray.push(userInfo);
+                    //reset the userInfo object (just in case);
+                    userInfo = {};
+                    //console.log("Firebase function: " + userArray.length);
+                });
+                referThis.setState({
+                    usedArray: userArray
+                });
+                // console.log(referThis.state.usedArray);
+            });
+        } else {
+            //Right now only for user's page.
+            //Add category based listings later
+            const userId = this.props.userId;
+            var user_name, profile_Picture;
 
+            //get the userName
+            dataRef.ref('/users/' + userId).on('value', function (snapshot) {
+                user_name = snapshot.val().username;
+                profile_Picture = snapshot.val().profile_picture;
+            });
+            var videosRef = dataRef.ref('videos/' + userId + '/uploaded_videos/');
 
+            videosRef.on('value', function (snapshot) {
+                snapshot.forEach(function (data) {
+                    //Store each value into an name-based object. 
+                    userInfo.userid = userId;
+                    userInfo.profilePic = profile_Picture;
+                    userInfo.videoCategory = data.val().videoCategory;
+                    userInfo.videoDesc = data.val().videoDesc;
+                    userInfo.videoTitle = data.val().videoTitle;
+                    userInfo.videoURL = data.val().videoURL;
+                    userInfo.userName = user_name;
+                    userInfo.uniqueKey = data.key;
+                    console.log(userInfo);
+                    //Then push the object into an array.
+                    userArray.push(userInfo);
+                    //reset the userInfo object (just in case);
+                    userInfo = {};
+                    //console.log("Firebase function: " + userArray.length);
+                });
+                referThis.setState({
+                    usedArray: userArray
+                });
+                // console.log(referThis.state.usedArray);
+            });
+        }
     }
-
 
     render() {
         function initApp() {

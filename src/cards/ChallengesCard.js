@@ -6,15 +6,11 @@
  *  
  */
 import React, { Component } from 'react';
-import {
-    Player, ControlBar,
-    ForwardControl, CurrentTimeDisplay,
-    TimeDivider, VolumeMenuButton, BigPlayButton
-} from 'video-react';
-import { firebaseApp } from '../firebase/Firebase';
+import { Player } from 'video-react';
+//import { firebaseApp } from '../firebase/Firebase';
 import HeartButton from "../buttons/HeartButton";
 
-var databaseRef = firebaseApp.database();
+//var databaseRef = firebaseApp.database();
 
 // var ratio = ((likes / (likes + dislikes)) * 100);
 
@@ -25,9 +21,7 @@ var databaseRef = firebaseApp.database();
  */
 
 class ChallengesCard extends Component {
-    constructor(props) {
-        super(props);
-    }
+    /*constructor(props) {  super(props);}*/
 
 
 
@@ -36,10 +30,11 @@ class ChallengesCard extends Component {
         const hitsInformation = this.props.hitsInformation;
 
         //Get all the props
-        const { challengedUniqueKey, challengedProfilePic, challengeduserName,
-            challengedvideoDesc, challengedvideoTitle, challengedvideoURL, challengeduserid,
-            challengerUniqueKey, challengerProfilePic, challengeruserName,
-            challengervideoDesc, challengervideoTitle, challengervideoURL, challengeruserid } = this.props;
+        const { /*challengedUniqueKey, challengedProfilePic, challengedvideoTitle, 
+            challengeduserid, challengerProfilePic,challengervideoTitle, challengeruserid*/
+            challengeduserName, challengedvideoDesc,
+            challengedvideoURL, challengerUniqueKey, challengeruserName,
+            challengervideoDesc, challengervideoURL, } = this.props;
         return (
             <div>
                 <div className="container">

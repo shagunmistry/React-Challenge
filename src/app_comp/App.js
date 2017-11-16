@@ -4,6 +4,7 @@ import './App.css';
 import Navigationbar from '../navigation/Navigationbar';
 import Hometrend from '../homepage/Hometrend';
 import Profilepage from '../profile_page_comp/Profilepage';
+import Userprofile from '../profile_page_comp/Userprofile';
 import OngoingChallenges from '../challenges_page/OngoingChallenges';
 import ProfileCheck from '../profile_page_comp/ProfileCheck';
 import UploadVideo from '../upload_video_comp/UploadVideo';
@@ -27,6 +28,7 @@ class App extends Component {
             <Route exact path="/OngoingChallenges" component={OngoingChallenges} />
             <Route exact path="/ProfileCheck" component={ProfileCheck} />
             <Route exact path="/Profilepage/:userName" component={Profilepage} />
+            <Route path="/users/:userId" component={Userprofile} />
             <Route exact path="/UploadVideo" component={UploadVideo} />
             <Route exact path="/EditProfile" component={EditProfile} />
           </div>

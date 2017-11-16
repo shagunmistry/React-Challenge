@@ -41,7 +41,7 @@ class EditProfile extends Component {
      */
     cancelChanges() {
         document.getElementById('card_header').innerText = "Canceling Changes";
-        window.location.replace('https://www.beztbaba.com/ProfileCheck');
+        window.location.replace('http://localhost:3000/ProfileCheck');
     }
 
     /**
@@ -64,9 +64,9 @@ class EditProfile extends Component {
         }).then({
             function(success) {
                 //window.alert("Success Writing the location and about Input");
-            }, function(error) {
+            }/*, function(error) {
                 window.alert(error.message);
-            }
+            }*/
         });
         //write the social media links to the Database.
         databaseRef.ref('users/' + this.state.userUID + '/social_media_links/').set({
@@ -76,11 +76,11 @@ class EditProfile extends Component {
         }).then({ //I don't think this works, by the way. It's somehow set up wrong.    
             function(success) {
                 // window.alert("Success writing social media links");
-            }, function(error) {
+            }/*, function(error) {
                 window.alert(error.message);
-            }
+            }*/
         });
-        window.location.replace("https://www.beztbaba.com/Profilecheck");
+        window.location.replace("http://localhost:3000/Profilecheck");
 
     }
 
@@ -106,7 +106,7 @@ class EditProfile extends Component {
             //use put the file in the reference then upload it to firebase. 
             var uploadTask = imageRef.put(referThis.state.filesToBeSent[0]);
             uploadTask.on('state_changed', function (snapshot) {
-                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                //var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 switch (snapshot.state) {
                     case firebase.storage.TaskState.PAUSED: // or 'paused'
                         break;
@@ -186,7 +186,7 @@ class EditProfile extends Component {
                 //user not logged in
                 //same as replacing the current location in current window. 
                 window.alert("Please log in");
-                window.location.replace("https://www.beztbaba.com/Profilecheck");
+                window.location.replace("http://localhost:3000/Profilecheck");
             }
         });
     }
@@ -209,7 +209,7 @@ class EditProfile extends Component {
                 <div className="card-block" id="EditProfileCard">
                     <div className="row">
                         <div className="col-md-6">
-                            <strong><h3 id="userName"></h3></strong>
+                            <strong><h3 id="userName">:)</h3></strong>
                             <img alt="ProfilePic" id="profilePicture" />
                         </div>
                         <div className="col-md-6">

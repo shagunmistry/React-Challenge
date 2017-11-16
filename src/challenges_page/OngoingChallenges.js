@@ -12,7 +12,6 @@ import { firebaseApp } from '../firebase/Firebase';
 var databaseRef = firebaseApp.database();
 var userInfo = {}, hitsInfo = {}, hitsArray = [];
 var userArray = [];
-var done = false;
 
 class OngoingChallenges extends Component {
     constructor(props) {
@@ -34,7 +33,7 @@ class OngoingChallenges extends Component {
      */
     componentWillMount() {
         //Get the data
-        var referThis = this, challengedVideoKey = "", challengerVideoKey = "";
+        var referThis = this;
         var videosRef = databaseRef.ref('challenges');
 
         //Read the challenges once

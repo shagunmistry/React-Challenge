@@ -12,7 +12,7 @@ import VideoPreview from '../cards/VideoPreview';
 var firebase = require('firebase');
 
 var defStorageRef = firebaseApp.storage().ref(), databaseRef = firebaseApp.database();
-var userUID = "", videoDownloadURL = "";
+var userUID = "";
 
 
 class UploadVideo extends Component {
@@ -26,7 +26,6 @@ class UploadVideo extends Component {
             userName: "",
             readyToSee: false,
             videoKey: "",
-            videoURL: "",
         }
         // this.handleChange = this.handleChange.bind(this);
         this.onDrop = this.onDrop.bind(this);
@@ -54,7 +53,7 @@ class UploadVideo extends Component {
             } else {
                 //user not logged in.
                 window.alert("Please sign in first in order to upload a video");
-                window.location.replace("https://www.beztbaba.com/ProfileCheck");
+                window.location.replace("http://localhost:3000/ProfileCheck");
 
             }
         });
@@ -69,7 +68,7 @@ class UploadVideo extends Component {
     onDrop(acceptedFiles, rejectedFiles) {
         if (rejectedFiles == undefined && acceptedFiles[0] == undefined) {
             window.alert("Please choose a valid video file!");
-            window.location.replace('https://www.beztbaba.com/UploadVideo');
+            window.location.replace('http://localhost:3000/UploadVideo');
         } else {
             console.log("Accepted File: " + acceptedFiles[0].type)
             //assign the state.array to filesToBeSent var then push this file into it and then assign it back to state.
@@ -144,7 +143,7 @@ class UploadVideo extends Component {
         }, function (error) {
             //There was an error so it will lead back to the home page after displaying Error Message. 
             window.alert("Upload Unsuccessfull. Please try again later! " + error.message);
-            window.location.replace('https://www.beztbaba.com/ProfilePage');
+            window.location.replace('http://localhost:3000/ProfilePage');
 
             //The video was not uploaded and therefore, it is not ready to see. 
             referThis.setState({

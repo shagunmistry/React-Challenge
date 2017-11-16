@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
-import { firebaseApp } from '../firebase/Firebase';
-import {
-    Player, ControlBar,
-    ForwardControl, CurrentTimeDisplay,
-    TimeDivider, VolumeMenuButton, BigPlayButton
-} from 'video-react';
-var databaseRef = firebaseApp.database();
+//import { firebaseApp } from '../firebase/Firebase';
+import { Player } from 'video-react';
+//var databaseRef = firebaseApp.database();
 
 
 class VideoPreview extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-        };
-    }
+    /* constructor(props) {
+         super(props);
+         this.state = {
+         };
+     } */
 
     render() {
 
@@ -28,10 +24,10 @@ class VideoPreview extends Component {
                         <div id="singleVideoContainer">
                             <h3>{this.props.userName}</h3>
                             <Player poster="" src={this.props.videourl}></Player>
-                            <hr/>
-                            <br/>
+                            <hr />
+                            <br />
                             <div id="videoInfoSection">
-                            <button className="btn btn-danger btn-lg" onClick={()=> window.location.replace('https://www.beztbaba.com/')} >Continue</button>
+                                <button className="btn btn-danger btn-lg" onClick={() => window.location.replace('http://localhost:3000/')} >Continue</button>
                             </div>
                         </div>
                     </div>

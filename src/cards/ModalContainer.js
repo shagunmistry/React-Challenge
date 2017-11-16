@@ -16,7 +16,7 @@ class ModalContainer extends Component {
                         <div className="modal-body">
                             <video id="compVideo" className="video-js vjs-default-skin" controls preload="auto" data-setup="{}" height="350" width="530"><source src="https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/o/test1.mp4?alt=media&token=1def8b71-9f28-4afc-a671-445fc9e97eaa" type="video/mp4" /></video>
                             <button type="button" className="btn btn-danger btn-4"><i className="fa fa-bomb"></i> | Like</button>
-                            <button type="button" className="btn btn-danger btn-4" onClick={() => window.location.replace('https://www.beztbaba.com/UploadVideo')} ><i className="fa fa-bomb"></i> | Challenge</button>
+                            <button type="button" className="btn btn-danger btn-4" onClick={() => window.location.replace('http://localhost:3000/UploadVideo')} ><i className="fa fa-bomb"></i> | Challenge</button>
                             <button type="button" className="btn btn-danger btn-4"><i className="fa fa-thumbs-o-down"></i> | Dislike</button>
                             <p ><a id="userProfileLink">User Name</a></p>
                             <p id="videoDescripton">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc eros odi</p>

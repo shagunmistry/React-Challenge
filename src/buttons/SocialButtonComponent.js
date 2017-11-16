@@ -11,7 +11,6 @@ var defStorageRef = firebaseApp.storage().ref(), databaseRef = firebaseApp.datab
 var firebase = require('firebase');
 
 var Modal = require('boron/FlyModal');
-var databaseRef = firebaseApp.database();
 var modalStyle = {
     width: 'auto',
 }
@@ -57,7 +56,7 @@ class SocialButtonComponent extends Component {
                     dislikes: dataDislikes,
                     challenges: dataChallenges,
                 });
-            }else{
+            } else {
                 //It does not exists so do nothing.
                 console.log("Returning NULL for this key: " + key);
             }
@@ -103,15 +102,14 @@ class SocialButtonComponent extends Component {
      * @param {*} uniqueKey 
      */
     likeButton(uniqueKey) {
-        var originalLikes, newLikeNumber, referThis = this, liked = false, disliked = false, updates = {};
-
+        var originalLikes, referThis = this, updates = {};
         //User has logged in.
         if (this.props.activeUser) {
 
             //Get the original like number
             originalLikes = this.state.likes;
             var originalDislikes = this.state.dislikes;
-            
+
             //Check if the user has liked it before
             var checkStatRef = databaseRef.ref('statKeeper/' + referThis.props.userid + '/' + uniqueKey);
             checkStatRef.once('value').then(function (snapshot) {
@@ -151,7 +149,7 @@ class SocialButtonComponent extends Component {
      * @param {*} uniqueKey 
      */
     dislikeButton(uniqueKey) {
-        var originalDislikes, newDislikeNumber, referThis = this, dislikeUpdates = {};
+        var originalDislikes, referThis = this, dislikeUpdates = {};
         //User has logged in.
         if (this.props.activeUser) {
 
@@ -214,7 +212,7 @@ class SocialButtonComponent extends Component {
      * @param {*} uniqueKey 
      */
     challengeButton(uniqueKey) {
-        var originalChallengeNum, newChallengeNum, referThis = this, challengerUserID = referThis.props.activeUserID;
+        var  referThis = this, challengerUserID = referThis.props.activeUserID;
 
         //Check if they are logged in and that the user does not challenge his own video
         if (referThis.props.activeUser) {
@@ -324,7 +322,7 @@ class SocialButtonComponent extends Component {
         }, function (error) {
             //Upload was unsuccessfull so let them try again later and refresh the page. 
             window.alert("Upload Unsuccessfull. Please try again later! " + error.message);
-            window.location.replace('https://www.beztbaba.com/ProfilePage');
+            window.location.replace('http://localhost:3000/ProfilePage');
 
             //empty out array after everything is done. 
             this.emptyArray();
@@ -383,7 +381,7 @@ class SocialButtonComponent extends Component {
             databaseRef.ref().update(updates);
 
             //Replace the location to the homepage -- FOR NOW, change it later. 
-            window.location.replace('https://www.beztbaba.com/');
+            window.location.replace('http://localhost:3000/');
         });
         //empty out array after everything is done. 
         this.emptyArray();
@@ -397,7 +395,7 @@ class SocialButtonComponent extends Component {
     onDrop(acceptedFiles, rejectedFiles) {
         if (rejectedFiles == undefined && acceptedFiles[0] == undefined) {
             window.alert("Please choose a valid video file!");
-            window.location.replace('https://www.beztbaba.com/UploadVideo');
+            window.location.replace('http://localhost:3000/UploadVideo');
         } else {
             console.log("Accepted File: " + acceptedFiles[0].type)
             //assign the state.array to filesToBeSent var then push this file into it and then assign it back to state.

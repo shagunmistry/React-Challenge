@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import {
-    Player, ControlBar,
-    ForwardControl, CurrentTimeDisplay,
-    TimeDivider, VolumeMenuButton, BigPlayButton
-} from 'video-react';
-import ModalContainer from '../cards/ModalContainer';
+import { Player, /*ControlBar,ForwardControl, CurrentTimeDisplay,  TimeDivider, VolumeMenuButton, BigPlayButton */ } from 'video-react';
+import { Link } from 'react-router-dom';
+
+//import ModalContainer from '../cards/ModalContainer';
 import SocialButtonComponent from '../buttons/SocialButtonComponent';
 
 import { firebaseApp } from '../firebase/Firebase';
@@ -48,7 +46,7 @@ class SingleCardContainer extends Component {
             }
         });
     }
-    
+
 
     componentDidMount() {
         //Update the likes/dislikes/challenges everytime they get updated in database. 
@@ -60,14 +58,14 @@ class SingleCardContainer extends Component {
             document.getElementById('dislikeNumber').innerText = snapshot.val().dislikes;
             document.getElementById('challengeNumber').innerText = snapshot.val().challenges;            
         }); */
-   
+
     }
 
 
     //We will have to pass down the states from CardContainer as props to this so that they get updated in real-time *fingers-crossed*
 
     render() {
-        const { userid, profilePic, videoCategory, videoDesc, videoTitle, videoURL, userName, uniqueKey } = this.props;
+        const { userid, profilePic, /*videoCategory,*/ videoDesc, videoTitle, videoURL, userName, uniqueKey } = this.props;
         return (
             <div className="container">
                 <div className="card" id="generalCard">
@@ -87,7 +85,7 @@ class SingleCardContainer extends Component {
                                         <SocialButtonComponent buttonType="challenge"
                                             activeUserID={this.state.activeUserID} activeUser={this.state.activeUser}
                                             userid={userid}
-                                            uniqueKey={uniqueKey} profilePicURL={this.state.activeProfilePic}/>
+                                            uniqueKey={uniqueKey} profilePicURL={this.state.activeProfilePic} />
                                     </div>
                                     <div className="col-md-4 col-xs-6 col-sm-4">
                                         <SocialButtonComponent buttonType="dislike"
@@ -97,7 +95,9 @@ class SingleCardContainer extends Component {
                                     </div>
                                 </div>
                                 <div id="vidProfilePicDiv" className="col-md-4 col-xs-6 col-sm-4">
-                                    <img src={profilePic} alt="Profile Pic" id="singleCardProfilePic"/>
+                                    <Link to={`/users/${userid}`} >
+                                        <img src={profilePic} alt="Profile Pic" id="singleCardProfilePic" />
+                                    </Link>
                                 </div>
                                 <div id="descriptionDiv" className="col-md-8 col-xs-12 col-sm-8">
                                     <blockquote><p id="videoDescription">{videoDesc}</p></blockquote>

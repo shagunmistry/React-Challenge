@@ -4,16 +4,16 @@ var firebase = require('firebase');
 var firebaseui = require('firebaseui');
 
 class Loginuser extends Component {
-    constructor(props) {
+    /*constructor(props) {
         super(props);
-    }
+    } */
 
     render() {
 
         // FirebaseUI config.
         var uiConfig = {
             //Ignore this url. It's only there because its required but it't not where it goes. :) 
-            signInSuccessUrl: 'https://www.beztbaba.com/Profilepage',
+            signInSuccessUrl: 'http://localhost:3000/Profilepage',
             signInOptions: [
                 // Leave the lines as is for the providers you want to offer your users.
                 firebase.auth.GoogleAuthProvider.PROVIDER_ID,
