@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import Loginuser from './Loginuser';
 import Profilepage from './Profilepage';
+import Userprofile from './Userprofile';
 var firebase = require('firebase');
 
 class ProfileCheck extends Component {
@@ -12,7 +13,8 @@ class ProfileCheck extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loggedIn: false
+            loggedIn: false,
+            uid: ""
         };
         this.componentWillMount = this.componentWillMount.bind(this);
     }
@@ -22,9 +24,11 @@ class ProfileCheck extends Component {
         //Check if the user has already logged in, if so lead to their profile page. if not, lead to the Login Page. 
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
+                
                 //when the user has signed in, go to this page. 
                 referThis.setState({
-                    loggedIn: true
+                    loggedIn: true,
+                    uid: user.uid
                 });
             } else {
                 referThis.setState({
@@ -40,7 +44,7 @@ class ProfileCheck extends Component {
 
         if (this.state.loggedIn) {
             return (
-                <Profilepage />
+                <Userprofile uid={this.state.uid} customize={true}/>
             );
         } else {
             return (

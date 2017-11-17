@@ -10,9 +10,10 @@ const database = firebaseApp.database();
 class Profilecard extends Component {
     constructor(props) {
         super(props);
-        this.componentWillMount = this.componentWillMount.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
         this.loadInformation = this.loadInformation.bind(this);
     }
+
 
     /**
      * Check if the userId in the link is the same as the currently logged in user id
@@ -21,10 +22,19 @@ class Profilecard extends Component {
      * ELSE: 
      *      Don't display the buttons and show stats and other visitor stuff. 
      */
-    componentWillMount() {
+    componentDidMount() {
+        console.log(this.props.visitorTag);
+        //if the user is a visitor to this profile, then hide the Logout button and Edit Profile button
+        if (this.props.visitorTag) {
+            // document.getElementById('profile_dropdow').style.display = 'none';
+        }
         //Load the information
         this.loadInformation();
     }
+
+
+
+
     /**
      * Load the user's information
      */
@@ -58,9 +68,11 @@ class Profilecard extends Component {
      * Set the SRC of their picture
      */
     nameAndPicSetup(userid) {
+        var userElement = document.getElementById('user_name');
+        var profilePicElement = document.getElementById('profile_pic');
         database.ref('/users/' + userid).on('value', function (snapshot) {
-            document.getElementById('user_name').innerText = snapshot.val().username;
-            document.getElementById('profile_pic').src = snapshot.val().profile_picture;
+            userElement.innerText = snapshot.val().username;
+            profilePicElement.src = snapshot.val().profile_picture;
         });
     }
     /**
@@ -80,38 +92,53 @@ class Profilecard extends Component {
 
     render() {
         return (
-                <div className="card" id="profile_card">
-                    <div className="row">
-                        <div className="col-sm-3 col-md-2">
-                            <img id="profile_pic" src=""
-                                alt="this is profile" />
+            <div className="card" id="profile_card">
+                <div className="row">
+                    <div className="col-sm-3 col-md-2">
+                        <img id="profile_pic" src=""
+                            alt="this is profile" />
+                    </div>
+                    <div className="col-sm-10 col-md-9 info_section">
+                        <div className="row" id="test_row">
+                            <div className="col-sm-6">
+                                <h3 id="user_name">______________</h3>
+                                <h6 id="user_location">__________</h6>
+                            </div>
+
                         </div>
-                        <div className="col-sm-10 col-md-9 info_section">
-                            <div className="row" id="test_row">
-                                <div className="col-sm-6">
-                                    <h3 id="user_name">______________</h3>
-                                    <h6 id="user_location">__________</h6>
-                                </div>
+                        <div className="row" id="test_row">
+                            <div className="col-sm-3 col-xs-4">
+                                <button type="button" className="btn btn-danger btn-4" id="follower_count">Followers</button>
                             </div>
-                            <div className="row" id="test_row">
-                                <div className="col-sm-3 col-xs-4">
-                                    <button type="button" className="btn btn-danger btn-4" id="follower_count">Followers</button>
-                                </div>
-                                <div className="col-sm-3 col-xs-4">
-                                    <button type="button" className="btn btn-danger btn-4" id="following_count">Following</button>
-                                </div>
-                                <div className="col-sm-3 col-xs-4" style={{ marginTop: '-3px' }}>
-                                    <button id="aboutMe" type="button" className="btn btn-success btn-4" data-toggle="collapse" data-target="#about_section">About </button>
-                                </div>
+                            <div className="col-sm-3 col-xs-4">
+                                <button type="button" className="btn btn-danger btn-4" id="following_count">Following</button>
                             </div>
-                            <div className="row" id="test_row">
-                                <div className="col-sm-12 collapse" id="about_section">About Section</div>
+                            <div className="col-sm-3 col-xs-4" style={{ marginTop: '-2px' }}>
+                                <button id="aboutMe" type="button" className="btn btn-success btn-4" data-toggle="collapse" data-target="#about_section">About </button>
                             </div>
+                        </div>
+                        <div className="row" id="test_row">
+                            <div className="col-sm-12 collapse" id="about_section">About Section</div>
                         </div>
                     </div>
+                </div>
             </div>
         );
     }
 }
 
 export default Profilecard;
+
+/**
+ * <div className="col-sm-6 dropdown" id="profile_dropdown" style={{ display: 'block', zIndex:'999'}}>
+                                <button className="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <i className="fa fa-id-badge"></i>
+                                </button>
+                                <ul className="dropdown-menu">
+                                    <li><button id="logOutButton" type="button" className="btn btn-info btn-3" onClick={() => this.logOut()}>Log Out</button>
+                                    </li>
+                                    <li><button id="editButton" type="button" className="btn btn-info btn-4" onClick={() => this.editProfie()}>Edit Profile </button>
+                                    </li>
+                                </ul>
+                            </div>
+ */

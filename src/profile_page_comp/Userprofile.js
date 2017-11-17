@@ -1,24 +1,26 @@
 /**
  * Show the user's profile page
  * depending on whether or not the person is a user. 
- * ID and visitor tag will be passed in as props
+ * ID and visitor tag will be passed in as props 
+ * ID will either be in link or PROPS. 
  * 
  * If the userid on the this.props.match.params.userId is not the same as the currently logged in UserId,
  * then take it's a visitor. Else, show him the profile. 
  */
 import React, { Component } from 'react';
 import Profilecard from './Profile_card';
+import EditProfile from '../edit_profile_comp/EditProfile';
 import { firebaseApp } from '../firebase/Firebase';
 import CardContainer from '../cards//CardContainer';
 
 const database = firebaseApp.database();
-
+var userid;
 
 class Userprofile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            visitorTag: false
+            visitorTag: true
         }
         this.componentWillMount = this.componentWillMount.bind(this);
     }
@@ -35,22 +37,52 @@ class Userprofile extends Component {
         firebaseApp.auth().onAuthStateChanged(function (user) {
             //If the user is logged in, see if the prop id matches that.
             if (user) {
-                if (user.uid === referThis.props.match.params.userId) {
-                    //visiting own profile
-                    referThis.setState({ visitorTag: true });
+                //check if the user exists first. If not, send him to the Edit page. 
+                database.ref('users/').child(user.uid).on('value', function (snapshot) {
+                    if (snapshot.val() !== null) {
+                        //User exists so do nothing. 
+                    } else {
+                        window.location.replace('http://localhost:3000/EditProfile');
+                    }
+                });
+                //if the userid was passed in the link. 
+                if (!referThis.props.customize) {
+                    if (user.uid === referThis.props.match.params.userId) {
+                        //visiting own profile
+                        referThis.setState({ visitorTag: true });
+                    } else {
+                        referThis.setState({ visitorTag: false });
+                    }
                 } else {
-                    referThis.setState({ visitorTag: false });
+                    //if the user id was passed in the props
+                    if (user.uid === referThis.props.uid) {
+                        //visiting own profile
+                        referThis.setState({ visitorTag: true });
+                    } else {
+                        referThis.setState({ visitorTag: false });
+                    }
                 }
+            } else{
+                //there is no user logged in so visitor tag is automatically true. 
+                referThis.setState({
+                    visitorTag:true
+                });
             }
         });
     }
 
     render() {
-        const params = this.props.params;
+        if (this.props.customize) {
+            userid = this.props.uid;
+        } else {
+            userid = this.props.match.params.userId;
+        }
+
         return (
+            //user has signed in before, so send them to their pag.e 
             <div>
-                <Profilecard userId={this.props.match.params.userId}/>
-                <CardContainer userId={this.props.match.params.userId} customize={true}/>
+                <Profilecard userId={userid} visitorTag={this.state.visitorTag}/>
+                <CardContainer userId={userid} customize={true} visitorTag={this.state.visitorTag} />
             </div>
         );
     }

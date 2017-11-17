@@ -26,7 +26,7 @@ class SocialButtonComponent extends Component {
         });
         this.likeButton = this.likeButton.bind(this);
         this.dislikeButton = this.dislikeButton.bind(this);
-        this.componentWillMount = this.componentWillMount.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
 
         //Methods needed to Upload a Challenge Video
         this.challengeButton = this.challengeButton.bind(this);
@@ -41,7 +41,7 @@ class SocialButtonComponent extends Component {
     /**
      * 
      */
-    componentWillMount() {
+    componentDidMount() {
         var key = this.props.uniqueKey, referThis = this;
 
         //Go to the database under STATS/ and use the key to get all the information. 
@@ -322,7 +322,7 @@ class SocialButtonComponent extends Component {
         }, function (error) {
             //Upload was unsuccessfull so let them try again later and refresh the page. 
             window.alert("Upload Unsuccessfull. Please try again later! " + error.message);
-            window.location.replace('http://localhost:3000/ProfilePage');
+            window.location.replace('http://localhost:3000/Userprofile');
 
             //empty out array after everything is done. 
             this.emptyArray();

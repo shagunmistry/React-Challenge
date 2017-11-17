@@ -2,6 +2,8 @@
 /**
  * This is the place where it will pull up all the videos from the Firebase Database and
  * it will look like the Instagram time-line. 
+ * 
+ * Prop: CUSTOMIZE is for when you are calling this page to display either a specific user's profile page or specific category. 
  */
 import React, { Component } from 'react';
 //import Modal from 'boron/WaveModal';
@@ -38,7 +40,7 @@ class CardContainer extends Component {
         //Get the data
         var referThis = this;
 
-        //Only for homepage
+        //Only for homepage 
         //The ELSE part is for categorized or for User's page. 
         if (!this.props.customize) {
             var videosRef = dataRef.ref('posts/');
