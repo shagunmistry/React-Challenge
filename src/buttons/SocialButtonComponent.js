@@ -113,20 +113,20 @@ class SocialButtonComponent extends Component {
             //Check if the user has liked it before
             var checkStatRef = databaseRef.ref('statKeeper/' + referThis.props.userid + '/' + uniqueKey);
             checkStatRef.once('value').then(function (snapshot) {
-                if ((snapshot.val()) == null || !(snapshot.val().like)) {
+                console.log(snapshot.val());
+                if (!snapshot.exists() || !(snapshot.val().like)) {
                     //If the user has not liked it before set LIKE to true and dislike to false
                     updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/like'] = true;
                     updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/dislike'] = false;
                     updates['stats/' + uniqueKey + '/likes'] = originalLikes + 1;
-
+                    databaseRef.ref().update(updates);
                     //If the user has DISLIKED it before, then un-dislike it
-                    if (snapshot.val().dislike) {
+                    if (!snapshot.exists() || snapshot.val().dislike) {
                         updates['stats/' + uniqueKey + '/dislikes'] = originalDislikes - 1;
+                        databaseRef.ref().update(updates);
                     }
 
-                    //Push out the updates
-                    databaseRef.ref().update(updates);
-                    console.log("A: " + snapshot.exists());
+                    // console.log("A: " + snapshot.exists());
                 } else if (snapshot.val().like) {
                     //if the user has liked it before, then set the like to false, dislike to true, and increment the dislike #
                     updates['statKeeper/' + referThis.props.userid + '/' + uniqueKey + '/like'] = false;
@@ -212,7 +212,7 @@ class SocialButtonComponent extends Component {
      * @param {*} uniqueKey 
      */
     challengeButton(uniqueKey) {
-        var  referThis = this, challengerUserID = referThis.props.activeUserID;
+        var referThis = this, challengerUserID = referThis.props.activeUserID;
 
         //Check if they are logged in and that the user does not challenge his own video
         if (referThis.props.activeUser) {
@@ -322,7 +322,7 @@ class SocialButtonComponent extends Component {
         }, function (error) {
             //Upload was unsuccessfull so let them try again later and refresh the page. 
             window.alert("Upload Unsuccessfull. Please try again later! " + error.message);
-            window.location.replace('http://localhost:3000/Userprofile');
+            window.location.replace('https://www.beztbaba.com//Userprofile');
 
             //empty out array after everything is done. 
             this.emptyArray();
@@ -353,7 +353,8 @@ class SocialButtonComponent extends Component {
                 videoDesc: description,
                 videoCategory: category,
                 userid: referThis.props.activeUserID,
-                profilePic: referThis.props.profilePicURL
+                profilePic: referThis.props.profilePicURL,
+                userName: referThis.props.activeUserName
             });
             /*     var updateProfiles =[];
                  updateProfiles['posts/' + newVideoRef.key + '/profilePic'] = referThis.props.profilePic;
@@ -381,7 +382,7 @@ class SocialButtonComponent extends Component {
             databaseRef.ref().update(updates);
 
             //Replace the location to the homepage -- FOR NOW, change it later. 
-            window.location.replace('http://localhost:3000/');
+            window.location.replace('https://www.beztbaba.com//');
         });
         //empty out array after everything is done. 
         this.emptyArray();
@@ -395,7 +396,7 @@ class SocialButtonComponent extends Component {
     onDrop(acceptedFiles, rejectedFiles) {
         if (rejectedFiles == undefined && acceptedFiles[0] == undefined) {
             window.alert("Please choose a valid video file!");
-            window.location.replace('http://localhost:3000/UploadVideo');
+            window.location.replace('https://www.beztbaba.com//UploadVideo');
         } else {
             console.log("Accepted File: " + acceptedFiles[0].type)
             //assign the state.array to filesToBeSent var then push this file into it and then assign it back to state.

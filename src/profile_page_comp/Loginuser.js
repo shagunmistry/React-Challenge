@@ -13,7 +13,7 @@ class Loginuser extends Component {
         // FirebaseUI config.
         var uiConfig = {
             //Ignore this url. It's only there because its required but it't not where it goes. :) 
-            signInSuccessUrl: '/',
+            signInSuccessUrl: '/Profilecheck',
             signInOptions: [
                 // Leave the lines as is for the providers you want to offer your users.
                 firebase.auth.GoogleAuthProvider.PROVIDER_ID,

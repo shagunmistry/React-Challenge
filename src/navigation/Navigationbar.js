@@ -29,7 +29,7 @@ export default class Navigationbar extends Component {
      */
   logOut() {
     firebaseApp.auth().signOut().then(function () {
-      window.location.replace("http://localhost:3000/");
+      window.location.replace("https://www.beztbaba.com//");
     }).catch(function (error) {
       window.alert("There was an error, please try again later");
       window.location.reload();
@@ -40,7 +40,7 @@ export default class Navigationbar extends Component {
    * edit Profile page where you can change your picture and about status
    */
   editProfie() {
-    window.location.replace('http://localhost:3000/EditProfile');
+    window.location.replace('https://www.beztbaba.com//EditProfile');
   }
 
 

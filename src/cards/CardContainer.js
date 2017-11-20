@@ -90,7 +90,7 @@ class CardContainer extends Component {
                     userInfo.videoURL = data.val().videoURL;
                     userInfo.userName = user_name;
                     userInfo.uniqueKey = data.key;
-                    console.log(userInfo);
+                    //console.log(userInfo);
                     //Then push the object into an array.
                     userArray.push(userInfo);
                     //reset the userInfo object (just in case);

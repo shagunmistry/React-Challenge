@@ -17,7 +17,8 @@ class SingleCardContainer extends Component {
             like: false,
             dislike: false,
             challenge: false,
-            activeProfilePic: ""
+            activeProfilePic: "",
+            activeUserName: ""
         });
 
         this.componentWillMount = this.componentWillMount.bind(this);
@@ -36,7 +37,8 @@ class SingleCardContainer extends Component {
                     referThis.setState({
                         activeProfilePic: snapshot.val().profile_picture,
                         activeUser: true,
-                        activeUserID: activeUserid
+                        activeUserID: activeUserid,
+                        activeUserName: snapshot.val().username
                     });
                 });
             } else {
@@ -85,7 +87,8 @@ class SingleCardContainer extends Component {
                                         <SocialButtonComponent buttonType="challenge"
                                             activeUserID={this.state.activeUserID} activeUser={this.state.activeUser}
                                             userid={userid}
-                                            uniqueKey={uniqueKey} profilePicURL={this.state.activeProfilePic} />
+                                            uniqueKey={uniqueKey} profilePicURL={this.state.activeProfilePic}
+                                            activeUserName={this.state.activeUserName} />
                                     </div>
                                     <div className="col-md-4 col-xs-6 col-sm-4">
                                         <SocialButtonComponent buttonType="dislike"

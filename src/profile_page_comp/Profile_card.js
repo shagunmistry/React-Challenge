@@ -1,8 +1,14 @@
 /**
 *   User's Profile card at the top of the profile page
+    PROPS: userId, visitorTag, visitorId <-- will be empty if the user is not logged in. 
  */
 import React, { Component } from 'react';
 import { firebaseApp } from '../firebase/Firebase';
+
+var Modal = require('boron/FlyModal');
+var modalStyle = {
+    width: 'auto',
+}
 
 const database = firebaseApp.database();
 
@@ -12,6 +18,7 @@ class Profilecard extends Component {
         super(props);
         this.componentDidMount = this.componentDidMount.bind(this);
         this.loadInformation = this.loadInformation.bind(this);
+        this.followUser = this.followUser.bind(this);
     }
 
 
@@ -23,7 +30,7 @@ class Profilecard extends Component {
      *      Don't display the buttons and show stats and other visitor stuff. 
      */
     componentDidMount() {
-        console.log(this.props.visitorTag);
+        console.log("Profile_Card " + this.props.visitorTag);
         //if the user is a visitor to this profile, then hide the Logout button and Edit Profile button
         if (this.props.visitorTag) {
             // document.getElementById('profile_dropdow').style.display = 'none';
@@ -59,7 +66,7 @@ class Profilecard extends Component {
                 referThis.fillAboutSection(userId);
             } else {
                 window.alert("This user does not Exist");
-                window.location.replace("http://localhost:3000");
+                window.location.replace("https://www.beztbaba.com/");
             }
         });
     }
@@ -71,8 +78,15 @@ class Profilecard extends Component {
         var userElement = document.getElementById('user_name');
         var profilePicElement = document.getElementById('profile_pic');
         database.ref('/users/' + userid).on('value', function (snapshot) {
-            userElement.innerText = snapshot.val().username;
-            profilePicElement.src = snapshot.val().profile_picture;
+            if (snapshot.val().userName === null || snapshot.val().profile_picture === null) {
+                //Getting null for the informtion so send them to edit profile
+                window.alert("Please fill out your profile.");
+                window.location.replace('/EditProfile');
+            } else {
+                userElement.innerText = snapshot.val().username;
+                profilePicElement.src = snapshot.val().profile_picture;
+            }
+
         });
     }
     /**
@@ -89,6 +103,74 @@ class Profilecard extends Component {
             document.getElementById('user_location').innerText = locationField;
         });
     }
+
+    /**
+     * Follow / Unfollow Button
+     * LOGIC: 
+     *  - Check if the clicker is a visitor or a owner
+     *  - If visitor --> make sure he's logged in. (If not, send him to log in screen);
+     *                   Check database to see if he/she already follows the owner 
+     *                   If (already follows) --> unfollow and set his id tag to false under owner's Follow node. 
+     *                   If (new Follow) --> Set his user id to true under Owner's Follow Node.
+     *  - If Owner -->   Go through the list of keys under his name under Follow node and display the users that follow him. 
+     * --Create an algorithm later that listens to those values and sends out emails/notifications based on new follow/unfollow.                
+     */
+    followUser() {
+        var referThis = this, visitorId = this.props.visitorId, userId = this.props.userId, updates = {};
+
+        //Check if visitor
+        if (this.props.visitorTag) {
+            //He's a visitor so get his visitorId - If he's not logged in, that will be blank
+            if (visitorId === "") {
+                //He's not logged in so ask him to log in
+                window.alert("Please log in to Follow");
+            } else {
+                //He's logged in, so check if the user already follows the owner. 
+                var followRef = database.ref('Follow_Challenge_Stats/' + userId);
+                followRef.once('value', function (snapshot) {
+                    if (!snapshot.exists()) {
+                        //if the snapshot does not exist
+                        console.log("The user does not have a followers Node");
+                        //Create a node for this user and insert the info of person who wants to follow this user. 
+                        updates['Follow_Challenge_Stats/' + userId + '/' + visitorId + '/follow'] = true;
+                        database.ref().update(updates).then(function (success) {
+                            //Push out update success and change the color 
+                            document.getElementById('follower_count').style.backgroundColor = 'white';
+                            document.getElementById('follower_count').style.color = 'black';
+                        });
+                        //Later create an algorithm that sends out emails and automatically updates the counts. 
+
+                    } else {
+                        //if the snapshot does exist, see if the person already follows the owner
+                        if (snapshot.child(visitorId + '/follow').val()) {
+                            //The person already follows this person so set this to false. 
+                            updates['Follow_Challenge_Stats/' + userId + '/' + visitorId + '/follow'] = false;
+                            database.ref().update(updates).then(function (success) {
+                                console.log(snapshot.child(visitorId + '/follow').val());
+                            });
+                        } else {
+                            //The person does not follow this person so follow him. 
+                            updates['Follow_Challenge_Stats/' + userId + '/' + visitorId + '/follow'] = true;
+                            database.ref().update(updates).then(function (success) {
+                                console.log("Follow this person: " + snapshot.child(visitorId + '/follow').val());
+                                document.getElementById('follower_count').style.backgroundColor = 'white';
+                                document.getElementById('follower_count').style.color = 'black';
+                            });
+                        }
+
+                    }
+                });
+            }
+
+        } else {
+            //The person is looking at his own profile so show him a list of his followers
+            console.log("This person is looking at his own profile");
+            //go to the database and get a list of the nodes that have "Follow: true"
+            window.location.replace('/Followers');
+
+        }
+    }
+
 
     render() {
         return (
@@ -108,10 +190,12 @@ class Profilecard extends Component {
                         </div>
                         <div className="row" id="test_row">
                             <div className="col-sm-3 col-xs-4">
-                                <button type="button" className="btn btn-danger btn-4" id="follower_count">Followers</button>
+                                <button type="button" className="btn btn-danger btn-4" id="follower_count" title="Followers"
+                                    onClick={() => this.followUser()}
+                                ><i className="fa fa-users"></i> | 1239</button>
                             </div>
                             <div className="col-sm-3 col-xs-4">
-                                <button type="button" className="btn btn-danger btn-4" id="following_count">Following</button>
+                                <button type="button" className="btn btn-danger btn-4" id="challenges_count" title="Challenges"><i className="fa fa-shield"></i> | 1231</button>
                             </div>
                             <div className="col-sm-3 col-xs-4" style={{ marginTop: '-2px' }}>
                                 <button id="aboutMe" type="button" className="btn btn-success btn-4" data-toggle="collapse" data-target="#about_section">About </button>
@@ -128,17 +212,3 @@ class Profilecard extends Component {
 }
 
 export default Profilecard;
-
-/**
- * <div className="col-sm-6 dropdown" id="profile_dropdown" style={{ display: 'block', zIndex:'999'}}>
-                                <button className="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">
-                                    <i className="fa fa-id-badge"></i>
-                                </button>
-                                <ul className="dropdown-menu">
-                                    <li><button id="logOutButton" type="button" className="btn btn-info btn-3" onClick={() => this.logOut()}>Log Out</button>
-                                    </li>
-                                    <li><button id="editButton" type="button" className="btn btn-info btn-4" onClick={() => this.editProfie()}>Edit Profile </button>
-                                    </li>
-                                </ul>
-                            </div>
- */

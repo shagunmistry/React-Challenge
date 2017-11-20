@@ -41,20 +41,21 @@ class EditProfile extends Component {
      */
     cancelChanges() {
         document.getElementById('card_header').innerText = "Canceling Changes";
-        window.location.replace('http://localhost:3000/ProfileCheck');
+        window.location.replace('https://www.beztbaba.com//ProfileCheck');
     }
 
     /**
      * Validate the form and update the data in the database.
      */
     submitChanges() {
+        var newUserName = document.getElementById('username').value;
         var aboutInput = document.getElementById('aboutInput').value;
         var locationIn = document.getElementById('locationInput').value;
         var facebookLink = document.getElementById('facebookLinkInput').value;
         var linkedLink = document.getElementById('linkedInLinkInput').value;
         var twitterLink = document.getElementById('twitterLinkInput').value;
-        console.log("Here are all the input values: " + aboutInput + '\n' + locationIn
-            + '\n' + facebookLink + '\n' + linkedLink + '\n' + twitterLink);
+        //console.log("Here are all the input values: " + aboutInput + '\n' + locationIn
+        //    + '\n' + facebookLink + '\n' + linkedLink + '\n' + twitterLink);
 
         //Write to the About section and if there is an error, give out an error. 
 
@@ -80,7 +81,13 @@ class EditProfile extends Component {
                 window.alert(error.message);
             }*/
         });
-        window.location.replace("http://localhost:3000/Profilecheck");
+
+        //Write the new username to the database
+        var updates = {};
+        updates['users/' + this.state.userUID + '/username'] = newUserName;
+        databaseRef.ref().update(updates);
+
+        window.location.replace("https://www.beztbaba.com//Profilecheck");
 
     }
 
@@ -154,28 +161,45 @@ class EditProfile extends Component {
                     userName: user.displayName,
                     userEmail: user.email,
                     userPicture: user.photoURL
-                })
+                });
+
+
 
                 //get the user profile pic url;
                 databaseRef.ref('/users/' + user.uid).on('value', function (snapshot) {
-                    var profilePic = snapshot.val().profile_picture;
+                    if (snapshot.val() === null) {
+                        var profilePic = "";
+                    } else {
+                        var profilePic = snapshot.val().profile_picture;
+                    }
                     document.getElementById("profilePicture").src = profilePic;
                 });
 
                 //Get the "About Section" data of the User.
-                databaseRef.ref('/users/' + referThis.state.userUID + '/about_section/').on('value', function (snapshot) {
-                    console.log("About Input: " + snapshot.val().aboutInput);
-                    var aboutInput = snapshot.val().aboutInput;
-                    var locationInput = snapshot.val().locationInp;
+                databaseRef.ref('/users/' + user.uid + '/about_section/').on('value', function (snapshot) {
+                    //console.log("About Input: " + snapshot.val().aboutInput);
+                    if (snapshot.val() === null) {
+                        var aboutInput = "", locationInput = "";
+                    } else {
+                        var aboutInput = snapshot.val().aboutInput;
+                        var locationInput = snapshot.val().locationInp;
+                    }
+
                     document.getElementById("aboutInput").value = aboutInput;
                     document.getElementById('locationInput').value = locationInput;
                 });
 
                 //get the user social_media_links information;
-                databaseRef.ref('/users/' + referThis.state.userUID + '/social_media_links/').on('value', function (snapshot) {
-                    var fbLink = snapshot.val().facebook;
-                    var twLink = snapshot.val().twitter;
-                    var inLink = snapshot.val().linkedin;
+                databaseRef.ref('/users/' + user.uid + '/social_media_links/').on('value', function (snapshot) {
+                    if (snapshot.val() === null) {
+                        var fbLink = "";
+                        var twLink = "";
+                        var inLink = "";
+                    } else {
+                        var fbLink = snapshot.val().facebook;
+                        var twLink = snapshot.val().twitter;
+                        var inLink = snapshot.val().linkedin;
+                    }
                     document.getElementById('facebookLinkInput').value = fbLink;
                     document.getElementById('twitterLinkInput').value = twLink;
                     document.getElementById('linkedInLinkInput').value = inLink;
@@ -186,7 +210,7 @@ class EditProfile extends Component {
                 //user not logged in
                 //same as replacing the current location in current window. 
                 window.alert("Please log in");
-                window.location.replace("http://localhost:3000/Profilecheck");
+                window.location.replace("/Profilecheck");
             }
         });
     }
@@ -219,6 +243,8 @@ class EditProfile extends Component {
                         </div>
                     </div>
                     <form>
+                        <label>Name</label>
+                        <input type="text" id="username" className="form-control" placeholder="What is your name?" required="true" />
                         <label>About</label>
                         <textarea id="aboutInput" className="form-control" type="text" placeholder="Say something about yourself and your content" rows="5"
                             required="true" />

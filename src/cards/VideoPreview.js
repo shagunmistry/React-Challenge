@@ -27,7 +27,7 @@ class VideoPreview extends Component {
                             <hr />
                             <br />
                             <div id="videoInfoSection">
-                                <button className="btn btn-danger btn-lg" onClick={() => window.location.replace('http://localhost:3000/')} >Continue</button>
+                                <button className="btn btn-danger btn-lg" onClick={() => window.location.replace('https://www.beztbaba.com//')} >Continue</button>
                             </div>
                         </div>
                     </div>

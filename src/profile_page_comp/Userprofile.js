@@ -6,6 +6,7 @@
  * 
  * If the userid on the this.props.match.params.userId is not the same as the currently logged in UserId,
  * then take it's a visitor. Else, show him the profile. 
+ * If the CUStOMIZE prop is true then that means the user came here by clicking on Login Navigation Link -- He's the OWNER
  */
 import React, { Component } from 'react';
 import Profilecard from './Profile_card';
@@ -20,7 +21,8 @@ class Userprofile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            visitorTag: true
+            visitorTag: true,
+            visitorId: ""
         }
         this.componentWillMount = this.componentWillMount.bind(this);
     }
@@ -42,30 +44,35 @@ class Userprofile extends Component {
                     if (snapshot.val() !== null) {
                         //User exists so do nothing. 
                     } else {
-                        window.location.replace('http://localhost:3000/EditProfile');
+                        window.location.replace('https://www.beztbaba.com//EditProfile');
                     }
                 });
                 //if the userid was passed in the link. 
                 if (!referThis.props.customize) {
+                    //  console.log(user.uid + " " + referThis.props.match.params.userId);
+                    // console.log(user.uid === referThis.props.match.params.userId);
                     if (user.uid === referThis.props.match.params.userId) {
                         //visiting own profile
-                        referThis.setState({ visitorTag: true });
-                    } else {
                         referThis.setState({ visitorTag: false });
+                    } else {
+                        referThis.setState({ visitorTag: true, visitorId: user.uid });
                     }
                 } else {
                     //if the user id was passed in the props
+                    //If the user is visiting his own profile
+                    //   console.log("No Customization: " + user.uid + " " + referThis.props.uid);
+                    //  console.log("No Customization : " + user.uid === referThis.props.uid);
                     if (user.uid === referThis.props.uid) {
                         //visiting own profile
-                        referThis.setState({ visitorTag: true });
-                    } else {
                         referThis.setState({ visitorTag: false });
+                    } else {
+                        referThis.setState({ visitorTag: true, visitorId: user.uid });
                     }
                 }
-            } else{
+            } else {
                 //there is no user logged in so visitor tag is automatically true. 
                 referThis.setState({
-                    visitorTag:true
+                    visitorTag: true, visitorId: ""
                 });
             }
         });
@@ -73,15 +80,17 @@ class Userprofile extends Component {
 
     render() {
         if (this.props.customize) {
+            //User is the owner 
             userid = this.props.uid;
         } else {
+            //User is likely a visitor
             userid = this.props.match.params.userId;
         }
 
         return (
             //user has signed in before, so send them to their pag.e 
             <div>
-                <Profilecard userId={userid} visitorTag={this.state.visitorTag}/>
+                <Profilecard userId={userid} visitorTag={this.state.visitorTag} visitorId={this.state.visitorId} />
                 <CardContainer userId={userid} customize={true} visitorTag={this.state.visitorTag} />
             </div>
         );
