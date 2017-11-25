@@ -66,7 +66,7 @@ class Profilecard extends Component {
                 referThis.fillAboutSection(userId);
             } else {
                 window.alert("This user does not Exist");
-                window.location.replace("https://www.beztbaba.com/");
+                window.location.replace("/");
             }
         });
     }

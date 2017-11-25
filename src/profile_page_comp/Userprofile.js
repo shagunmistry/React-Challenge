@@ -44,7 +44,7 @@ class Userprofile extends Component {
                     if (snapshot.val() !== null) {
                         //User exists so do nothing. 
                     } else {
-                        window.location.replace('https://www.beztbaba.com//EditProfile');
+                        window.location.replace('/EditProfile');
                     }
                 });
                 //if the userid was passed in the link. 

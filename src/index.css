@@ -1,12 +1,15 @@
 /****ANIMATIOF FOR THE WHOLE PAGE***REMOVE IF NECESSARY ******/
 *{
 	transition-property: all;
-	transition-duration: .6s;
+	transition-duration: .4s;
 	transition-timing-function: ease;
 }
 /********navbar************/
 #navContainer{
 	margin-top: 0px;
+}
+#navContainer{
+	min-width: 525px;
 }
 
 /************* Whole BODY Styles *******************/
@@ -20,7 +23,6 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-
 }
 .modal-dialog{
 		position: relative;
@@ -170,6 +172,7 @@ button{
 .container{
 	margin-top: 10px;
 	margin-bottom: 0px;
+	min-width: 525px;
 }
 #generalCard{
 	width: 525px;
@@ -186,7 +189,7 @@ button{
 	border-radius: 5px;
 	
 }
-
+/*** Like + Challenge + Dislike Buttons **/
 .supportButtons{
 	color: black;
 	font-size: 25px;

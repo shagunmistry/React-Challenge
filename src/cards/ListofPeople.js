@@ -34,7 +34,7 @@ class ListofPeople extends Component {
                 }
             } else {
                 window.alert("Please Log In");
-                window.location.replace("https://www.beztbaba.com//");
+                window.location.replace("/");
             }
         });
 

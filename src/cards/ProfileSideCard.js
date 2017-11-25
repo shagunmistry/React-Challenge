@@ -35,7 +35,7 @@ class ProfileSideCard extends Component {
         databaseRef.ref('/users/' + userid + '/about_section/').on('value', function (snapshot) {
             if (snapshot.val() == null) {
                 console.log("Please fill out your Profile Information First");
-                window.location.replace('https://www.beztbaba.com//Editprofile');
+                window.location.replace('/Editprofile');
             }
             var aboutInput = snapshot.val().aboutInput;
             var locationField = snapshot.val().locationInp;

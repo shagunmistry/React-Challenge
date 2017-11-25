@@ -29,7 +29,7 @@ export default class Navigationbar extends Component {
      */
   logOut() {
     firebaseApp.auth().signOut().then(function () {
-      window.location.replace("https://www.beztbaba.com//");
+      window.location.replace("/");
     }).catch(function (error) {
       window.alert("There was an error, please try again later");
       window.location.reload();
@@ -40,7 +40,7 @@ export default class Navigationbar extends Component {
    * edit Profile page where you can change your picture and about status
    */
   editProfie() {
-    window.location.replace('https://www.beztbaba.com//EditProfile');
+    window.location.replace('/EditProfile');
   }
 
 
@@ -59,13 +59,13 @@ export default class Navigationbar extends Component {
               <a className="navbar-brand" href="Hometrend"><img alt="Logo" src="https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/o/blackInside.png?alt=media&token=3db37412-a392-4e45-8d1d-36e8a784649a" width="30" height="30" className="d-inline-block align-top" /></a>
             </div>
             <div className="Collapse navbar-collapse" id="myNavbar">
-              <ul className="nav navbar-nav">
-                {/* <li><NavLink to="/Comedy" onClick={()=>window.location.reload()} ><i className="fa fa-hand-spock-o"></i><span> Comedy</span></NavLink></li>
+              {/*   <ul className="nav navbar-nav">
+               <li><NavLink to="/Comedy" onClick={()=>window.location.reload()} ><i className="fa fa-hand-spock-o"></i><span> Comedy</span></NavLink></li>
                     <li><NavLink to="/Sports" onClick={()=>window.location.reload()} ><i className="fa fa-bicycle"></i><span> Sports</span></NavLink></li>
                     <li><NavLink to="/Dancing" onClick={()=>window.location.reload()}><i className="fa fa-cubes"></i><span> Dancing</span></NavLink></li>
                     <li><NavLink to="/Cooking" onClick={()=>window.location.reload()}><i className="fa fa-diamond"></i><span> Cooking</span></NavLink></li>
-    */}
-              </ul>
+    
+              </ul>*/}
               <ul className="nav navbar-nav navbar-right">
                 <li><NavLink to="/Hometrend" onClick={() => window.location.reload()}><i className="fa fa-home"></i> Home </NavLink></li>
                 <li><NavLink to="/OngoingChallenges" onClick={() => window.location.reload()}><i className="fa fa-area-chart"></i> Ongoing Challenges</NavLink></li>
@@ -95,16 +95,3 @@ export default class Navigationbar extends Component {
   }
 }
 
-/**
- * <div className="col-sm-6 dropdown" id="profile_dropdown" style={{ display: 'block', zIndex:'999'}}>
-                                <button className="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">
-                                    <i className="fa fa-id-badge"></i>
-                                </button>
-                                <ul className="dropdown-menu">
-                                    <li><button id="logOutButton" type="button" className="btn btn-info btn-3" onClick={() => this.logOut()}>Log Out</button>
-                                    </li>
-                                    <li><button id="editButton" type="button" className="btn btn-info btn-4" onClick={() => this.editProfie()}>Edit Profile </button>
-                                    </li>
-                                </ul>
-                            </div>
- */

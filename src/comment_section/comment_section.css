@@ -1,0 +1,33 @@
+#comment_user_pic{
+    width: 35px; 
+    height: 35px;
+    border-radius: 50%;
+}
+#comment_list_group_item{
+    padding: 7px;
+    width: 100%;
+}
+#comment_section{
+    text-align: left;
+    background-color: transparent;
+}
+.comment_text_class{
+    width: 400px;
+    margin-left: 5px;
+}
+.btn-circle{
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+#finished_profile_pic_div{
+    width: auto;
+}
+#finished_comment_div{
+    top: 3px;
+    padding: 3px;
+}

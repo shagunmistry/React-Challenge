@@ -41,7 +41,7 @@ class EditProfile extends Component {
      */
     cancelChanges() {
         document.getElementById('card_header').innerText = "Canceling Changes";
-        window.location.replace('https://www.beztbaba.com//ProfileCheck');
+        window.location.replace('/ProfileCheck');
     }
 
     /**
@@ -87,7 +87,7 @@ class EditProfile extends Component {
         updates['users/' + this.state.userUID + '/username'] = newUserName;
         databaseRef.ref().update(updates);
 
-        window.location.replace("https://www.beztbaba.com//Profilecheck");
+        window.location.replace("/Profilecheck");
 
     }
 

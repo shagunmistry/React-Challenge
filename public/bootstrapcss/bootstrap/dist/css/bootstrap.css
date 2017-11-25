@@ -12,11 +12,6 @@ html {
 }
 body {
     margin: 0;
-    background: linear-gradient(to top, #09203f 0%, #537895 100%) no-repeat center center fixed;	
-     -webkit-background-size: cover;
-        -moz-background-size: cover;
-        -o-background-size: cover;
-        background-size: cover;
 }
 article,
 aside,
@@ -4588,6 +4583,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     }
 }
 .navbar-default {
+    min-width: 570px;
     background-color: white;
     border: none;
 }

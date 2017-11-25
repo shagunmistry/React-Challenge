@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Player, /*ControlBar,ForwardControl, CurrentTimeDisplay,  TimeDivider, VolumeMenuButton, BigPlayButton */ } from 'video-react';
 import { Link } from 'react-router-dom';
+import CommentSection from '../comment_section/CommentSection';
 
 //import ModalContainer from '../cards/ModalContainer';
 import SocialButtonComponent from '../buttons/SocialButtonComponent';
@@ -109,6 +110,9 @@ class SingleCardContainer extends Component {
                             </div>
                         </div>
                     </div>
+                    <CommentSection activeUser={this.state.activeUser} activeUserID={this.state.activeUserID}
+                                    uniqueKey={uniqueKey} vidOwnerUserId={userid}
+                    />
                 </div>
             </div>
         );

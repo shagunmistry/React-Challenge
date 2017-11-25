@@ -41,7 +41,7 @@ class Profilepage extends Component {
      */
     logOut() {
         firebaseApp.auth().signOut().then(function () {
-            window.location.replace("https://www.beztbaba.com//");
+            window.location.replace("/");
         }).catch(function (error) {
             window.alert("There was an error, please try again later");
             window.location.reload();
@@ -52,7 +52,7 @@ class Profilepage extends Component {
      * edit Profile page where you can change your picture and about status
      */
     editProfie() {
-        window.location.replace('https://www.beztbaba.com//EditProfile');
+        window.location.replace('/EditProfile');
     }
 
     /**
@@ -110,7 +110,7 @@ class Profilepage extends Component {
                 console.log("User has not logged in");
                 //user not logged in
                 //same as replacing the current location in current window. 
-                window.location.replace("https://www.beztbaba.com//Profilecheck");
+                window.location.replace("/Profilecheck");
             }
         });
     }
@@ -174,7 +174,7 @@ class Profilepage extends Component {
         databaseRef.ref('/users/' + userid + '/about_section/').on('value', function (snapshot) {
             if (snapshot.val() == null) {
                 console.log("Please fill out your Profile Information First");
-                window.location.replace('https://www.beztbaba.com//Editprofile');
+                window.location.replace('/Editprofile');
             }
             var aboutInput = snapshot.val().aboutInput;
             var locationField = snapshot.val().locationInp;
