@@ -28,7 +28,7 @@ var databaseRef = firebaseApp.database();
 class CommentBox extends Component {
     constructor(props) {
         super(props);
-       
+
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.submitComment = this.submitComment.bind(this);
@@ -59,11 +59,12 @@ class CommentBox extends Component {
          */
         var actUserID = referProps.activeUserID,
             vidUniqueKey = referProps.uniqueKey, ownerUserId = referProps.vidOwnUserId,
-            commentText = document.getElementById('comment_text').value;
+            commentText = document.getElementById(actUserID + vidUniqueKey).value;
 
         //If the comment box is empty, do nothing
         if (commentText === "") {
-            console.log("Comment Box is empty");
+            // console.log("Comment Box is empty");
+
         } else {
             //As long as the user is logged in
             if (this.props.activeUser) {
@@ -81,7 +82,7 @@ class CommentBox extends Component {
                 //Push out the update now. 
                 databaseRef.ref().update(updates).then(function (success) {
                     //After submission, show the comment on the page. 
-                    document.getElementById('comment_text').value = "";
+                    document.getElementById(actUserID + vidUniqueKey).value = "";
                 });
             }
         }
@@ -94,7 +95,7 @@ class CommentBox extends Component {
             <div>
                 <img style={{ display: this.props.activeUser ? '' : 'none', }} src="https://firebasestorage.googleapis.com/v0/b/challengemetest-ea2e0.appspot.com/o/users%2FbEcyh6hrlGXbTq8ZE27BxFgvHXX2%2Fimages%2FSelf_pic.PNG?alt=media&token=ff1c0b02-6ebe-4887-83f3-cff884311c55" alt="comment_user" id="comment_user_pic" />
                 <input
-                    type="text" className="comment_text_class" id="comment_text"
+                    type="text" className="comment_text_class" id={this.props.activeUserID + this.props.uniqueKey}
                     placeholder={this.props.activeUser ? "What do you think?..." : 'Please log in to comment...'}
                     onClick={this.props.activeUser ? '' : () => this.showModal()}
                 />

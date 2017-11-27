@@ -10,7 +10,7 @@ import { firebaseApp } from '../firebase/Firebase';
 var databaseRef = firebaseApp.database();
 
 
-var commentInfo = {}, commentPassArray = [];
+var commentPassArray = [];
 
 class FinishedComments extends Component {
     constructor(props) {
@@ -27,9 +27,10 @@ class FinishedComments extends Component {
        * Purpose of this is to show the comments as soon as they are added. 
        */
         var referProps = this.props, referThis = this;
+
         var postCommentRef = databaseRef.ref('Comments/' + referProps.uniqueKey);
         //Anytime there's a new comment added, add it to the row 
-        postCommentRef.on('value', function (data) {
+        /* postCommentRef.on('value', function (data) {
             if (data.exists()) {
                 data.forEach(function (snapshot) {
                     //console.log(snapshot.val());
@@ -46,12 +47,31 @@ class FinishedComments extends Component {
                 referThis.setState({
                     mainComments: commentPassArray
                 });
+            } 
+ 
+         });*/
+        postCommentRef.on('child_added', function (data) {
+            // console.log(referProps.uniqueKey);
+            //console.log(data.val());
+            // console.log(data.exists());
+            if (data.exists()) {
+                var commentInfo = {};
+                commentInfo.commentTxt = data.val().commentText;
+                commentInfo.authorId = data.val().userId;
+                //Push out this info to the array
+                commentPassArray.push(commentInfo);
+                //Then clear out commentInfo just to be safe 
+                commentInfo = {};
+
+                //Set the state with the arrat
+                referThis.setState({
+                    mainComments: commentPassArray
+                });
             } else {
                 referThis.setState({
                     noComments: true
                 });
             }
-
         });
     }
 
@@ -60,9 +80,9 @@ class FinishedComments extends Component {
         //console.log(mainArray.length);
         if (this.state.noComments) {
             return (
-                <div style={{textAlign: 'center'}}>There are no comments!</div>
+                <div style={{ textAlign: 'center' }}>There are no comments!</div>
             );
-        } else{
+        } else {
             return (
                 <div>
                     {

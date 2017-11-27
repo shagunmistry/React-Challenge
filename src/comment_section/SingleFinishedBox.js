@@ -40,7 +40,7 @@ class SingleFinishedBox extends Component {
     render() {
         const { authorId, commentTxt } = this.props;
         return (
-            <div>
+            <div style={{ borderBottom: '1px solid black'}} >
                 <div className="row">
                     <div className="col-sm-2" id="finished_profile_pic_div">
                         <Link to={`/users/${authorId}`} ><img src={this.state.profile_picture_src} alt={this.state.userName} id="comment_user_pic" /></Link>
