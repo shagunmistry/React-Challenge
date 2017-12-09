@@ -1,0 +1,38 @@
+/******************************************NEW _ PROFILE _ PAGE ********************************/
+#profile_pic{
+	max-width: 150px;
+	max-height: 200px;
+	margin:10px;
+}
+#profile_card{
+	margin-right: auto;
+	margin-left: auto;
+    border: none;
+    box-shadow:2px 2px 7px whitesmoke;
+	max-width: 800px;
+    background-color: white;
+    
+}
+#test_row{
+	text-align: left;	padding-left:30px; margin-bottom: 3px;
+}
+
+@media screen and (max-width: 994px) {
+	#profile_card{
+		max-width: 400px;
+        min-width: 400px;
+        text-align: center;
+	}
+	#profile_pic{
+        max-width: 250px;
+        height: 250px;
+    }
+    #test_row{
+        text-align: center;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    #user_name{
+        margin-top: 5px;
+    }
+}

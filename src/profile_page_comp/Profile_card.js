@@ -4,11 +4,12 @@
  */
 import React, { Component } from 'react';
 import { firebaseApp } from '../firebase/Firebase';
-
+require('./Profile_page.css');
 var Modal = require('boron/FlyModal');
 var modalStyle = {
     width: 'auto',
-}
+};
+
 
 const database = firebaseApp.database();
 
@@ -16,6 +17,10 @@ const database = firebaseApp.database();
 class Profilecard extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            followCount: 0,
+            challengesCount: 0
+        };
         this.componentDidMount = this.componentDidMount.bind(this);
         this.loadInformation = this.loadInformation.bind(this);
         this.followUser = this.followUser.bind(this);
@@ -77,6 +82,7 @@ class Profilecard extends Component {
     nameAndPicSetup(userid) {
         var userElement = document.getElementById('user_name');
         var profilePicElement = document.getElementById('profile_pic');
+        var referThis = this;
         database.ref('/users/' + userid).on('value', function (snapshot) {
             if (snapshot.val().userName === null || snapshot.val().profile_picture === null) {
                 //Getting null for the informtion so send them to edit profile
@@ -88,6 +94,42 @@ class Profilecard extends Component {
             }
 
         });
+
+        /**
+         * See if the visitor already follows this person
+         * if so, change the color of the button 
+         */
+        if (this.props.visitorTag) {
+            database.ref('/Follow_Challenge_Stats/' + userid + '/' + this.props.visitorId).on('value', function (snapshot) {
+                if (snapshot.exists()) {
+                    //if the person follows this user
+                    if (snapshot.val().follow) {
+                        document.getElementById('follower_count').style.backgroundColor = 'white';
+                        document.getElementById('follower_count').style.color = 'red';
+                    }
+                }
+
+            });
+        }
+
+        /**
+         * Get the follower counts and Challenges Counts
+         */
+        database.ref('/Followers_Challengers_Count/' + userid).on('value', function (dataShot) {
+            if (dataShot.exists()) {
+                //The node for this user exists so get the follower count. 
+                referThis.setState({
+                    followCount: dataShot.val().followerCount,
+                    challengesCount: dataShot.val().challengesCount
+                });
+            } else {
+                referThis.setState({
+                    followCount: 0,
+                    challengesCount: 0
+                });
+            }
+        });
+
     }
     /**
      * Fill in the about Section --> Name, Speciality, Follower Count, Challenge Count
@@ -116,7 +158,8 @@ class Profilecard extends Component {
      * --Create an algorithm later that listens to those values and sends out emails/notifications based on new follow/unfollow.                
      */
     followUser() {
-        var referThis = this, visitorId = this.props.visitorId, userId = this.props.userId, updates = {};
+        var referThis = this, visitorId = this.props.visitorId, userId = this.props.userId, updates = {},
+            followerCount = this.state.followCount, challengesCount = this.state.challengesCount;
 
         //Check if visitor
         if (this.props.visitorTag) {
@@ -133,28 +176,31 @@ class Profilecard extends Component {
                         console.log("The user does not have a followers Node");
                         //Create a node for this user and insert the info of person who wants to follow this user. 
                         updates['Follow_Challenge_Stats/' + userId + '/' + visitorId + '/follow'] = true;
+                        updates['Followers_Challengers_Count/' + userId + '/followerCount'] = followerCount + 1;
                         database.ref().update(updates).then(function (success) {
                             //Push out update success and change the color 
                             document.getElementById('follower_count').style.backgroundColor = 'white';
-                            document.getElementById('follower_count').style.color = 'black';
+                            document.getElementById('follower_count').style.color = 'red';
                         });
                         //Later create an algorithm that sends out emails and automatically updates the counts. 
 
                     } else {
                         //if the snapshot does exist, see if the person already follows the owner
                         if (snapshot.child(visitorId + '/follow').val()) {
-                            //The person already follows this person so set this to false. 
+                            //The person already follows this person so set this to false. --Unfollow the person
                             updates['Follow_Challenge_Stats/' + userId + '/' + visitorId + '/follow'] = false;
+                            updates['Followers_Challengers_Count/' + userId + '/followerCount'] = followerCount - 1;
                             database.ref().update(updates).then(function (success) {
-                                console.log(snapshot.child(visitorId + '/follow').val());
+                                document.getElementById('follower_count').style.backgroundColor = 'red';
+                                document.getElementById('follower_count').style.color = 'white';
                             });
                         } else {
-                            //The person does not follow this person so follow him. 
+                            //The person does not follow this person so follow him.  --Follow the person
                             updates['Follow_Challenge_Stats/' + userId + '/' + visitorId + '/follow'] = true;
+                            updates['Followers_Challengers_Count/' + userId + '/followerCount'] = followerCount + 1;
                             database.ref().update(updates).then(function (success) {
-                                console.log("Follow this person: " + snapshot.child(visitorId + '/follow').val());
                                 document.getElementById('follower_count').style.backgroundColor = 'white';
-                                document.getElementById('follower_count').style.color = 'black';
+                                document.getElementById('follower_count').style.color = 'red';
                             });
                         }
 
@@ -183,8 +229,8 @@ class Profilecard extends Component {
                     <div className="col-sm-10 col-md-9 info_section">
                         <div className="row" id="test_row">
                             <div className="col-sm-6">
-                                <h3 id="user_name">______________</h3>
-                                <h6 id="user_location">__________</h6>
+                                <h3 id="user_name"></h3>
+                                <h6 id="user_location"></h6>
                             </div>
 
                         </div>
@@ -192,10 +238,11 @@ class Profilecard extends Component {
                             <div className="col-sm-3 col-xs-4">
                                 <button type="button" className="btn btn-danger btn-4" id="follower_count" title="Followers"
                                     onClick={() => this.followUser()}
-                                ><i className="fa fa-users"></i> | 1239</button>
+                                >{/*<i className="fa fa-users"></i> */} Followers | {this.state.followCount} </button>
                             </div>
                             <div className="col-sm-3 col-xs-4">
-                                <button type="button" className="btn btn-danger btn-4" id="challenges_count" title="Challenges"><i className="fa fa-shield"></i> | 1231</button>
+                                <button type="button" className="btn btn-danger btn-4" id="challenges_count"
+                                    title="Challenges">{/*<i className="fa fa-shield"></i> */} Challenges | {this.state.challengesCount}</button>
                             </div>
                             <div className="col-sm-3 col-xs-4" style={{ marginTop: '-2px' }}>
                                 <button id="aboutMe" type="button" className="btn btn-success btn-4" data-toggle="collapse" data-target="#about_section">About </button>

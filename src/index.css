@@ -1,8 +1,7 @@
 /****ANIMATIOF FOR THE WHOLE PAGE***REMOVE IF NECESSARY ******/
 *{
 	transition-property: all;
-	transition-duration: .4s;
-	transition-timing-function: ease;
+	transition-timing-function: ease-in-out;
 }
 /********navbar************/
 #navContainer{
@@ -80,94 +79,6 @@ button{
 	color: red;
 }
 
-/**************** Profile Page Container************************/
-.ProfileContainer{
-	max-width: 1300px; margin-right: auto; margin-left: auto;
-	max-height: 750px; 
-}
-.card-img-top{
-	max-height: 300px;z-index: 1; margin-top: -30px;
-}
-#aboutSec{
-	width: 100%;
-}
-#profilePic{
-	max-width: 100px !important;
-	max-height: 100px; 
-	position: relative;
-	z-index: 100;
-	margin-bottom: 5px;
-	margin-right: 5px;
-	top: -10px;
-}
-.picSocial{
-	z-index: 100;
-}
-#videoCard{
-	max-height: 750px; overflow-y: scroll;border-bottom: none;
-}
-.cardBlock{
-	padding: 0;
-}
-.cardTitle{
-	margin-top: -50px; z-index: 100; background-color: white;
-}
-.userRow{
-	z-index:100;
-}
-.list-group-item{
-	font-size: 14px;
-	float:left;
-	padding:6px;
-}
-#userNameID{
-	margin-left: 20px;
-	left: 5px;
-}
-.userButton{
-	float:right;
-	background-color: transparent;
-	border: none;
-}
-.profileCard{
-	background-color: white;
-}
-/**********************************New Profile Page Style *******************************/
-.profileSidebar{
-	position: fixed;
-	margin-left: 150px;	
-	margin-top: 10px;
-	overflow-y: visible;
-}
-.profileSideCard{
-	height: auto;
-	width: 300px;
-	background-color: white;
-
-}
-#img_top{
-	height: 250px;
-	max-width: 300px;
-	margin-top: auto;
-	box-shadow: 5px 0px 2px;
-	background-color: black;
-	margin-right: auto;
-	margin-left: auto;
-}
-#nameTitle{
-	color: lightseagreen;
-	font-size:25px;
-	font-weight: bolder;
-}
-#userLocationField{
-	font-size: 12px;	
-}
-#followerNumer{ margin-bottom: -5px; } #challengeNumber{ margin-bottom: -5px; }
-#aboutMeParagraph{
-	float: left;
-	text-align: left;
-
-}
 /***********************************Card Container <--Cards used in Homepage to show videos ****************************************/
 .container{
 	margin-top: 10px;
@@ -178,7 +89,7 @@ button{
 	width: 525px;
 	max-height: 900px;
 	overflow-y: visible;
-	border: 2px black solid;
+	background-color: white;
 }
 #singleVideoContainer{
 	min-height: 550px;
@@ -189,6 +100,7 @@ button{
 	border-radius: 5px;
 	
 }
+
 /*** Like + Challenge + Dislike Buttons **/
 .supportButtons{
 	color: black;
@@ -212,7 +124,7 @@ button{
 /**BLOCK_Quote_DESC**/
 blockquote {
 	background:white;
-	border-left: 10px solid red;
+	border-left: 5px solid red;
 	margin: 2px 2px;
 	padding: 0.5em 10px;
 	quotes: "\201C""\201D""\2018""\2019";
@@ -231,7 +143,7 @@ blockquote {
   }
 #videoUserName{
 	float: right;
-	font-size: 23px;
+	font-size: 20px;
 }
 
 /****************************************Challenges Page****************************************/
@@ -374,29 +286,6 @@ blockquote {
 	color: #3b5998;
 }
 
-/******************************************NEW _ PROFILE _ PAGE ********************************/
-#profile_pic{
-	max-width: 150px;
-	max-height: 200px;
-	margin:10px;
-}
-#profile_card{
-	margin-right: auto;
-	margin-left: auto;
-	border: 1px solid black;
-	max-width: 800px;
-}
-#test_row{
-	text-align: left;	padding-left:30px;
-}
 
-@media screen and (max-width: 994px) {
-	#profile_card{
-		max-width: 400px;
-		min-width: 400px;
-	}
-	#profile_pic{
-		float:left;
-	}
-}
+
 

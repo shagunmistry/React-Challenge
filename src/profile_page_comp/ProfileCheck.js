@@ -21,10 +21,9 @@ class ProfileCheck extends Component {
 
     componentWillMount() {
         var referThis = this;
-        //Check if the user has already logged in, if so lead to their profile page. if not, lead to the Login Page. 
+        //Check if the user has already logged in, if so lead to their profile page. if not, set the LoggedIn status to False.  
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
-                
                 //when the user has signed in, go to this page. 
                 referThis.setState({
                     loggedIn: true,

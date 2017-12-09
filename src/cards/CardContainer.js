@@ -1,4 +1,3 @@
-
 /**
  * This is the place where it will pull up all the videos from the Firebase Database and
  * it will look like the Instagram time-line. 
@@ -23,7 +22,7 @@ class CardContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            usedArray: []
+            usedArray: [],
         }
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
@@ -67,8 +66,8 @@ class CardContainer extends Component {
                 // console.log(referThis.state.usedArray);
             });
         } else {
-            //Right now only for user's page.
-            //Add category based listings later
+
+            //Right now only for user's page.  --> Add category based listings later
             const userId = this.props.userId;
             var user_name, profile_Picture;
 
@@ -79,6 +78,7 @@ class CardContainer extends Component {
             });
             var videosRef = dataRef.ref('videos/' + userId + '/uploaded_videos/');
 
+            //Get all the videos from the user's database. 
             videosRef.on('value', function (snapshot) {
                 snapshot.forEach(function (data) {
                     //Store each value into an name-based object. 
@@ -98,8 +98,9 @@ class CardContainer extends Component {
                     //console.log("Firebase function: " + userArray.length);
                 });
                 referThis.setState({
-                    usedArray: userArray
+                    usedArray: userArray,
                 });
+
                 // console.log(referThis.state.usedArray);
             });
         }
@@ -107,9 +108,10 @@ class CardContainer extends Component {
 
     render() {
         function initApp() {
+
         }
         window.addEventListener('load', function () {
-            initApp()
+            initApp();
         });
 
         var usedArray = this.state.usedArray;
@@ -121,6 +123,7 @@ class CardContainer extends Component {
                 }
             </div>
         );
+
 
     }
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { firebaseApp } from '../firebase/Firebase';
 
 
@@ -60,20 +60,20 @@ export default class Navigationbar extends Component {
             </div>
             <div className="Collapse navbar-collapse" id="myNavbar">
               {/*   <ul className="nav navbar-nav">
-               <li><NavLink to="/Comedy" onClick={()=>window.location.reload()} ><i className="fa fa-hand-spock-o"></i><span> Comedy</span></NavLink></li>
+               <li><Link to="/Comedy" onClick={()=>window.location.reload()} ><i className="fa fa-hand-spock-o"></i><span> Comedy</span></NavLink></li>
                     <li><NavLink to="/Sports" onClick={()=>window.location.reload()} ><i className="fa fa-bicycle"></i><span> Sports</span></NavLink></li>
                     <li><NavLink to="/Dancing" onClick={()=>window.location.reload()}><i className="fa fa-cubes"></i><span> Dancing</span></NavLink></li>
                     <li><NavLink to="/Cooking" onClick={()=>window.location.reload()}><i className="fa fa-diamond"></i><span> Cooking</span></NavLink></li>
     
               </ul>*/}
               <ul className="nav navbar-nav navbar-right">
-                <li><NavLink to="/Hometrend" onClick={() => window.location.reload()}><i className="fa fa-home"></i> Home </NavLink></li>
-                <li><NavLink to="/OngoingChallenges" onClick={() => window.location.reload()}><i className="fa fa-area-chart"></i> Ongoing Challenges</NavLink></li>
-                <li><NavLink to="/UploadVideo" onClick={() => window.location.reload()}><i className="fa fa-upload"></i><span> Upload Video</span></NavLink></li>
+                <li><Link to="/Hometrend" onClick={() => window.location.reload()}><i className="fa fa-home"></i> Home </Link></li>
+                <li><Link to="/OngoingChallenges" onClick={() => window.location.reload()}><i className="fa fa-area-chart"></i> Ongoing Challenges</Link></li>
+                <li><Link to="/UploadVideo" onClick={() => window.location.reload()}><i className="fa fa-upload"></i><span> Upload Video</span></Link></li>
                 <li>
-                  <NavLink to="/ProfileCheck" onClick={() => window.location.reload()}>
+                  <Link to="/ProfileCheck" onClick={() => window.location.reload()}>
                     <i className="fa fa-user" ></i> Profile <span className="badge notifications">10</span>
-                  </NavLink>
+                  </Link>
                 </li>
                 <li className="dropdown" id="profile_options">
                   <a className="dropdown-toggle" type="button" data-toggle="dropdown">

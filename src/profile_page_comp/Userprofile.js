@@ -44,6 +44,7 @@ class Userprofile extends Component {
                     if (snapshot.val() !== null) {
                         //User exists so do nothing. 
                     } else {
+                        //User is not in the database so lead them to the Profile Page. 
                         window.location.replace('/EditProfile');
                     }
                 });
@@ -83,12 +84,11 @@ class Userprofile extends Component {
             //User is the owner 
             userid = this.props.uid;
         } else {
-            //User is likely a visitor
+            //User is the visitor
             userid = this.props.match.params.userId;
         }
 
         return (
-            //user has signed in before, so send them to their pag.e 
             <div>
                 <Profilecard userId={userid} visitorTag={this.state.visitorTag} visitorId={this.state.visitorId} />
                 <CardContainer userId={userid} customize={true} visitorTag={this.state.visitorTag} />
